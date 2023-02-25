@@ -10,3 +10,4 @@
 </ul>
 
 <%= link_to 'Edit recipe', edit_recipe_path %>
+<%= link_to "Remove", recipe_path(@recipe), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>

@@ -1,5 +1,5 @@
 class RecipesController < ApplicationController
-  before_action :set_recipe, only: %i[show edit update]
+  before_action :set_recipe, only: %i[show edit update destroy]
 
   def index
     @recipes = Recipe.all
@@ -29,6 +29,11 @@ class RecipesController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @recipe.destroy
+    redirect_to recipes_path, status: :see_other
   end
 
   private
