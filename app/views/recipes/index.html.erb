@@ -1,6 +1,6 @@
 <ul>
   <% @recipes.each do |recipe| %>
-    <li><%= recipe.title %></li>
+    <li><%= link_to recipe.title, recipe_path(recipe) %></li>
     <li><%= recipe.cooking_time %></li>
     <li><%= recipe.description %></li>
     <li><%= recipe.rating %></li>
@@ -11,3 +11,5 @@
     <br>
   <% end %>
 </ul>
+
+<%= link_to 'Add recipe', new_recipe_path %>
