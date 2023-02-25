@@ -2,7 +2,7 @@ class UserIngredientsController < ApplicationController
   before_action :set_user_ingredient, only: %i[]
 
   def index
-    @users_ingredients = UserIngredient.all
+    @user_ingredients = UserIngredient.all.select{ |ingredient| ingredient.quantity > 0 }
   end
 
   def update
@@ -11,8 +11,10 @@ class UserIngredientsController < ApplicationController
   end
 
   def create
-    @new_users_ingridient = UserIngrediant.new(user_ingredient_params)
-    #need to work with this one
+    @new_users_ingridient = UserIngredient.new(user_ingredient_params)
+    @new_users_ingridient.ingredient_id = Ingredient.find_by(name: params[:query]).id
+    @new_users_ingridient.save
+    #need to work on this one
   end
 
   def delete
@@ -29,7 +31,7 @@ class UserIngredientsController < ApplicationController
   end
 
   def user_ingredient_params
-    params.require(:user_ingredient).permit(:measurement, :quantity)
+    params.require(:user_ingredient).permit(:measurment, :quantity)
   end
 
   def set_user_ingredient
