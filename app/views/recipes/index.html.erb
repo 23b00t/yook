@@ -1,5 +1,6 @@
 <ul>
   <% @recipes.each do |recipe| %>
+    <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
     <li><%= link_to recipe.title, recipe_path(recipe) %></li>
     <li><%= recipe.cooking_time %></li>
     <li><%= recipe.description %></li>
