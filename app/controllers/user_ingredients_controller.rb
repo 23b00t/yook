@@ -1,12 +1,12 @@
-class UsersIngredientsController < ApplicationController
+class UserIngredientsController < ApplicationController
   before_action :set_user_ingredient, only: %i[]
 
   def index
-    @users_ingridients = UserIngredient.all
+    @users_ingredients = UserIngredient.all
   end
 
   def update
-    @user_ingridient = set_user_ingredient
+    @user_ingredient = set_user_ingredient
     @user_ingredient.update(user_ingredient_params)
   end
 
@@ -33,6 +33,6 @@ class UsersIngredientsController < ApplicationController
   end
 
   def set_user_ingredient
-    @ingrediant = UserIngrediant.find(params[:id])
+    @ingrediant = UserIngredient.find(params[:id])
   end
 end
