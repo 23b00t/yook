@@ -1,0 +1,10 @@
+<%= simple_form_for recipe do |f| %>
+  <%= f.input :title, label: "Title", error: 'A title is mandatory, please specify one' %>
+  <%= f.input :description, label: "Description" %>
+  <%= f.input :cooking_time %>
+  <%= f.input :rating %>
+  <%= f.input :difficulty %>
+  <%= f.input :serving_size %>
+  <%#= f.input :photo, as: :file, label: "Upload a Photo" %>
+  <%= f.button :submit%>
+<%end%>
