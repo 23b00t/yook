@@ -1,0 +1,12 @@
+<div>
+  <% @users_ingredients.each do |ingredient| %>
+    <p class="primary-text">
+      <%= ingredient.ingredient.name %>
+      <%= simple_form_for ingredient do |f| %>
+        <%= f.input :quantity %>
+        <%= f.input :measurment, collection: %w[milliliter liter deciliter gram kilogram miligram]%>
+      <%end%>
+    </p>
+  <% end %>
+</div>
+
