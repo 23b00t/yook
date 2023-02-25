@@ -1,0 +1,12 @@
+<ul>
+  <% @recipes.each do |recipe| %>
+    <li><%= recipe.title %></li>
+    <li><%= recipe.cooking_time %></li>
+    <li><%= recipe.description %></li>
+    <li><%= recipe.rating %></li>
+    <li><%= recipe.difficulty %></li>
+    <li><%= recipe.serving_size %></li>
+    <li><%= recipe.cooked %></li>
+    <li><%= recipe.notes %></li>
+  <% end %>
+</ul>
