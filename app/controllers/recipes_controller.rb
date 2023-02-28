@@ -2,9 +2,12 @@ class RecipesController < ApplicationController
   before_action :set_recipe, only: %i[show edit update destroy]
 
   def index
-    @recipes = Recipe.all
-    @recipes = Recipe.search_by_title_and_description(params[:query]) if params[:query].present?
-    filters
+    if params[:query].present?
+      @recipes = Recipe.search_by_title_and_description(params[:query])
+    else
+      @recipes = Recipe.all
+    end
+    filter
   end
 
   def new
@@ -50,23 +53,13 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
   end
 
-  def filters
-    @recipes = @recipes.select { |recipe| recipe.cooked.to_s == params[:cooked] || recipe.cooked.nil? } if params[:cooked].present?
-
-    if params[:cooking_time].present?
-      time = params[:cooking_time].scan(/\d+/).map(&:to_i)
-      @recipes = @recipes.reject { |recipe| recipe.cooking_time < time[0] || recipe.cooking_time > time[1] }
-    end
-
-    @recipes = @recipes.select { |recipe| recipe.difficulty == params[:difficulty] } if params[:difficulty].present?
-
-    @recipes = @recipes.select { |recipe| recipe.rating >= params[:rating].to_i } if params[:rating].present?
-
-    if params[:tags].present?
-      tag_matches = Recipe.search_by_tag(params[:tags])
-      @recipes = @recipes.select { |recipe| tag_matches.include? recipe }
-    end
-
-    @recipes
+  def filter
+    @recipes = RecipeFilter.new(@recipes)
+                           .filter_by_cooked(params[:cooked])
+                           .filter_by_cooking_time(params[:cooking_time])
+                           .filter_by_difficulty(params[:difficulty])
+                           .filter_by_rating(params[:rating])
+                           .filter_by_tags(params[:tags])
+                           .results
   end
 end
