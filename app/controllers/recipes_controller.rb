@@ -7,7 +7,7 @@ class RecipesController < ApplicationController
     else
       @recipes = Recipe.all
     end
-    filter
+    filter unless params[:query].nil?
   end
 
   def new
