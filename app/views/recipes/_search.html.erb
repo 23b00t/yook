@@ -1,0 +1,21 @@
+<%= form_with url: recipes_path, method: :get do |f| %>
+  <%= label_tag :query, 'Search for:' %>
+  <%= text_field_tag :query, params[:query] %>
+
+  <%= label_tag :cooked, 'Cooked:' %>
+  <%= f.select :cooked, options_for_select([['Any', ''], ['Yes', 'true'], ['No', 'false']], selected: params[:cooked]) %>
+
+  <%= label_tag :cooking_time, 'Cooking Time:' %>
+  <%= f.select :cooking_time, options_for_select([['Any', '0..6000'], ['< 30 minutes', '0..29'], ['30-60 minutes', '30..60'], ['> 60 minutes', '61..6000']], selected: params[:cooking_time]) %>
+
+  <%= label_tag :difficulty, 'Difficulty:' %>
+  <%= f.select :difficulty, options_for_select([['Any', ''], ['Easy', 'easy'], ['Medium', 'medium'], ['Hard', 'hard']], selected: params[:difficulty]) %>
+
+  <%= label_tag :rating, 'Rating:' %>
+  <%= f.select :rating, options_for_select([['Any', ''], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5']], selected: params[:rating]) %>
+
+  <%= label_tag :tags, 'Tags:' %>
+  <%= text_field_tag :tags, params[:tags] %>
+
+  <%= submit_tag 'Search' %>
+<% end %>
