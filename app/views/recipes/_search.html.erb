@@ -6,7 +6,7 @@
   <%= f.select :cooked, options_for_select([['Any', ''], ['Yes', 'true'], ['No', 'false']], selected: params[:cooked]) %>
 
   <%= label_tag :cooking_time, 'Cooking Time:' %>
-  <%= f.select :cooking_time, options_for_select([['Any', '0..6000'], ['< 30 minutes', '0..29'], ['30-60 minutes', '30..60'], ['> 60 minutes', '61..6000']], selected: params[:cooking_time]) %>
+  <%= f.select :cooking_time, options_for_select([['Any', ''], ['< 30 minutes', '0..29'], ['30-60 minutes', '30..60'], ['> 60 minutes', '61..6000']], selected: params[:cooking_time]) %>
 
   <%= label_tag :difficulty, 'Difficulty:' %>
   <%= f.select :difficulty, options_for_select([['Any', ''], ['Easy', 'easy'], ['Medium', 'medium'], ['Hard', 'hard']], selected: params[:difficulty]) %>
