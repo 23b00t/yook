@@ -3,8 +3,9 @@
   <%= f.input :description, label: "Description" %>
   <%= f.input :cooking_time %>
   <%= f.input :rating %>
-  <%= f.input :difficulty %>
+  <%= f.input :difficulty, collection: %i[easy medium hard] %>
   <%= f.input :serving_size %>
+  <%= f.input :tags %>
   <%= f.input :photo, as: :file, label: "Upload a picture of your dish" %>
   <%= f.button :submit%>
 <%end%>
