@@ -14,6 +14,9 @@
   <%= label_tag :rating, 'Rating:' %>
   <%= f.select :rating, options_for_select([['Any', ''], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5']], selected: params[:rating]) %>
 
+  <%= label_tag :active, 'Filter by inventory:' %>
+  <%= f.select :active, options_for_select([['Any', ''], ['Yes', true], ['No', false]], selected: params[:active]) %>
+
   <%= label_tag :tags, 'Tags:' %>
   <%= text_field_tag :tags, params[:tags] %>
 

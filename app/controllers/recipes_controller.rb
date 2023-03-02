@@ -18,7 +18,8 @@ class RecipesController < ApplicationController
     @recipe = Recipe.new(recipe_params)
     @recipe.user = current_user
     if @recipe.save
-      redirect_to recipe_path(@recipe)
+      session[:recipe_id] = @recipe.id
+      redirect_to ingredients_path
     else
       render :new, status: :unprocessable_entity
     end
@@ -59,6 +60,7 @@ class RecipesController < ApplicationController
                            .filter_by_cooking_time(params[:cooking_time])
                            .filter_by_difficulty(params[:difficulty])
                            .filter_by_rating(params[:rating])
+                           # .filter_by_user_ingredients(params[:active])
                            .filter_by_tags(params[:tags])
                            .results
   end

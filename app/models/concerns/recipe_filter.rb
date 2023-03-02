@@ -34,6 +34,17 @@ class RecipeFilter
     self
   end
 
+  # def filter_by_user_ingredients(active)
+  #   if active
+  #     match = @scope.map do |recipe|
+  #       recipe.recipe_ingredients.map do |ingredient|
+  #         UserIngredient.all.include? ingredient.ingredient_id
+  #       end
+  #     end
+  #     raise
+  #   end
+  # end
+
   def results
     @scope
   end
