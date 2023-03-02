@@ -1,0 +1,25 @@
+<%= form_with url: ingredients_path, method: :get do |f| %>
+  <%= label_tag :query, 'Search for ingredient:' %>
+  <%= text_field_tag :query, params[:query] %>
+  <%= submit_tag 'Search' %>
+<% end %>
+
+<ul>
+  <% @ingredients.each do |ingredient| %>
+    <li>
+      <%= ingredient.name %>
+      <%= form_with url: recipe_recipe_ingredients_path(@recipe), method: :post do |f| %>
+        <%= label_tag :quantity, 'Quantity' %>
+        <%= text_field_tag :quantity, params[:quantity] %>
+
+        <%= label_tag :measurment, 'Measurment' %>
+        <%= text_field_tag :measurment, params[:measurment] %>
+
+        <%= f.hidden_field :ingredient_id, value: ingredient.id  %>
+        <%= f.hidden_field :recipe_id, value: @recipe.id %>
+
+        <%= submit_tag 'Add' %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

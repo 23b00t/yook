@@ -33,3 +33,4 @@ p 'create inventar'
   ingredient = Ingredient.all.sample
   UserIngredient.create(measurment: Faker::Food.metric_measurement, quantity: rand(10), user_id: user.id, ingredient_id: ingredient.id)
 end
+
