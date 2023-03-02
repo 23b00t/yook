@@ -4,7 +4,7 @@ class IngredientsController < ApplicationController
     if params[:query].present?
       @ingredients = Ingredient.search_by_name(params[:query])
     else
-      @ingredients = Ingredient.all
+      @ingredients = Ingredient.all.first(10)
     end
   end
 end
