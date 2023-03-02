@@ -10,7 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema[7.0].define(version: 2023_02_28_082709) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,7 +53,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_082709) do
   end
 
   create_table "recipe_ingredients", force: :cascade do |t|
-    t.integer "quantity"
+    t.float "quantity"
     t.string "measurment"
     t.bigint "ingredient_id", null: false
     t.bigint "recipe_id", null: false
@@ -79,8 +81,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_082709) do
 
   create_table "user_ingredients", force: :cascade do |t|
     t.string "measurment"
-    t.integer "quantity"
-    t.boolean "favorited"
+    t.float "quantity"
+    t.boolean "favorited", default: false
     t.bigint "user_id", null: false
     t.bigint "ingredient_id", null: false
     t.datetime "created_at", null: false

@@ -1,12 +1,24 @@
 <div>
-  <% @users_ingredients.each do |ingredient| %>
-    <p class="primary-text">
+  <% @user_ingredients.each do |ingredient| %>
+    <p style="background-color: green">
       <%= ingredient.ingredient.name %>
       <%= simple_form_for ingredient do |f| %>
         <%= f.input :quantity %>
-        <%= f.input :measurment, collection: %w[milliliter liter deciliter gram kilogram miligram]%>
+        <%= f.input :measurment, collection: %w[milliliter liter gram kilogram milligram] %>
+        <%= f.input :favorited, as: :boolean %>
+        <%= f.button :submit%>
       <%end%>
     </p>
   <% end %>
 </div>
 
+<div class="sticky-bottom" style="background-color: silver">
+  <p>Here will be a plus icon with a pop-up</p>
+   <%= simple_form_for UserIngredient.new do |f| %>
+        <%= text_field_tag :name, nil, placeholder: "Name of the ingredient" %>
+        <%= f.input :quantity, placeholder: "How much?"%>
+        <%= f.input :measurment, collection: %w[milliliter liter deciliter gram kilogram miligram], placeholder: "Which measurment?" %>
+        <%= f.input :favorited, as: :boolean %>
+        <%= f.button :submit%>
+      <%end%>
+</div>
