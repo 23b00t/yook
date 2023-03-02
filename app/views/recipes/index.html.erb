@@ -1,0 +1,20 @@
+<%= render 'search' %>
+
+<ul>
+  <p><%= 'Sorry, nothing found...' if @recipes.empty? %></p>
+  <% @recipes.each do |recipe| %>
+    <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
+    <li><%= link_to recipe.title, recipe_path(recipe) %></li>
+    <li><%= recipe.cooking_time %></li>
+    <li><%= recipe.description %></li>
+    <li><%= recipe.rating %></li>
+    <li><%= recipe.difficulty %></li>
+    <li><%= recipe.serving_size %></li>
+    <li><%= recipe.tags %></li>
+    <li><%= recipe.cooked %></li>
+    <li><%= recipe.notes %></li>
+    <br>
+  <% end %>
+</ul>
+
+<%= link_to 'Add recipe', new_recipe_path %>

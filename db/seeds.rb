@@ -35,3 +35,4 @@ p 'create inventar'
   ingredient = Ingredient.all.sample
   UserIngredient.create(measurment: metric_measurement.sample, quantity: rand(10), user_id: user.id, ingredient_id: ingredient.id)
 end
+

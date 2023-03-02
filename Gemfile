@@ -78,3 +78,5 @@ group :test do
 end
 
 gem 'faker'
+gem "cloudinary"
+gem "pg_search"
