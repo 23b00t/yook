@@ -3,8 +3,8 @@ class UserIngredientsController < ApplicationController
 
   def index
     UserIngredient.all.each { |ingredient| convert(ingredient) }
-    @user_ingredients = UserIngredient.all.select { |ingredient| ingredient.quantity.positive? && ingredient.favorited }
-    @user_ingredients += UserIngredient.all.select { |ingredient| ingredient.quantity.positive? && !ingredient.favorited }
+    @user_ingredients = UserIngredient.all.select { |i| i.quantity.positive? && i.favorited && i.user_id = current_user.id }
+    @user_ingredients += UserIngredient.all.select { |i| i.quantity.positive? && !i.favorited && i.user_id = current_user.id }
   end
 
   def update
@@ -34,10 +34,6 @@ class UserIngredientsController < ApplicationController
   end
 
   private
-
-  def ingredient_params
-    params.require(:ingredient).permit(:name, :type)
-  end
 
   def user_ingredient_params
     params.require(:user_ingredient).permit(:measurment, :quantity, :favorited)
