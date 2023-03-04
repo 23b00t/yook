@@ -9,3 +9,6 @@ application.register("hello", HelloController)
 
 import SearchRecipesController from "./search_recipes_controller"
 application.register("search-recipes", SearchRecipesController)
+
+import ShowFiltersController from "./show_filters_controller"
+application.register("show-filters", ShowFiltersController)

@@ -10,10 +10,10 @@ class RecipesController < ApplicationController
 
     filter unless params[:query].nil?
 
-    # respond_to do |format|
-    #   format.html
-    #   format.text { render partial: "recipes/list", locals: { recipes: @recipes }, formats: [:html] }
-    # end
+    respond_to do |format|
+      format.html
+      format.text { render partial: "recipes/list", formats: [:html] }
+    end
   end
 
   def new
@@ -30,7 +30,6 @@ class RecipesController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
-
   end
 
   def show; end

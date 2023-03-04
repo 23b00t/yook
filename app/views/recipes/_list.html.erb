@@ -1,21 +1,24 @@
-<ul>
-  <p><%= 'Sorry, nothing found...' if @recipes.empty? %></p>
-  <% @recipes.each do |recipe| %>
-    <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
-    <li>
-      <%= link_to recipe.title, recipe_path(recipe) %>
-      <% if @matches %>
-        <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %
-      <% end %>
-    </li>
-    <li>Cooking time: <%= recipe.cooking_time %></li>
-    <li>Steps: <%= recipe.description %></li>
-    <li>Rating: <%= recipe.rating %></li>
-    <li>Difficulty: <%= recipe.difficulty %></li>
-    <li>Serving size: <%= recipe.serving_size %></li>
-    <li>Tags: <%= recipe.tags %></li>
-    <li>Cooked? <%= recipe.cooked %></li>
-    <li>Notes: <%= recipe.notes %></li>
-    <br>
-  <% end %>
-</ul>
+<div data-search-recipes-target="list">
+  <ul>
+    <p><%= 'Sorry, nothing found...' if @recipes.empty? %></p>
+    <% @recipes.each do |recipe| %>
+      <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
+      <li>
+        <%= link_to recipe.title, recipe_path(recipe) %>
+
+        <% if @matches %>
+          <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %
+        <% end %>
+      </li>
+      <li>Cooking time: <%= recipe.cooking_time %></li>
+      <li>Steps: <%= recipe.description %></li>
+      <li>Rating: <%= recipe.rating %></li>
+      <li>Difficulty: <%= recipe.difficulty %></li>
+      <li>Serving size: <%= recipe.serving_size %></li>
+      <li>Tags: <%= recipe.tags %></li>
+      <li>Cooked? <%= recipe.cooked %></li>
+      <li>Notes: <%= recipe.notes %></li>
+      <br>
+    <% end %>
+  </ul>
+</div>

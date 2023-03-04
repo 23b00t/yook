@@ -5,7 +5,7 @@ class RecipeFilter
 
   def filter_by_cooked(cooked)
     cooked = cooked == 'yes'
-    @scope = @scope.select { |recipe| recipe.cooked == cooked }
+    @scope = @scope.select { |recipe| recipe.cooked == cooked || recipe.cooked.nil? }
     self
   end
 
@@ -13,7 +13,7 @@ class RecipeFilter
     unless cooking_time.nil? || cooking_time.empty?
       time = cooking_time.scan(/\d+/).map(&:to_i)
       @scope = @scope.reject do |recipe|
-        recipe.cooking_time.nil? && (recipe.cooking_time < time[0] || recipe.cooking_time > time[1])
+        recipe.cooking_time.nil? || (recipe.cooking_time < time[0] || recipe.cooking_time > time[1])
       end
     end
     self
