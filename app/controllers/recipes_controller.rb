@@ -7,7 +7,13 @@ class RecipesController < ApplicationController
     else
       @recipes = Recipe.all
     end
+
     filter unless params[:query].nil?
+
+    # respond_to do |format|
+    #   format.html
+    #   format.text { render partial: "recipes/list", locals: { recipes: @recipes }, formats: [:html] }
+    # end
   end
 
   def new

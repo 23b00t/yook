@@ -1,6 +1,6 @@
-<%= form_with url: recipes_path, method: :get do |f| %>
+<%= form_with url: recipes_path, method: :get, html: {data: {search_recipes_target: "form"}} do |f| %>
   <%= label_tag :query, 'Search for:' %>
-  <%= text_field_tag :query, params[:query] %>
+  <%= text_field_tag :query, params[:query], data: {search_recipes_target: "input", action: "keyup->search-recipes#update"} %>
 
   <%= label_tag :cooked, 'Cooked:' %>
   <%= f.select :cooked, options_for_select([['Any', ''], ['Yes', 'true'], ['No', 'false']], selected: params[:cooked]) %>
