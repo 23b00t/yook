@@ -57,4 +57,3 @@ class RecipesScraper
     @serving_size = scrape_time_serving[3]
   end
 end
-
