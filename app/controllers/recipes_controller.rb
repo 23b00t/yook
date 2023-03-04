@@ -51,6 +51,19 @@ class RecipesController < ApplicationController
     redirect_to recipes_path, status: :see_other
   end
 
+  def edit_description
+    @recipe = Recipe.find(params[:id])
+  end
+
+  def update_description
+    @recipe = Recipe.find(params[:id])
+    if @recipe.update(recipe_params)
+      redirect_to recipe_path(@recipe)
+    else
+      render :edit_description
+    end
+  end
+
   private
 
   def recipe_params
