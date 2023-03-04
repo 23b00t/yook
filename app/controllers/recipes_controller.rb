@@ -7,7 +7,13 @@ class RecipesController < ApplicationController
     else
       @recipes = Recipe.all
     end
+
     filter unless params[:query].nil?
+
+    respond_to do |format|
+      format.html
+      format.text { render partial: "recipes/list", formats: [:html] }
+    end
   end
 
   def new
@@ -24,7 +30,6 @@ class RecipesController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
-
   end
 
   def show; end

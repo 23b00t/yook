@@ -1,25 +1,11 @@
-<%= render 'search' %>
+<div data-controller="search-recipes">
+  <div data-controller="show-filters">
+    <%= render 'search' %>
+    <button aria-label="Edit movie">
+      <i class="fa-solid fa-filter fa-xs ml-2" data-action="click->show-filters#displayForm"></i>
+    </button>
+  </div>
+  <%= render 'list' %>
 
-<ul>
-  <p><%= 'Sorry, nothing found...' if @recipes.empty? %></p>
-  <% @recipes.each do |recipe| %>
-    <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
-    <li>
-      <%= link_to recipe.title, recipe_path(recipe) %>
-      <% if @matches %>
-        <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %
-      <% end %>
-    </li>
-    <li>Cooking time: <%= recipe.cooking_time %></li>
-    <li>Steps: <%= recipe.description %></li>
-    <li>Rating: <%= recipe.rating %></li>
-    <li>Difficulty: <%= recipe.difficulty %></li>
-    <li>Serving size: <%= recipe.serving_size %></li>
-    <li>Tags: <%= recipe.tags %></li>
-    <li>Cooked? <%= recipe.cooked %></li>
-    <li>Notes: <%= recipe.notes %></li>
-    <br>
-  <% end %>
-</ul>
-
-<%= link_to 'Save recipe', new_recipe_path %>
+  <%= link_to 'Add recipe', new_recipe_path %>
+</div>

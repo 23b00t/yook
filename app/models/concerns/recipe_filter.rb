@@ -5,22 +5,22 @@ class RecipeFilter
 
   def filter_by_cooked(cooked)
     cooked = cooked == 'yes'
-    @scope = @scope.select { |recipe| recipe.cooked == cooked }
+    @scope = @scope.select { |recipe| recipe.cooked == cooked || recipe.cooked.nil? }
     self
   end
 
   def filter_by_cooking_time(cooking_time)
-    unless cooking_time.empty?
+    unless cooking_time.nil? || cooking_time.empty?
       time = cooking_time.scan(/\d+/).map(&:to_i)
       @scope = @scope.reject do |recipe|
-        recipe.cooking_time.nil? && (recipe.cooking_time < time[0] || recipe.cooking_time > time[1])
+        recipe.cooking_time.nil? || (recipe.cooking_time < time[0] || recipe.cooking_time > time[1])
       end
     end
     self
   end
 
   def filter_by_difficulty(difficulty)
-    unless difficulty.empty?
+    unless difficulty.nil? || difficulty.empty?
       @scope = @scope.select do |recipe|
         !recipe.difficulty.nil? && recipe.difficulty == difficulty
       end
@@ -29,12 +29,14 @@ class RecipeFilter
   end
 
   def filter_by_rating(rating)
-    @scope = @scope.select { |recipe| !recipe.rating.nil? && recipe.rating >= rating.to_i } unless rating.empty?
+    unless rating.nil? || rating.empty?
+      @scope = @scope.select { |recipe| !recipe.rating.nil? && recipe.rating >= rating.to_i }
+    end
     self
   end
 
   def filter_by_tags(tags)
-    unless tags.empty?
+    unless tags.nil? || tags.empty?
       tag_matches = Recipe.search_by_tag(tags)
       @scope = @scope.select { |recipe| tag_matches.include? recipe }
     end
