@@ -4,25 +4,32 @@ class RecipeFilter
   end
 
   def filter_by_cooked(cooked)
-    @scope = @scope.select { |recipe| recipe.cooked.to_s == cooked || recipe.cooked.nil? }
+    cooked = cooked == 'yes'
+    @scope = @scope.select { |recipe| recipe.cooked == cooked }
     self
   end
 
   def filter_by_cooking_time(cooking_time)
     unless cooking_time.empty?
       time = cooking_time.scan(/\d+/).map(&:to_i)
-      @scope = @scope.reject { |recipe| recipe.cooking_time.nil? || recipe.cooking_time < time[0] || recipe.cooking_time > time[1] }
+      @scope = @scope.reject do |recipe|
+        recipe.cooking_time.nil? && (recipe.cooking_time < time[0] || recipe.cooking_time > time[1])
+      end
     end
     self
   end
 
   def filter_by_difficulty(difficulty)
-    @scope = @scope.select { |recipe| !recipe.difficulty.nil? || recipe.difficulty == difficulty } unless difficulty.empty?
+    unless difficulty.empty?
+      @scope = @scope.select do |recipe|
+        !recipe.difficulty.nil? && recipe.difficulty == difficulty
+      end
+    end
     self
   end
 
   def filter_by_rating(rating)
-    @scope = @scope.select { |recipe| !recipe.rating.nil? || recipe.rating >= rating.to_i } unless rating.empty?
+    @scope = @scope.select { |recipe| !recipe.rating.nil? && recipe.rating >= rating.to_i } unless rating.empty?
     self
   end
 
@@ -42,17 +49,23 @@ class RecipeFilter
           UserIngredient.where(ingredient: recipe_ingredient.ingredient).present?
         end
       end
-    end
-    @matches.each { |k, v| @matches[k] = v.count(true).fdiv(v.length) }
-    @scope = @matches.keys.sort_by do |k|
-      match_percentage = @matches[k].is_a?(Float) ? @matches[k] : @matches[k][0]
-      match_percentage = 0 if match_percentage.nan?
-      [-match_percentage, k.title]
+      sort
     end
     self
   end
 
   def results
     @scope
+  end
+
+  private
+
+  def sort
+    @matches.each { |k, v| @matches[k] = v.count(true).fdiv(v.length) }
+    @scope = @matches.keys.sort_by do |k|
+      match_percentage = @matches[k].is_a?(Float) ? @matches[k] : @matches[k][0]
+      match_percentage = 0 if match_percentage.nan?
+      [-match_percentage, k.title]
+    end
   end
 end
