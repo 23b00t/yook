@@ -1,36 +1,35 @@
 class UserIngredientsController < ApplicationController
-  before_action :set_user_ingredient, only: %i[]
+  before_action :set_user_ingredient, only: %i[update destroy]
 
   def index
     UserIngredient.all.each { |ingredient| convert(ingredient) }
     @user_ingredients = UserIngredient.all.select { |ingredient| ingredient.quantity.positive? && ingredient.favorited }
     @user_ingredients += UserIngredient.all.select { |ingredient| ingredient.quantity.positive? && !ingredient.favorited }
+    @new_ingredient = UserIngredient.new
   end
 
   def update
-    @user_ingredient = set_user_ingredient
-    @user_ingredient.update(user_ingredient_params)
-    convert(@user_ingredient)
-    redirect_to user_ingredients_path
+    @ingredient.update(ingredient_params)
+    convert(@ingredient)
+    redirect_to ingredients_path
   end
 
   def create
-    @new_users_ingredient = UserIngredient.new(user_ingredient_params)
-    if Ingredient.find_by(name: params[:name]).nil?
-      redirect_to user_ingredients_path
-    else
+    @ing = Ingredient.find_by(name: params[:name].downcase.capitalize)
+
+    if @ing
       @new_users_ingredient = UserIngredient.new(user_ingredient_params)
-      @new_users_ingredient.ingredient_id = Ingredient.find_by(name: params[:name]).id
+      @new_users_ingredient.ingredient_id = @ing.id
       @new_users_ingredient.user_id = current_user.id
       @new_users_ingredient.save
+    else
+      redirect_to user_ingredients_path
     end
   end
 
-  def delete
-    @user_ingridient = set_user_ingredient
-    if @user_ingredient.creator_id == current_user.id
-      @user_ingredient.destroy
-    end
+  def destroy
+    @ingredient.destroy
+    redirect_to user_ingredients_path
   end
 
   private
@@ -40,28 +39,28 @@ class UserIngredientsController < ApplicationController
   end
 
   def user_ingredient_params
-    params.require(:user_ingredient).permit(:measurment, :quantity, :favorited)
+    params.require(:user_ingredient).permit(:measurement, :quantity, :favorited)
   end
 
   def set_user_ingredient
-    @ingrediant = UserIngredient.find(params[:id])
+    @ingredient = UserIngredient.find(params[:id])
   end
 
   #automaticly converts measurment 1000g = 1kg and so on
   def convert(ingredient)
     if ingredient.quantity >= 1000
-      case ingredient.measurment
+      case ingredient.measurement
       when "gram"
         ingredient.quantity /= 1000
-        ingredient.measurment = "kilogram"
+        ingredient.measurement = "kilogram"
         ingredient.save
       when "milligram"
         ingredient.quantity /= 1000
-        ingredient.measurment = "gram"
+        ingredient.measurement = "gram"
         ingredient.save
       when "milliliter"
         ingredient.quantity /= 1000
-        ingredient.measurment = "liter"
+        ingredient.measurement = "liter"
         ingredient.save
       end
     end
