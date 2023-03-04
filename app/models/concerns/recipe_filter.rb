@@ -11,18 +11,18 @@ class RecipeFilter
   def filter_by_cooking_time(cooking_time)
     unless cooking_time.empty?
       time = cooking_time.scan(/\d+/).map(&:to_i)
-      @scope = @scope.reject { |recipe| recipe.cooking_time < time[0] || recipe.cooking_time > time[1] }
+      @scope = @scope.reject { |recipe| recipe.cooking_time.nil? || recipe.cooking_time < time[0] || recipe.cooking_time > time[1] }
     end
     self
   end
 
   def filter_by_difficulty(difficulty)
-    @scope = @scope.select { |recipe| recipe.difficulty == difficulty } unless difficulty.empty?
+    @scope = @scope.select { |recipe| !recipe.difficulty.nil? || recipe.difficulty == difficulty } unless difficulty.empty?
     self
   end
 
   def filter_by_rating(rating)
-    @scope = @scope.select { |recipe| recipe.rating >= rating.to_i } unless rating.empty?
+    @scope = @scope.select { |recipe| !recipe.rating.nil? || recipe.rating >= rating.to_i } unless rating.empty?
     self
   end
 
@@ -34,16 +34,23 @@ class RecipeFilter
     self
   end
 
-  # def filter_by_user_ingredients(active)
-  #   if active
-  #     match = @scope.map do |recipe|
-  #       recipe.recipe_ingredients.map do |ingredient|
-  #         UserIngredient.all.include? ingredient.ingredient_id
-  #       end
-  #     end
-  #     raise
-  #   end
-  # end
+  def sort_by_user_ingredients(active)
+    if active
+      @matches = {}
+      @scope.each do |recipe|
+        @matches[recipe] = recipe.recipe_ingredients.map do |recipe_ingredient|
+          UserIngredient.where(ingredient: recipe_ingredient.ingredient).present?
+        end
+      end
+    end
+    @matches.each { |k, v| @matches[k] = v.count(true).fdiv(v.length) }
+    @scope = @matches.keys.sort_by do |k|
+      match_percentage = @matches[k].is_a?(Float) ? @matches[k] : @matches[k][0]
+      match_percentage = 0 if match_percentage.nan?
+      [-match_percentage, k.title]
+    end
+    self
+  end
 
   def results
     @scope
