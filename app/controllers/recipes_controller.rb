@@ -61,8 +61,9 @@ class RecipesController < ApplicationController
                            .filter_by_cooking_time(params[:cooking_time])
                            .filter_by_difficulty(params[:difficulty])
                            .filter_by_rating(params[:rating])
-                           # .filter_by_user_ingredients(params[:active])
                            .filter_by_tags(params[:tags])
-                           .results
+                           .sort_by_user_ingredients(params[:active])
+    @matches = @recipes.instance_variable_get(:@matches)
+    @recipes = @recipes.results
   end
 end

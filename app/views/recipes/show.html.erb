@@ -9,6 +9,15 @@
   <li><%= @recipe.cooked %></li>
   <li><%= @recipe.notes %></li>
 </ul>
+<h2>Ingredients</h2>
+<% @recipe.recipe_ingredients.each do |ingredient| %>
+  <ul>
+    <li>
+      <%= ingredient.ingredient.name %>
+      (Available: <%= UserIngredient.all.where(ingredient_id: ingredient.ingredient).present? ? 'Yes' : 'No' %>)
+    </li>
+  </ul>
+<% end %>
 
 <%= link_to 'Edit recipe', edit_recipe_path %>
 <%= link_to "Remove", recipe_path(@recipe), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>

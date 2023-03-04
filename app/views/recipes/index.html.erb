@@ -4,15 +4,20 @@
   <p><%= 'Sorry, nothing found...' if @recipes.empty? %></p>
   <% @recipes.each do |recipe| %>
     <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
-    <li><%= link_to recipe.title, recipe_path(recipe) %></li>
-    <li><%= recipe.cooking_time %></li>
-    <li><%= recipe.description %></li>
-    <li><%= recipe.rating %></li>
-    <li><%= recipe.difficulty %></li>
-    <li><%= recipe.serving_size %></li>
-    <li><%= recipe.tags %></li>
-    <li><%= recipe.cooked %></li>
-    <li><%= recipe.notes %></li>
+    <li>
+      <%= link_to recipe.title, recipe_path(recipe) %>
+      <% if @matches %>
+        <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %
+      <% end %>
+    </li>
+    <li><p>Cooking time:</p><%= recipe.cooking_time %></li>
+    <li><p>Steps:</p><%= recipe.description %></li>
+    <li><p>Rating:</p><%= recipe.rating %></li>
+    <li><p>Difficulty:</p><%= recipe.difficulty %></li>
+    <li><p>Serving size:</p><%= recipe.serving_size %></li>
+    <li><p>Tags:</p><%= recipe.tags %></li>
+    <li><p>Cooked?</p><%= recipe.cooked %></li>
+    <li><p>Notes:</p><%= recipe.notes %></li>
     <br>
   <% end %>
 </ul>
