@@ -1,0 +1,20 @@
+<% if ingredients.count > 0 %>
+  <% ingredients.each do |ingredient| %>
+      <p style="background-color: green">
+        <%= ingredient.ingredient.name %>
+        <%= simple_form_for ingredient do |f| %>
+          <%= f.input :quantity %>
+          <%= f.input :measurement, collection: %w[milliliter liter gram kilogram milligram] %>
+          <% if ingredient.class == UserIngredient %>
+            <%= f.input :favorited, as: :boolean %>
+          <% end %>
+          <%= f.button :submit %>
+        <%end%>
+      </p>
+      <% if ingredient.class == GroceryIngredient %>
+        <%= link_to "Delete grocery", grocery_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+      <% else %>
+        <%= link_to "Delete", user_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+      <% end %>
+  <% end %>
+<% end %>
