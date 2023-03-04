@@ -7,7 +7,13 @@ class RecipesController < ApplicationController
     else
       @recipes = Recipe.all
     end
+
     filter unless params[:query].nil?
+
+    respond_to do |format|
+      format.html
+      format.text { render partial: "recipes/list", formats: [:html] }
+    end
   end
 
   def new
@@ -15,6 +21,7 @@ class RecipesController < ApplicationController
   end
 
   def create
+    params[:recipe][:tags] = params[:recipe][:tags].join(' ')
     @recipe = Recipe.new(recipe_params)
     @recipe.user = current_user
     if @recipe.save
@@ -30,6 +37,7 @@ class RecipesController < ApplicationController
   def edit; end
 
   def update
+    params[:recipe][:tags] = params[:recipe][:tags].join(' ')
     if @recipe.update(recipe_params)
       session[:recipe_id] = @recipe.id
       redirect_to ingredients_path
@@ -61,8 +69,9 @@ class RecipesController < ApplicationController
                            .filter_by_cooking_time(params[:cooking_time])
                            .filter_by_difficulty(params[:difficulty])
                            .filter_by_rating(params[:rating])
-                           # .filter_by_user_ingredients(params[:active])
                            .filter_by_tags(params[:tags])
-                           .results
+                           .sort_by_user_ingredients(params[:active])
+    @matches = @recipes.instance_variable_get(:@matches)
+    @recipes = @recipes.results
   end
 end
