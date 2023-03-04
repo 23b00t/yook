@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users
-  # root to: "pages#home"
+
   root to: 'recipes#index'
 
   resources :recipes do
     resources :recipe_ingredients, only: :create
+    get 'edit_description', on: :member
+    patch 'update_description', on: :member
   end
 
   resources :ingredients, only: :index
@@ -12,8 +14,4 @@ Rails.application.routes.draw do
   resources :user_ingredients
 
   resources :grocery_ingredients, only: %i[index create update destroy]
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
 end

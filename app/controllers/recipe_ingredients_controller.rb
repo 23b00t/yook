@@ -12,6 +12,6 @@ class RecipeIngredientsController < ApplicationController
   private
 
   def recipe_ingredient_params
-    params.permit(:quantity, :measurment, :recipe_id, :ingredient_id)
+    params.permit(:quantity, :measurement, :recipe_id, :ingredient_id)
   end
 end

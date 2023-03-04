@@ -1,0 +1,8 @@
+<h1>Steps</h1>
+
+<%= form_with model: @recipe, url: update_description_recipe_path(@recipe), method: :patch do |f| %>
+  <%= f.label :description %>
+  <%= f.text_area :description, rows: 10 %>
+
+  <%= f.submit 'Save recipe' %>
+<% end %>
