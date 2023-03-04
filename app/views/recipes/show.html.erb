@@ -1,14 +1,24 @@
 <%= cl_image_tag @recipe.photo.key, height: 300, width: 400, crop: :fill if @recipe.photo.attached? %>
 <ul>
   <li><%= @recipe.title %></li>
-  <li><%= @recipe.cooking_time %></li>
-  <li><%= @recipe.description %></li>
-  <li><%= @recipe.rating %></li>
-  <li><%= @recipe.difficulty %></li>
-  <li><%= @recipe.serving_size %></li>
-  <li><%= @recipe.cooked %></li>
-  <li><%= @recipe.notes %></li>
+  <li>Cooking time: <%= @recipe.cooking_time %></li>
+  <li>Steps: <%= @recipe.description %></li>
+  <li>Rating: <%= @recipe.rating %></li>
+  <li>Difficulty: <%= @recipe.difficulty %></li>
+  <li>Serving size: <%= @recipe.serving_size %></li>
+  <li>Tags: <%= @recipe.tags %></li>
+  <li>Cooked? <%= @recipe.cooked %></li>
+  <li>Notes: <%= @recipe.notes %></li>
 </ul>
+<h2>Ingredients</h2>
+<% @recipe.recipe_ingredients.each do |ingredient| %>
+  <ul>
+    <li>
+      <%= ingredient.ingredient.name %>
+      (Available: <%= UserIngredient.all.where(ingredient_id: ingredient.ingredient).present? ? 'Yes' : 'No' %>)
+    </li>
+  </ul>
+<% end %>
 
 <%= link_to 'Edit recipe', edit_recipe_path %>
 <%= link_to "Remove", recipe_path(@recipe), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
