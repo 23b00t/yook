@@ -15,6 +15,7 @@ class RecipesController < ApplicationController
   end
 
   def create
+    params[:recipe][:tags] = params[:recipe][:tags].join(' ')
     @recipe = Recipe.new(recipe_params)
     @recipe.user = current_user
     if @recipe.save
@@ -23,6 +24,7 @@ class RecipesController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+
   end
 
   def show; end
@@ -30,6 +32,7 @@ class RecipesController < ApplicationController
   def edit; end
 
   def update
+    params[:recipe][:tags] = params[:recipe][:tags].join(' ')
     if @recipe.update(recipe_params)
       session[:recipe_id] = @recipe.id
       redirect_to ingredients_path

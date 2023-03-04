@@ -10,16 +10,16 @@
         <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %
       <% end %>
     </li>
-    <li><p>Cooking time:</p><%= recipe.cooking_time %></li>
-    <li><p>Steps:</p><%= recipe.description %></li>
-    <li><p>Rating:</p><%= recipe.rating %></li>
-    <li><p>Difficulty:</p><%= recipe.difficulty %></li>
-    <li><p>Serving size:</p><%= recipe.serving_size %></li>
-    <li><p>Tags:</p><%= recipe.tags %></li>
-    <li><p>Cooked?</p><%= recipe.cooked %></li>
-    <li><p>Notes:</p><%= recipe.notes %></li>
+    <li>Cooking time: <%= recipe.cooking_time %></li>
+    <li>Steps: <%= recipe.description %></li>
+    <li>Rating: <%= recipe.rating %></li>
+    <li>Difficulty: <%= recipe.difficulty %></li>
+    <li>Serving size: <%= recipe.serving_size %></li>
+    <li>Tags: <%= recipe.tags %></li>
+    <li>Cooked? <%= recipe.cooked %></li>
+    <li>Notes: <%= recipe.notes %></li>
     <br>
   <% end %>
 </ul>
 
-<%= link_to 'Add recipe', new_recipe_path %>
+<%= link_to 'Save recipe', new_recipe_path %>
