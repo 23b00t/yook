@@ -12,7 +12,10 @@
 <h2>Ingredients</h2>
 <% @recipe.recipe_ingredients.each do |ingredient| %>
   <ul>
-    <li><%= ingredient.ingredient.name %></li>
+    <li>
+      <%= ingredient.ingredient.name %>
+      (Available: <%= UserIngredient.all.where(ingredient_id: ingredient.ingredient).present? ? 'Yes' : 'No' %>)
+    </li>
   </ul>
 <% end %>
 
