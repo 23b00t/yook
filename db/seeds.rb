@@ -26,13 +26,12 @@ p 'create recipes and its ingredients'
   recipe = Recipe.create!(title: Faker::Food.dish, cooking_time: rand(120), description: Faker::Food.description, rating: rand(5), difficulty: 'hard', serving_size: 4, user_id: user.id)
   5.times do
     ingredient = Ingredient.all.sample
-    RecipeIngredient.create!(recipe_id: recipe.id, ingredient_id: ingredient.id, measurment: metric_measurement.sample, quantity: rand(5))
+    RecipeIngredient.create!(recipe_id: recipe.id, ingredient_id: ingredient.id, measurement: metric_measurement.sample, quantity: rand(5))
   end
 end
 
 p 'create inventar'
 20.times do
   ingredient = Ingredient.all.sample
-  UserIngredient.create(measurment: metric_measurement.sample, quantity: rand(10), user_id: user.id, ingredient_id: ingredient.id)
+  UserIngredient.create(measurement: metric_measurement.sample, quantity: rand(10), user_id: user.id, ingredient_id: ingredient.id)
 end
-
