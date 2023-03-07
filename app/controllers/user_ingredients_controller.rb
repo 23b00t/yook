@@ -12,9 +12,9 @@ class UserIngredientsController < ApplicationController
     @ingredient.update(user_ingredient_params)
     convert(@ingredient)
     referring_url = request.referrer
-    if referring_url.end_with?('update_user_ingredients')
-      id = referring_url.match(%r{(\d+)/(update_user_ingredients)$})
-      redirect_to update_user_ingredients_recipe_path(id[1])
+    if referring_url.end_with?('cooked')
+      id = referring_url.match(%r{(\d+)/(cooked)$})
+      redirect_to cooked_recipe_path(id[1])
     else
       redirect_to user_ingredients_path
     end

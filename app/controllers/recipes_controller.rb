@@ -1,5 +1,5 @@
 class RecipesController < ApplicationController
-  before_action :set_recipe, only: %i[show edit update destroy update_user_ingredients]
+  before_action :set_recipe, only: %i[show edit update destroy cooked]
 
   def index
     if params[:query].present?
@@ -66,7 +66,7 @@ class RecipesController < ApplicationController
     end
   end
 
-  def update_user_ingredients
+  def cooked
     ingredients = @recipe.recipe_ingredients
     ingredients.each do |ingredient|
       @user_ingredient = UserIngredient.where(ingredient_id: ingredient.ingredient_id)
@@ -75,7 +75,7 @@ class RecipesController < ApplicationController
       unless @user_ingredient.first.measurement == ingredient.measurement
         @edit = true
         flash.now[:alert] = "The measurement of the ingredient in your fridge is: #{@user_ingredient.first.measurement}.\n
-                             You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually"
+                             You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually!"
         return render :show
       end
 
