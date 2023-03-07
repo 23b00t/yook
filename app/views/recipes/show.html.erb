@@ -15,10 +15,16 @@
   <ul>
     <li>
       <%= ingredient.ingredient.name %>
-      (Available: <%= UserIngredient.all.where(ingredient_id: ingredient.ingredient).present? ? 'Yes' : 'No' %>)
+      <% user_ingredient = UserIngredient.all.where(ingredient_id: ingredient.ingredient) %>
+      (Available: <%= (user_ingredient.present? && user_ingredient.first.quantity.positive?) ? 'Yes' : 'No' %>)
     </li>
   </ul>
 <% end %>
 
+<% if @edit %>
+  <%= render 'shared/list_ingredient', ingredients: @user_ingredient %>
+<% end %>
+
+<%= link_to 'Cooked', update_user_ingredients_recipe_path(@recipe) %>
 <%= link_to 'Edit recipe', edit_recipe_path %>
 <%= link_to "Remove", recipe_path(@recipe), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>

@@ -1,5 +1,5 @@
 class RecipesController < ApplicationController
-  before_action :set_recipe, only: %i[show edit update destroy]
+  before_action :set_recipe, only: %i[show edit update destroy update_user_ingredients]
 
   def index
     if params[:query].present?
@@ -32,7 +32,9 @@ class RecipesController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    @edit = false
+  end
 
   def edit; end
 
@@ -62,6 +64,26 @@ class RecipesController < ApplicationController
     else
       render :edit_description
     end
+  end
+
+  def update_user_ingredients
+    ingredients = @recipe.recipe_ingredients
+    ingredients.each do |ingredient|
+      @user_ingredient = UserIngredient.where(ingredient_id: ingredient.ingredient_id)
+      next if @user_ingredient.empty? || @user_ingredient.first.quantity <= 0
+
+      unless @user_ingredient.first.measurement == ingredient.measurement
+        @edit = true
+        flash.now[:alert] = "The measurement of the ingredient in your fridge is: #{@user_ingredient.first.measurement}.\n
+                             You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually"
+        return render :show
+      end
+
+      quantity = @user_ingredient.first.quantity - ingredient.quantity
+      quantity.positive? ? @user_ingredient.update(quantity:) : @user_ingredient.update(quantity: 0)
+    end
+    @recipe.cooked = true
+    redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
   end
 
   private

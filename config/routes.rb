@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resources :recipe_ingredients, only: :create
     get 'edit_description', on: :member
     patch 'update_description', on: :member
+    get 'update_user_ingredients', on: :member
   end
 
   resources :ingredients, only: :index

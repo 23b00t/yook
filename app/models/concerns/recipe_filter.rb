@@ -48,7 +48,8 @@ class RecipeFilter
       @matches = {}
       @scope.each do |recipe|
         @matches[recipe] = recipe.recipe_ingredients.map do |recipe_ingredient|
-          UserIngredient.where(ingredient: recipe_ingredient.ingredient).present?
+          UserIngredient.where(ingredient: recipe_ingredient.ingredient).present? &&
+            UserIngredient.where(ingredient: recipe_ingredient.ingredient).first.quantity.positive?
         end
       end
       sort
