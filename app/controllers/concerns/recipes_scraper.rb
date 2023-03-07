@@ -3,18 +3,18 @@ require "open-uri"
 require "nokogiri"
 
 class RecipesScraper
-  attr_accessor :name, :ingredients, :description, :error, :cooking_time, :serving_size
+  attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size
 
   def initialize(url)
-    @doc = Nokogiri::HTML(URI.open(url))
-    @name = "Unnamed recipe"
+    @title = "Unnamed recipe"
     @ingredients = "Sorry, we cant find any ingredients to this recipe"
     @error = ""
     @description = "There is no desxription to this meal"
     begin
+      @doc = Nokogiri::HTML(URI.open(url))
       scrape
     rescue
-      @error = "Not a valid link, try link from https://www.allrecipes.com website"
+      @error = true
     end
   end
 
@@ -22,7 +22,7 @@ class RecipesScraper
     ingredients = []
     @doc.css('.mntl-structured-ingredients p').each do |element|
       parts = element.css("span")
-      hash = { measurment: parts[1].text, quantity: parts[0].text, name: parts[2].text }
+      hash = { measurement: parts[1].text, quantity: parts[0].text, name: parts[2].text }
       ingredients << hash
     end
     return ingredients
@@ -51,10 +51,9 @@ class RecipesScraper
 
   def scrape
     @ingredients = scrape_ingredients
-    @name = scrape_name
+    @title = scrape_name
     @description = scrape_description
     @cooking_time = scrape_time_serving[2]
     @serving_size = scrape_time_serving[3]
   end
 end
-
