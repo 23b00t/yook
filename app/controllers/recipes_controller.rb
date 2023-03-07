@@ -21,14 +21,30 @@ class RecipesController < ApplicationController
   end
 
   def create
-    params[:recipe][:tags] = params[:recipe][:tags].join(' ')
-    @recipe = Recipe.new(recipe_params)
-    @recipe.user = current_user
-    if @recipe.save
-      session[:recipe_id] = @recipe.id
-      redirect_to ingredients_path
+    if !params[:link].nil?
+      scrape = RecipesScraper.new(params[:link])
+      @recipe = Recipe.new
+      render :new, status: :unprocessable_entity if scrape.error
+      @recipe = Recipe.new( {title: scrape.title, cooking_time: scrape.cooking_time, serving_size: scrape.serving_size, description: scrape.description } )
+      @recipe.user = current_user
+      @recipe.save
+      scrape.ingredients.each do |ingredient|
+        new_ing = RecipeIngredient.new({ measurement: ingredient[:measurement], quantity: ingredient[:quantity] })
+        Ingredient.new({ name: ingredient[:name] }).save
+        new_ing.recipe = @recipe
+        new_ing.ingredient = Ingredient.find_by(name: ingredient[:name])
+        new_ing.save
+      end
     else
-      render :new, status: :unprocessable_entity
+      params[:recipe][:tags] = params[:recipe][:tags].join(' ')
+      @recipe = Recipe.new(recipe_params)
+      @recipe.user = current_user
+      if @recipe.save
+        session[:recipe_id] = @recipe.id
+        redirect_to ingredients_path
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
