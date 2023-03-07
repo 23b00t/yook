@@ -1,11 +1,13 @@
 <%= simple_form_for recipe do |f| %>
+  <% if current_path = :new %>
+    <%= text_field_tag :link, nil, placeholder: "the Link" %> <%= f.button :submit, 'Add recipe with the link' %>
+  <% end %>
   <%= f.input :title, label: "Title", error: 'A title is mandatory, please specify one' %>
-  <%= f.input :description, label: "Description" %>
   <%= f.input :cooking_time %>
   <%= f.input :rating %>
   <%= f.input :difficulty, collection: %i[easy medium hard] %>
   <%= f.input :serving_size %>
   <%= f.input :tags, collection: %i[#fun #healthy #superfood], input_html: { multiple: true } %>
   <%= f.input :photo, as: :file, label: "Upload a picture of your dish" %>
-  <%= f.button :submit%>
+  <%= f.button :submit, 'Add ingredients' %>
 <%end%>

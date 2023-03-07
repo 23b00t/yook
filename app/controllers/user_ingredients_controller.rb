@@ -11,7 +11,7 @@ class UserIngredientsController < ApplicationController
   end
 
   def update
-    @ingredient.update(ingredient_params)
+    @ingredient.update(user_ingredient_params)
     convert(@ingredient)
     redirect_to user_ingredients_path
   end
