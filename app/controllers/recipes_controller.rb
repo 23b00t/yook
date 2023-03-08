@@ -21,7 +21,7 @@ class RecipesController < ApplicationController
   end
 
   def create
-    if !params[:link].nil?
+    if params[:link].present?
       scrape = RecipesScraper.new(params[:link])
       @recipe = Recipe.new
       render :new, status: :unprocessable_entity if scrape.error
