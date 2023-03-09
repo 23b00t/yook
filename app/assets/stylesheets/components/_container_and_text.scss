@@ -1,0 +1,78 @@
+@import "colors";
+
+.container {
+  width: 87.5%;
+  padding: 0;
+}
+
+// New text types
+
+.button-text {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 19px;
+  text-decoration: none;
+}
+
+.tag {
+  @extend .accent-background;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1px 2px;
+  // width: 36px;
+  // height: 21px;
+  // left: 20px;
+  // top: 240px;
+  border-radius: 999px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 15px;
+  text-transform: lowercase;
+}
+
+
+
+
+// Built in text
+
+.container p {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 19px;
+  text-decoration: none;
+}
+
+.container h1 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 58px;
+  text-decoration: none;
+}
+
+.container h2 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 29px;
+  text-decoration: none;
+}
+
+.container h3 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 24px;
+  text-decoration: none;
+}
