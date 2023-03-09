@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root to: 'recipes#index'
 
   resources :recipes do
-    resources :recipe_ingredients, only: :create
+    resources :recipe_ingredients
     get 'edit_description', on: :member
     patch 'update_description', on: :member
   end
