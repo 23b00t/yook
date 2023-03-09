@@ -11,9 +11,9 @@ class RecipeFilter
 
   def filter_by_cooking_time(cooking_time)
     unless cooking_time.nil? || cooking_time.empty?
-      time = cooking_time.scan(/\d+/).map(&:to_i)
+      time = cooking_time.scan(/\d+/)
       @scope = @scope.reject do |recipe|
-        recipe.cooking_time.nil? || (recipe.cooking_time < time[0] || recipe.cooking_time > time[1])
+        recipe.cooking_time.nil? || (recipe.cooking_time.to_i < time[0] || recipe.cooking_time.to_i > time[1])
       end
     end
     self
@@ -48,7 +48,8 @@ class RecipeFilter
       @matches = {}
       @scope.each do |recipe|
         @matches[recipe] = recipe.recipe_ingredients.map do |recipe_ingredient|
-          UserIngredient.where(ingredient: recipe_ingredient.ingredient).present?
+          UserIngredient.where(ingredient: recipe_ingredient.ingredient).present? &&
+            UserIngredient.where(ingredient: recipe_ingredient.ingredient).first.quantity.positive?
         end
       end
       sort

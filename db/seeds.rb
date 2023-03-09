@@ -6,6 +6,7 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 require 'faker'
+require 'csv'
 
 metric_measurement = ["kilogram", "gram", "milligram", "liter", "milliliter"]
 
@@ -16,9 +17,9 @@ Ingredient.destroy_all
 p 'create user'
 user = User.create!(email: 'test@test.com', password: 'password')
 
-p 'create ingrediants'
-100.times do
-  Ingredient.create!(name: Faker::Food.unique.ingredient)
+p 'create ingredients'
+CSV.foreach('db/Foodlist.csv', headers: true, header_converters: :symbol) do |row|
+  Ingredient.create(name: row[:name], group: row[:food_group])
 end
 
 p 'create recipes and its ingredients'

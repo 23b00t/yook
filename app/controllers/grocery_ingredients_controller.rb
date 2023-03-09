@@ -21,6 +21,7 @@ class GroceryIngredientsController < ApplicationController
       @grocery_item.user_id = current_user.id
       @grocery_item.ingredient_id = @ing.id
       @grocery_item.save
+      redirect_to grocery_ingredients_path
     else
       # create the ingredient, or as them to add an ingredient that exists?
     end
