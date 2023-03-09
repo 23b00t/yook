@@ -11,7 +11,7 @@ class RecipeFilter
 
   def filter_by_cooking_time(cooking_time)
     unless cooking_time.nil? || cooking_time.empty?
-      time = cooking_time.scan(/\d+/).map(&:to_i)
+      time = cooking_time.scan(/\d+/)
       @scope = @scope.reject do |recipe|
         recipe.cooking_time.nil? || (recipe.cooking_time.to_i < time[0] || recipe.cooking_time.to_i > time[1])
       end

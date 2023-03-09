@@ -1,4 +1,6 @@
+require "pry-byebug"
 class UserIngredientsController < ApplicationController
+  include ActionView::RecordIdentifier
   before_action :set_user_ingredient, only: %i[update destroy]
 
   def index
@@ -21,13 +23,17 @@ class UserIngredientsController < ApplicationController
   end
 
   def create
-    @ing = Ingredient.find_by(name: params[:name].downcase.capitalize)
-
-    if @ing
-      @new_users_ingredient = UserIngredient.new(user_ingredient_params)
-      @new_users_ingredient.ingredient_id = @ing.id
-      @new_users_ingredient.user_id = current_user.id
-      @new_users_ingredient.save
+    @ingredient = Ingredient.find_by(name: params[:name].downcase.capitalize)
+    if @ingredient
+      if UserIngredient.find_by(user_id: @ingredient.id).nil?
+        @new_users_ingredient = UserIngredient.new(user_ingredient_params)
+        @new_users_ingredient.ingredient_id = @ingredient.id
+        @new_users_ingredient.user_id = current_user.id
+        @new_users_ingredient.save
+      else
+        @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
+        redirect_to user_ingredients_path(@anchor_user, anchor: dom_id(@employee))
+      end
     else
       redirect_to user_ingredients_path
     end
