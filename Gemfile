@@ -80,3 +80,4 @@ end
 gem 'faker'
 gem "cloudinary"
 gem "pg_search"
+gem "pry-byebug"

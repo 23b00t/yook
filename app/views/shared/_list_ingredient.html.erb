@@ -1,6 +1,6 @@
 <% if ingredients.count > 0 %>
   <% ingredients.each do |ingredient| %>
-      <p style="background-color: green">
+      <p style="background-color: green" id="<%=ingredient.id%>">
         <%= ingredient.ingredient.name %>
         <%= simple_form_for ingredient do |f| %>
           <%= f.input :quantity %>
