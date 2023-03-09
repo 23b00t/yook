@@ -1,24 +1,28 @@
 <div data-search-recipes-target="list">
-  <ul>
-    <p><%= 'Sorry, nothing found...' if @recipes.empty? %></p>
+  <p><%= 'No recipes yet! Click the plus button to add one' if @recipes.empty? %></p>
+  <div class="d-flex flex-wrap justify-content-between">
     <% @recipes.each do |recipe| %>
-      <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
-      <li>
-        <%= link_to recipe.title, recipe_path(recipe) %>
+      <div class='recipe-card'>
+        <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
+        <div>
+          <%= link_to recipe.title, recipe_path(recipe), class: "h3" %>
 
-        <% if @matches %>
-          <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %
-        <% end %>
-      </li>
-      <li>Cooking time: <%= recipe.cooking_time %></li>
-      <li>Steps: <%= recipe.description %></li>
-      <li>Rating: <%= recipe.rating %></li>
-      <li>Difficulty: <%= recipe.difficulty %></li>
-      <li>Serving size: <%= recipe.serving_size %></li>
-      <li>Tags: <%= recipe.tags %></li>
-      <li>Cooked? <%= recipe.cooked %></li>
-      <li>Notes: <%= recipe.notes %></li>
-      <br>
+          <% if @matches %>
+            <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %
+          <% end %>
+          <p class="tag"><%= recipe.cooking_time %> min</p>
+          <% unless recipe.rating.nil? %>
+            <p class="tag"><%= recipe.rating %>/5</p>
+          <% end %>
+          <p class="tag"><%= recipe.difficulty %></p>
+          <p class="tag">Serves: <%= recipe.serving_size %></p>
+          <% unless recipe.tags.nil? %>
+            <p class="tag">#<%= recipe.tags %></p>
+          <% end %>
+          <p class="tag">Cooked? <%= recipe.cooked %></p>
+          <br>
+        </div>
+      </div>
     <% end %>
-  </ul>
+  </div>
 </div>
