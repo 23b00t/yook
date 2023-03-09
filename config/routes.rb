@@ -5,9 +5,12 @@ Rails.application.routes.draw do
 
   resources :recipes do
     resources :recipe_ingredients, only: :create
-    get 'edit_description', on: :member
-    patch 'update_description', on: :member
-    get 'cooked', on: :member
+    member do
+      get 'edit_description'
+      patch 'update_description'
+      get 'cooked'
+      get 'create_grocery_list'
+    end
   end
 
   resources :ingredients, only: :index

@@ -26,5 +26,6 @@
 <% end %>
 
 <%= link_to 'Cooked', cooked_recipe_path(@recipe) %>
+<%= link_to 'Greate grocery list', create_grocery_list_recipe_path(@recipe) %>
 <%= link_to 'Edit recipe', edit_recipe_path %>
 <%= link_to "Remove", recipe_path(@recipe), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>

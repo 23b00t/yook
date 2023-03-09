@@ -1,5 +1,5 @@
 class RecipesController < ApplicationController
-  before_action :set_recipe, only: %i[show edit update destroy cooked]
+  before_action :set_recipe, only: %i[show edit update destroy cooked create_grocery_list]
 
   def index
     if params[:query].present?
@@ -100,6 +100,15 @@ class RecipesController < ApplicationController
     end
     @recipe.cooked = true
     redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
+  end
+
+  def create_grocery_list
+    @recipe.recipe_ingredients.each do |ingredient|
+      unless UserIngredient.all.where(ingredient_id: ingredient.ingredient).present?
+        GroceryIngredient.create(ingredient: ingredient.ingredient, measurement: ingredient.measurement, quantity: ingredient.quantity, user: current_user)
+      end
+    end
+    redirect_to recipe_path(@recipe), notice: 'Added missing ingredients to grocery list'
   end
 
   private
