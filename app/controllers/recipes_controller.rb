@@ -1,6 +1,6 @@
 require "open-uri"
 class RecipesController < ApplicationController
-  before_action :set_recipe, only: %i[show edit update destroy cooked]
+  before_action :set_recipe, only: %i[show edit update destroy cooked create_grocery_list]
 
   def index
     if params[:query].present?
@@ -102,6 +102,24 @@ class RecipesController < ApplicationController
     end
     @recipe.cooked = true
     redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
+  end
+
+  def create_grocery_list
+    @recipe.recipe_ingredients.each do |ingredient|
+      next if UserIngredient.all.where(ingredient_id: ingredient.ingredient).present?
+
+      grocery_ingredient = GroceryIngredient.where(ingredient: ingredient.ingredient)
+      if grocery_ingredient.present?
+        new_quantity = grocery_ingredient.first.quantity + ingredient.quantity
+        GroceryIngredient.update(quantity: new_quantity)
+      else
+        GroceryIngredient.create(
+          ingredient: ingredient.ingredient, measurement: ingredient.measurement,
+          quantity: ingredient.quantity, user: current_user
+        )
+      end
+    end
+    redirect_to recipe_path(@recipe), notice: 'Added missing ingredients to grocery list'
   end
 
   private
