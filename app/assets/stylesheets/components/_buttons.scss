@@ -1,0 +1,29 @@
+@import "colors";
+@import "container_and_text";
+
+.button {
+  border-radius: 999px;
+  padding: 5px;
+  width: 100%;
+  margin: 5px 0px;
+}
+
+.button-primary {
+  @extend .primary-background;
+  @extend .button-text;
+}
+
+.button-secondary {
+  @extend .light-grey-background;
+  @extend .button-text;
+}
+
+.tertiary-link-button {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  text-decoration-line: underline;
+}
