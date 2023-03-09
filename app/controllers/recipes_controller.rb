@@ -1,3 +1,4 @@
+require "open-uri"
 class RecipesController < ApplicationController
   before_action :set_recipe, only: %i[show edit update destroy cooked]
 
@@ -26,6 +27,7 @@ class RecipesController < ApplicationController
       @recipe = Recipe.new
       render :new, status: :unprocessable_entity if scrape.error
       @recipe = Recipe.new( {title: scrape.title, cooking_time: scrape.cooking_time, serving_size: scrape.serving_size, description: scrape.description } )
+      @recipe.scraped_img_url = scrape.image_url
       @recipe.user = current_user
       @recipe.save
       scrape.ingredients.each do |ingredient|
