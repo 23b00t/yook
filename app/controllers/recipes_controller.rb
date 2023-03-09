@@ -104,8 +104,17 @@ class RecipesController < ApplicationController
 
   def create_grocery_list
     @recipe.recipe_ingredients.each do |ingredient|
-      unless UserIngredient.all.where(ingredient_id: ingredient.ingredient).present?
-        GroceryIngredient.create(ingredient: ingredient.ingredient, measurement: ingredient.measurement, quantity: ingredient.quantity, user: current_user)
+      next if UserIngredient.all.where(ingredient_id: ingredient.ingredient).present?
+
+      grocery_ingredient = GroceryIngredient.where(ingredient: ingredient.ingredient)
+      if grocery_ingredient.present?
+        new_quantity = grocery_ingredient.first.quantity + ingredient.quantity
+        GroceryIngredient.update(quantity: new_quantity)
+      else
+        GroceryIngredient.create(
+          ingredient: ingredient.ingredient, measurement: ingredient.measurement,
+          quantity: ingredient.quantity, user: current_user
+        )
       end
     end
     redirect_to recipe_path(@recipe), notice: 'Added missing ingredients to grocery list'
