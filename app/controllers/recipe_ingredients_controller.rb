@@ -9,6 +9,10 @@ class RecipeIngredientsController < ApplicationController
     end
   end
 
+  def index
+    @recipe_ingredients = RecipeIngredient.all.select { |i| i.recipe_id = params[:recipe_id] }
+  end
+
   private
 
   def recipe_ingredient_params
