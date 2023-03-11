@@ -23,17 +23,21 @@ class RecipesController < ApplicationController
   def create
     if params[:link].present?
       scrape = RecipesScraper.new(params[:link])
-      @recipe = Recipe.new
-      render :new, status: :unprocessable_entity if scrape.error
-      @recipe = Recipe.new( {title: scrape.title, cooking_time: scrape.cooking_time, serving_size: scrape.serving_size, description: scrape.description } )
+
+      @recipe = Recipe.new(title: scrape.title, cooking_time: scrape.cooking_time, serving_size: scrape.serving_size, description: scrape.description)
       @recipe.user = current_user
-      @recipe.save
-      scrape.ingredients.each do |ingredient|
-        new_ing = RecipeIngredient.new({ measurement: ingredient[:measurement], quantity: ingredient[:quantity] })
-        Ingredient.new({ name: ingredient[:name] }).save
-        new_ing.recipe = @recipe
-        new_ing.ingredient = Ingredient.find_by(name: ingredient[:name])
-        new_ing.save
+      if scrape.error.present?
+        redirect_to new_recipe_path, alert: "Problems importing your recipe! Have you put in the right link"
+      else
+        @recipe.save
+        scrape.ingredients.each do |ingredient|
+          new_ing = RecipeIngredient.new({ measurement: ingredient[:measurement], quantity: ingredient[:quantity] })
+          Ingredient.new({ name: ingredient[:name] }).save
+          new_ing.recipe = @recipe
+          new_ing.ingredient = Ingredient.find_by(name: ingredient[:name])
+          new_ing.save
+        end
+        redirect_to edit_recipe_path(@recipe)
       end
     else
       params[:recipe][:tags] = params[:recipe][:tags].join(' ')
