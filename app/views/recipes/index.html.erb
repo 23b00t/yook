@@ -1,8 +1,8 @@
 <div data-controller="search-recipes">
   <div data-controller="show-filters">
     <%= render 'search' %>
-    <button aria-label="Edit movie">
-      <i class="fa-solid fa-filter fa-xs ml-2" data-action="click->show-filters#displayForm"></i>
+    <button aria-label="Edit movie" data-action="click->show-filters#displayForm">
+      <i class="fa-solid fa-filter fa-xs ml-2"></i>
     </button>
   </div>
   <%= render 'list' %>
