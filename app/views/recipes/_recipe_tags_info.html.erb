@@ -1,0 +1,36 @@
+<% if @matches %>
+  <% amount = (@matches[recipe].nan? ? 0 : (@matches[recipe] * 100).to_i) %>
+  <% if amount > 90 %>
+    <p class="green-tag">🏠 <%= amount %>% in house</p>
+  <% elsif amount > 50 %>
+    <p class="green-tag">🏠 <%= amount %>% in house</p>
+  <% else %>
+    <p class="red-tag">🏠 <%= amount %>% in house</p>
+  <% end %>
+
+
+
+
+<% end %>
+
+<p class="tag">⏳ <%= recipe.cooking_time %> min</p>
+
+<% unless recipe.rating.nil? %>
+  <p class="tag">⭐️ <%= recipe.rating %>/5</p>
+<% end %>
+
+<p class="tag">⚡️ <%= recipe.difficulty %></p>
+
+<p class="tag">🍜 Serves: <%= recipe.serving_size %></p>
+
+<% unless recipe.tags.nil? %>
+  <p class="tag">#<%= recipe.tags %></p>
+<% end %>
+
+<p class="tag">
+  <% if recipe.cooked? %>
+    ☑ Cooked!
+  <% else %>
+    ➡ Not cooked
+  <% end %>
+</p>

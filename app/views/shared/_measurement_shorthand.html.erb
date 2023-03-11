@@ -1,0 +1,19 @@
+<% if ingredient.measurement.downcase.include?("kilogram")%>
+  kg
+<% elsif ingredient.measurement.downcase.include?("gram")%>
+  g
+<% elsif ingredient.measurement.downcase.include?("milligram")%>
+  mg
+<% elsif ingredient.measurement.downcase.include?("liter")%>
+  l
+<% elsif ingredient.measurement.downcase.include?("milliliter") %>
+  ml
+<% elsif ingredient.measurement.downcase.include?("quart")%>
+  <%= ingredient.measurement.downcase %>
+<% elsif ingredient.measurement.downcase.include?("cup")%>
+  <%= ingredient.measurement.downcase %>
+<% elsif ingredient.measurement.downcase.include?("tablespoon")%>
+  tbsp
+<% elsif ingredient.measurement.downcase.include?("teaspoon")%>
+  tsp
+<% end %>

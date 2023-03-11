@@ -1,30 +1,14 @@
-<div class="navbar navbar-expand-sm navbar-light navbar-lewagon">
-  <div class="container-fluid">
-    <%= link_to root_path, class: "navbar-brand" do %>
-      <i class="fa-solid fa-utensils"></i>
-    <% end %>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto">
-        <% if user_signed_in? %>
-          <li class="nav-item dropdown">
-            <i class="fa-solid fa-bars fa-xl avatar " id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Grocery List", grocery_ingredients_path, class: "dropdown-item" %>
-              <%= link_to "Fridge", user_ingredients_path, class: "dropdown-item" %>
-              <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
-            </div>
-          </li>
-        <% else %>
-          <li class="nav-item">
-            <%= link_to "Login", new_user_session_path, class: "nav-link" %>
-          </li>
-        <% end %>
-      </ul>
+<div class="new-navbar sticky-top">
+  <div class='container d-flex justify-content-between align-items-center'>
+    <div class="d-flex align-items-center" onclick="location.href='/recipes'">
+      <h3>Y</h3>
+      <i class="fa-solid fa-egg"></i>
+      <i class="fa-solid fa-egg"></i>
+      <h3>K</h3>
     </div>
+    <!-- <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" if user_signed_in? %>-->
+    <%= link_to destroy_user_session_path, data: {turbo_method: :delete} do %>
+      <i class="fa-solid fa-person-walking-arrow-right"></i>
+    <% end %>
   </div>
 </div>

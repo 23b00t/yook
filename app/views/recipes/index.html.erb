@@ -1,11 +1,8 @@
+<h1>Recipes</h1>
 <div data-controller="search-recipes">
   <div data-controller="show-filters">
+    <i class="fa-solid fa-filter icon" data-action="click->show-filters#displayForm"></i>
     <%= render 'search' %>
-    <button aria-label="Edit movie">
-      <i class="fa-solid fa-filter fa-xs ml-2" data-action="click->show-filters#displayForm"></i>
-    </button>
   </div>
   <%= render 'list' %>
-
-  <%= link_to 'Add recipe', new_recipe_path %>
 </div>

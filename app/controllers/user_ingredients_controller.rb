@@ -57,7 +57,7 @@ class UserIngredientsController < ApplicationController
   #automaticly converts measurment 1000g = 1kg and so on
   def convert(ingredient)
     if ingredient.quantity >= 1000
-      case ingredient.measurement
+      case ingredient.measurement.downcase
       when "gram"
         ingredient.quantity /= 1000
         ingredient.measurement = "kilogram"
