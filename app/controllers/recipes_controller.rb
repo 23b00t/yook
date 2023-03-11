@@ -27,7 +27,7 @@ class RecipesController < ApplicationController
       @recipe = Recipe.new(title: scrape.title, cooking_time: scrape.cooking_time, serving_size: scrape.serving_size, description: scrape.description)
       @recipe.user = current_user
       if scrape.error.present?
-        redirect_to new_recipe_path, alert: "Problems importing your recipe! Have you put in the right link"
+        redirect_to new_recipe_path, alert: "Problems importing your recipe! Have you put in the right link?"
       else
         @recipe.save
         scrape.ingredients.each do |ingredient|
