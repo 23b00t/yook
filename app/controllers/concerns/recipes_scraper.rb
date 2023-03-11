@@ -11,7 +11,7 @@ class RecipesScraper
     @error = ""
     @description = "There is no desxription to this meal"
     begin
-      @doc = Nokogiri::XML(URI.open(url))
+      @doc = Nokogiri::HTML(URI.open(url))
       scrape
     rescue
       @error = true
@@ -50,7 +50,7 @@ class RecipesScraper
   end
 
   def scrape_img_url
-    url = @doc.at_css(".primary-image__image").attributes["src"].value
+    url = @doc.css("img")
     return url
   end
 
@@ -64,5 +64,5 @@ class RecipesScraper
   end
 end
 
-test = RecipesScraper.new("https://www.allrecipes.com/recipe/285077/easy-one-pot-ground-turkey-pasta/")
+test = RecipesScraper.new("https://www.allrecipes.com/recipe/142027/sweet-restaurant-slaw/")
 p test.image_url
