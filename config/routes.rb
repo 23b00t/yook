@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :recipe_ingredients, only: :update
   resources :ingredients, only: :index
 
   resources :user_ingredients
