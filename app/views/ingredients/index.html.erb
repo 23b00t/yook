@@ -8,20 +8,23 @@
   <% @ingredients.each do |ingredient| %>
     <li>
       <%= ingredient.name %>
-      <%= form_with url: recipe_recipe_ingredients_path(@recipe), method: :post do |f| %>
-        <%= label_tag :quantity, 'Quantity' %>
-        <%= text_field_tag :quantity, params[:quantity] %>
+      <%= form_with model: [@recipe, RecipeIngredient.new], method: :post do |f| %>
+        <%= f.label :quantity, 'Quantity' %>
+        <%= f.text_field :quantity %>
 
-        <%= label_tag :measurment, 'Measurment' %>
-        <%= text_field_tag :measurement, params[:measurment] %>
+        <%= f.label :measurment, 'Measurment' %>
+        <%= f.text_field :measurement %>
 
         <%= f.hidden_field :ingredient_id, value: ingredient.id  %>
-        <%= f.hidden_field :recipe_id, value: @recipe.id %>
 
         <%= submit_tag 'Add' %>
       <% end %>
     </li>
   <% end %>
 </ul>
+
+<% if @recipe.recipe_ingredients.present? %>
+    <%= render 'shared/list_ingredient', ingredients: @recipe.recipe_ingredients %>
+<% end %>
 
 <%= link_to 'Add description', edit_description_recipe_path(@recipe) %>
