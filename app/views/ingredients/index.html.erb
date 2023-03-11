@@ -1,6 +1,6 @@
-<%= form_with url: ingredients_path, method: :get do |f| %>
-  <%= label_tag :query, 'Search for ingredient:' %>
-  <%= text_field_tag :query, params[:query] %>
+<%= form_with model: @ingredient, method: :get do |f| %>
+  <%= f.label :query, 'Search for ingredient:' %>
+  <%= f.select :query, Ingredient.all.pluck(:name).unshift(''), {}, data: {controller: "tom-select"} %>
   <%= submit_tag 'Search' %>
 <% end %>
 

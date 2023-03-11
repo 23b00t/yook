@@ -14,7 +14,7 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def create
-    @ing = Ingredient.find_by(name: params[:name].downcase.capitalize)
+    @ing = Ingredient.find_by(name: params[:grocery_ingredient][:ingredient_id].downcase.capitalize)
 
     if @ing
       @grocery_item = GroceryIngredient.new(grocery_ingredient_params)

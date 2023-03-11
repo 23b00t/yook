@@ -23,7 +23,7 @@ class UserIngredientsController < ApplicationController
   end
 
   def create
-    @ingredient = Ingredient.find_by(name: params[:name].downcase.capitalize)
+    @ingredient = Ingredient.find_by(name: params[:user_ingredient][:ingredient_id].downcase.capitalize)
     if @ingredient
       if UserIngredient.find_by(user_id: @ingredient.id).nil?
         @new_users_ingredient = UserIngredient.new(user_ingredient_params)
@@ -34,8 +34,9 @@ class UserIngredientsController < ApplicationController
         @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
         redirect_to user_ingredients_path(@anchor_user, anchor: dom_id(@employee))
       end
-    else
       redirect_to user_ingredients_path
+    else
+      redirect_to user_ingredients_path, alert: "Something went wrong!"
     end
   end
 
