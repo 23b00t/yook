@@ -22,5 +22,6 @@
     <%= text_field_tag :tags, params[:tags] %>
 
     <%= submit_tag 'Apply filters' %>
+    <button type="button" data-action="click->search-recipes#resetForm">Reset form</button>
   </div>
 <% end %>
