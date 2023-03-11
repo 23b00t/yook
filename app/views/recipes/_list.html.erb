@@ -2,10 +2,13 @@
   <p><%= 'No recipes yet! Click the plus button to add one' if @recipes.empty? %></p>
   <div class="d-flex flex-wrap justify-content-between">
     <% @recipes.each do |recipe| %>
-      <div class='recipe-card'>
-        <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill if recipe.photo.attached? %>
-        <div>
-          <%= link_to recipe.title, recipe_path(recipe), class: "h3" %>
+      <% if recipe.photo.attached? %>
+        <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill%>
+      <% elsif !recipe.scraped_img_url.nil? %>
+        <img src="<%= recipe.scraped_img_url %>" style="height: 300px; width: 400px; crop: :fill">
+      <% end %>
+      <li>
+        <%= link_to recipe.title, recipe_path(recipe) %>
 
           <% if @matches %>
             <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %

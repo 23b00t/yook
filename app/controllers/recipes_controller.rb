@@ -1,3 +1,4 @@
+require "open-uri"
 class RecipesController < ApplicationController
   before_action :set_recipe, only: %i[show edit update destroy cooked create_grocery_list]
 
@@ -23,8 +24,8 @@ class RecipesController < ApplicationController
   def create
     if params[:link].present?
       scrape = RecipesScraper.new(params[:link])
-
       @recipe = Recipe.new(title: scrape.title, cooking_time: scrape.cooking_time, serving_size: scrape.serving_size, description: scrape.description)
+      @recipe.scraped_img_url = scrape.image_url
       @recipe.user = current_user
       if scrape.error.present?
         redirect_to new_recipe_path, alert: "Problems importing your recipe! Have you put in the right link?"

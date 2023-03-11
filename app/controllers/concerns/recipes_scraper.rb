@@ -3,7 +3,7 @@ require "open-uri"
 require "nokogiri"
 
 class RecipesScraper
-  attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size
+  attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size, :image_url
 
   def initialize(url)
     @title = "Unnamed recipe"
@@ -11,7 +11,7 @@ class RecipesScraper
     @error = ""
     @description = "There is no desxription to this meal"
     begin
-      @doc = Nokogiri::HTML(URI.open(url))
+      @doc = Nokogiri::XML(URI.open(url))
       scrape
     rescue
       @error = true
@@ -49,11 +49,20 @@ class RecipesScraper
     return serving_size_time
   end
 
+  def scrape_img_url
+    url = @doc.at_css(".primary-image__image").attributes["src"].value
+    return url
+  end
+
   def scrape
     @ingredients = scrape_ingredients
     @title = scrape_name
     @description = scrape_description
     @cooking_time = scrape_time_serving[2]
     @serving_size = scrape_time_serving[3]
+    @image_url = scrape_img_url
   end
 end
+
+test = RecipesScraper.new("https://www.allrecipes.com/recipe/285077/easy-one-pot-ground-turkey-pasta/")
+p test.image_url

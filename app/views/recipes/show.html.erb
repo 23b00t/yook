@@ -1,4 +1,8 @@
-<%= cl_image_tag @recipe.photo.key, height: 300, width: 400, crop: :fill if @recipe.photo.attached? %>
+<% if @recipe.photo.attached? %>
+  <%= cl_image_tag @recipe.photo.key, height: 300, width: 400, crop: :fill%>
+<% elsif !@recipe.scraped_img_url.nil? %>
+  <img src="<%= @recipe.scraped_img_url %>" style="height: 300px; width: 400px; crop: :fill">
+<% end %>
 <ul>
   <li><%= @recipe.title %></li>
   <li>Cooking time: <%= @recipe.cooking_time %></li>
