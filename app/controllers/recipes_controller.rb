@@ -95,18 +95,15 @@ class RecipesController < ApplicationController
       @user_ingredient = UserIngredient.where(ingredient_id: ingredient.ingredient_id).first
       next if !@user_ingredient.present? || @user_ingredient.quantity <= 0
 
-      # unless @user_ingredient.first.measurement == ingredient.measurement
-      #   @edit = true
-      #   flash.now[:alert] = "The measurement of the ingredient in your fridge is: #{@user_ingredient.first.measurement}.\n
-      #                        You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually!"
-      #   return render :show
-      # end
       unit1 = Unit.new("#{@user_ingredient.quantity} #{@user_ingredient.measurement}")
       unit2 = Unit.new("#{ingredient.quantity} #{ingredient.measurement}")
-      unit3 = unit1 - unit2
-      quantity = unit3.match(/\d+/)
-      raise
-      quantity.positive? ? @user_ingredient.update(quantity:) : @user_ingredient.update(quantity: 0)
+      unit3 = (unit1 - unit2).to(@user_ingredient.measurement).round(4)
+      quantity = unit3.scalar
+      if quantity.positive?
+        @user_ingredient.update(quantity:, measurement: @user_ingredient.measurement)
+      else
+        @user_ingredient.update(quantity: 0, measurement: @user_ingredient.measurement)
+      end
     end
     @recipe.cooked = true
     redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
