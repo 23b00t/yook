@@ -1,8 +1,10 @@
-<div class="input ingredient-list pt-3 mt-2">
+
+<div class='d-none input ingredient-list pt-3 mt-2' data-show-filters-target="button">
   <%= simple_form_for ingredient do |f| %>
-      <%= text_field_tag :name, nil, placeholder: "Add to inventory" %>
-      <%= f.input :quantity, label_html: { class:"d-none"}, placeholder: "amount" %>
-      <%= f.input :measurement, collection: %w[ml l kg g mg], label_html: { class:"d-none"}, placeholder:"g" %>
+      <%= f.label :name %>
+      <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select"}} %>
+      <%= f.input :quantity, placeholder: "Amount?"%>
+      <%= f.input :measurement, collection: %w[ml l kg g mg], placeholder: "Which measurment?" %>
       <% if ingredient.class == UserIngredient %>
         <%= f.input :favorited, as: :boolean %>
       <% end %>

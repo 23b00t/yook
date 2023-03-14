@@ -1,11 +1,10 @@
-<% ingredients_sorted = ingredients.sort %>
 <h1>Inventory</h1>
 <div class="d-flex flex-column gap-2">
   <% if ingredients.count > 0 %>
     <% ingredients.each do |ingredient| %>
       <div class="input ingredient-list pt-3">
         <p><%= ingredient.ingredient.name %></p>
-        <%= simple_form_for ingredient, defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}}, html: {class: nil} do |f| %>
+        <%= simple_form_for @recipe_ingredient && @recipe_ingredient.id == ingredient.id ? @recipe_ingredient : ingredient, defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}}, html: {class: nil} do |f| %>
             <%= f.input :quantity, label_html: { class:"d-none"}, div_html: {style: "margin-bottom:0px;"} %>
             <%= f.input :measurement, collection: %w[ml l kg g mg], label_html: { class:"d-none"} %>
             <% if ingredient.class == UserIngredient %>
