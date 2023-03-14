@@ -1,22 +1,50 @@
 @import "colors";
 
-.recipe-card {
-  margin-bottom: 16px;
-  background-color: white;
-  border: 1px;
-  border-color: lightgrey;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 5px;
-  width: 155px;
-  height: 250px;
+.card {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   border-radius: 12px;
-  overflow: hidden;
+  background-color: white;
+  border: 0px;
+}
+
+.recipe-card {
+  @extend .card;
+  width: 48%;
+}
+
+.recipe-card-title {
+  padding: 3px 5px;
+  margin-bottom: 0px;
+  @extend .dark-grey-text;
+}
+
+.recipe-card >img {
+  height: 85px;
+  width: 100%;
+  object-fit: cover;
+  opacity: 0.90;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+}
+
+.recipe-card-info {
+  display: flex;
+  font-family: "sans-serif";
+  justify-content: start;
+  flex-wrap: wrap;
+  column-gap: 5px;
+  row-gap: 5px;
+  padding: 5px;
 }
 
 .text-box {
-  padding: 8px;
-  margin: 8px;
+  @extend .card;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.measurement-col {
+  display: flex;
+  justify-content: flex-start;
+  margin-right: 5px;
 }

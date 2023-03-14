@@ -1,0 +1,6 @@
+<% user_ingredient = UserIngredient.all.where(ingredient_id: ingredient.ingredient) %>
+<% if user_ingredient.present? && user_ingredient.first.quantity.positive? %>
+  <i class="fa-solid fa-house-circle-check green-text" style="font-size: 12px;"></i>
+<% else %>
+  <i class="fa-solid fa-house-circle-xmark red-text" style="font-size: 12px;"></i>
+<% end %>

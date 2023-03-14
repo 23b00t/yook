@@ -1,0 +1,25 @@
+@import 'colors';
+
+.input {
+  border: 0px;
+  padding: 1px 10px 1px 10px;
+  border-radius: 999px;
+  @extend .light-grey-background;
+}
+
+.search-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: max-content;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.search-box select {
+  @extend .input;
+}
+
+.search-box input {
+  @extend .input;
+}

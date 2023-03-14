@@ -1,29 +1,20 @@
 <div data-search-recipes-target="list">
   <p><%= 'No recipes yet! Click the plus button to add one' if @recipes.empty? %></p>
-  <div class="d-flex flex-wrap justify-content-between">
+  <div class="card-index">
     <% @recipes.each do |recipe| %>
-      <% if recipe.photo.attached? %>
-        <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill%>
-      <% elsif !recipe.scraped_img_url.nil? %>
-        <img src="<%= recipe.scraped_img_url %>" style="height: 300px; width: 400px; crop: :fill">
-      <% end %>
-      <li>
-        <%= link_to recipe.title, recipe_path(recipe) %>
-
-          <% if @matches %>
-            <%= @matches[recipe].nan? ? 0 : @matches[recipe] * 100 %> %
+      <div class='recipe-card white-background' onclick="location.href='/recipes/<%=recipe.id%>'" style="cursor:pointer">
+          <% if recipe.photo.attached? %>
+            <!--maybe need to adjust this-->
+            
+            <%= cl_image_tag recipe.photo.key, height: 300, width: 400, crop: :fill%>
+          <% elsif !recipe.scraped_img_url.nil? %>
+            <img src="<%= recipe.scraped_img_url %>" style="height: 300px; width: 400px; crop: :fill">
+          <% else %>
+            <img src="https://images.unsplash.com/photo-1576867757603-05b134ebc379?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" style="opacity:60%;"alt="Table filled with food">
           <% end %>
-          <p class="tag"><%= recipe.cooking_time %> min</p>
-          <% unless recipe.rating.nil? %>
-            <p class="tag"><%= recipe.rating %>/5</p>
-          <% end %>
-          <p class="tag"><%= recipe.difficulty %></p>
-          <p class="tag">Serves: <%= recipe.serving_size %></p>
-          <% unless recipe.tags.nil? %>
-            <p class="tag">#<%= recipe.tags %></p>
-          <% end %>
-          <p class="tag">Cooked? <%= recipe.cooked %></p>
-          <br>
+        <h3 class="recipe-card-title"><%= recipe.title %></h3>
+        <div class='recipe-card-info'>
+          <%= render "recipe_tags_info", recipe: recipe %>
         </div>
       </div>
     <% end %>

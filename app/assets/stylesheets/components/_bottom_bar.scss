@@ -1,0 +1,15 @@
+.bottom-bar {
+  position: fixed;
+  bottom: 5px;
+  left: 6.25%;
+  height: 50px;
+  width: 87.5%;
+  border-radius: 999px;
+  margin: auto;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 6.25% 3px 6.25%;
+  align-items: center;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}

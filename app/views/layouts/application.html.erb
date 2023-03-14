@@ -22,11 +22,13 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
-  <body class='beige-background'>
+  <body class='app-background'>
     <%= render "shared/navbar" %>
     <%= render "shared/flashes" %>
-    <div class='container'>
+    <%= render "recipes/recipe_image" %>
+    <div class="container" style="padding-bottom:60px;">
       <%= yield %>
     </div>
+    <%= render "shared/bottom_bar" %>
   </body>
 </html>
