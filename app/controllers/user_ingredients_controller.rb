@@ -5,8 +5,7 @@ class UserIngredientsController < ApplicationController
 
   def index
     UserIngredient.all.each { |ingredient| convert(ingredient) }
-    @user_ingredients = UserIngredient.all.select { |i| i.quantity.positive? && i.favorited && i.user_id = current_user.id }
-    @user_ingredients += UserIngredient.all.select { |i| i.quantity.positive? && !i.favorited && i.user_id = current_user.id }
+    @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user_id = current_user.id }).sort
     @new_ingredient = UserIngredient.new
   end
 

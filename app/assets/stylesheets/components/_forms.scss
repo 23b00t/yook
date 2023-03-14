@@ -23,3 +23,48 @@
 .search-box input {
   @extend .input;
 }
+
+.ingredient-list {
+  @extend .input;
+  display: flex;
+  overflow: hidden;
+  vertical-align: middle;
+  justify-content: space-between;
+}
+
+.ingredient-list form {
+  display: flex;
+  flex: row;
+  justify-content: end;
+  width: fit-content;
+}
+
+.ingredient-list form input {
+  height: 100%;
+  border: 0px;
+  margin-bottom: 0px;
+  padding: 0px;
+  text-align: right;
+  @extend .light-grey-background;
+}
+
+.ingredient-list form div {
+  margin-bottom: 0px;
+  max-width: 30%;
+  min-width: 20%;
+  text-align: right;
+  margin-right: 3px;
+  @extend .light-grey-background;
+}
+
+.ingredient-list form select {
+  height: 100%;
+  border: 0px;
+  margin-bottom: 0px;
+  padding: 0px;
+  @extend .light-grey-background;
+}
+
+.text-align-right {
+  justify-content: end;
+}
