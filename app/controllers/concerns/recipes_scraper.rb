@@ -1,14 +1,14 @@
 require "json"
 
 require "nokogiri"
-require "open-uri"
+require "httparty"
 
 class RecipesScraper
   attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size, :image_url
 
   def initialize(url)
     begin
-      @doc = Nokogiri::HTML(URI.open(url).body)
+      @doc = Nokogiri::HTML(HTTParty.get(url).body)
       scrape
     rescue
       @error = true
@@ -69,5 +69,7 @@ class RecipesScraper
   end
 end
 
-test1 = RecipesScraper.new("https://realfood.tesco.com/recipes/simple-lasagne.html")
+
 test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/285077/easy-one-pot-ground-turkey-pasta/")
+
+p test2.title
