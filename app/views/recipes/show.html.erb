@@ -1,35 +1,44 @@
-<% if @recipe.photo.attached? %>
-  <%= cl_image_tag @recipe.photo.key, height: 300, width: 400, crop: :fill%>
-<% elsif !@recipe.scraped_img_url.nil? %>
-  <img src="<%= @recipe.scraped_img_url %>" style="height: 300px; width: 400px; crop: :fill">
-<% end %>
-<ul>
-  <li><%= @recipe.title %></li>
-  <li>Cooking time: <%= @recipe.cooking_time %></li>
-  <li>Steps: <%= @recipe.description %></li>
-  <li>Rating: <%= @recipe.rating %></li>
-  <li>Difficulty: <%= @recipe.difficulty %></li>
-  <li>Serving size: <%= @recipe.serving_size %></li>
-  <li>Tags: <%= @recipe.tags %></li>
-  <li>Cooked? <%= @recipe.cooked %></li>
-  <li>Notes: <%= @recipe.notes %></li>
-</ul>
-<h2>Ingredients</h2>
-<% @recipe.recipe_ingredients.each do |ingredient| %>
-  <ul>
-    <li>
-      <%= ingredient.ingredient.name %>
-      <% user_ingredient = UserIngredient.all.where(ingredient_id: ingredient.ingredient) %>
-      (Available: <%= (user_ingredient.present? && user_ingredient.first.quantity.positive?) ? 'Yes' : 'No' %>)
-    </li>
-  </ul>
-<% end %>
+<!-- Links -->
+<div class="show-recipe-container">
+  <div class="actions">
+    <%= link_to cooked_recipe_path(@recipe), class: "icon" do %>
+      <i class="fa-solid fa-check icon"></i>
+    <% end %>
+    <%= link_to edit_recipe_path, class: "icon" do %>
+      <i class="fa-solid fa-pencil icon"></i>
+    <% end %>
+    <%= link_to recipe_path(@recipe), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "icon" do %>
+      <i class="fa-solid fa-trash-can icon"></i>
+    <% end %>
+  </div>
+  <h1 style="margin-top:15px;"><%= @recipe.title %></h1>
+  <!-- Basic Info -->
+    <div class='recipe-card-info' style="padding:0px; margin-bottom:8px;">
+      <%= render "recipe_tags_info", recipe: @recipe %>
+    </div>
 
+
+  <!-- Ingredients -->
+    <div class="text-box">
+      <h3>Ingredients</h3>
+      <!-- to be added when we can increase serving size
+      <div class="d-flex flex-row">
+        <p>Serving size:</p>
+        <p class="grey-tag"><%= @recipe.serving_size %></p>
+      </div>
+      -->
+      <%= render "ingredient_list", recipe: @recipe %>
+    </div>
+
+  <!-- Steps-->
+    <div class="text-box">
+      <h3>Directions</h3>
+      <%= render "step_list", recipe: @recipe %>
+    </div>
+
+<!--
 <% if @edit %>
-  <%= render 'shared/list_ingredient', ingredients: @user_ingredient %>
+  <%= render 'shared/list_ingredient', ingredients: [@user_ingredient] %>
 <% end %>
+-->
 
-<%= link_to 'Cooked', cooked_recipe_path(@recipe) %>
-<%= link_to 'Greate grocery list', create_grocery_list_recipe_path(@recipe) %>
-<%= link_to 'Edit recipe', edit_recipe_path %>
-<%= link_to "Remove", recipe_path(@recipe), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>

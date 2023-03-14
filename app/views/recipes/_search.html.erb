@@ -1,26 +1,25 @@
 <%= form_with url: recipes_path, method: :get, html: {data: {search_recipes_target: "form"}} do |f| %>
-  <%= label_tag :query, 'Search for:' %>
-  <%= text_field_tag :query, params[:query], data: {search_recipes_target: "input", action: "keyup->search-recipes#update"} %>
 
-  <div class='d-none' data-show-filters-target="button">
-    <%= label_tag :cooked, 'Cooked:' %>
-    <%= f.select :cooked, options_for_select([['Any', ''], ['Yes', 'true'], ['No', 'false']], selected: params[:cooked]) %>
+  <div class='d-none search-box' data-show-filters-target="button">
+    <%= submit_tag 'Apply filters', style: "background-color: #87B90C; color: white;" %>
+    <!-- <%= label_tag :cooked, 'Cooked:'  %> -->
+    <%= f.select :cooked, options_for_select([['➡ Cooked?', ''], ['Yes', 'true'], ['No', 'false']], selected: params[:cooked])%>
 
-    <%= label_tag :cooking_time, 'Cooking Time:' %>
-    <%= f.select :cooking_time, options_for_select([['Any', ''], ['< 30 minutes', '0..29'], ['30-60 minutes', '30..60'], ['> 60 minutes', '61..6000']], selected: params[:cooking_time]) %>
+    <!--<%= label_tag :cooking_time, 'Cooking Time:' %> -->
+    <%= f.select :cooking_time, options_for_select([['➡ Time', ''], ['< 30 minutes', '0..29'], ['30-60 minutes', '30..60'], ['> 60 minutes', '61..6000']], selected: params[:cooking_time]) %>
 
-    <%= label_tag :difficulty, 'Difficulty:' %>
-    <%= f.select :difficulty, options_for_select([['Any', ''], ['Easy', 'easy'], ['Medium', 'medium'], ['Hard', 'hard']], selected: params[:difficulty]) %>
+    <!--<%= label_tag :difficulty, 'Difficulty:' %>-->
+    <%= f.select :difficulty, options_for_select([['➡ Difficulty', ''], ['Easy', 'easy'], ['Medium', 'medium'], ['Hard', 'hard']], selected: params[:difficulty]) %>
 
-    <%= label_tag :rating, 'Rating:' %>
-    <%= f.select :rating, options_for_select([['Any', ''], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5']], selected: params[:rating]) %>
+    <!--<%= label_tag :rating, 'Rating:' %>-->
+    <%= f.select :rating, options_for_select([['➡ Rating', ''], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5']], selected: params[:rating]) %>
 
-    <%= label_tag :active, 'Sort by inventory:' %>
-    <%= f.select :active, options_for_select([['Any', ''], ['Yes', true], ['No', false]], selected: params[:active]) %>
+    <!--<%= label_tag :active, 'Sort by inventory:' %>-->
+    <%= f.select :active, options_for_select([['➡ Sort by inventory', ''], ['Yes', true], ['No', false]], selected: params[:active]) %>
 
-    <%= label_tag :tags, 'Tags:' %>
-    <%= text_field_tag :tags, params[:tags] %>
-
-    <%= submit_tag 'Apply filters' %>
+    <!--<%= label_tag :tags, 'Tags:' %>-->
+    <%= text_field_tag :tags, params[:tags], placeholder: "➡ Tags" %>
   </div>
+
+  <%= text_field_tag :query, params[:query], data: {search_recipes_target: "input", action: "keyup->search-recipes#update"}, class: 'input search-box', placeholder: "search", style: "width: 100%" %>
 <% end %>

@@ -1,0 +1,18 @@
+<table class="no-bullets">
+  <% recipe.recipe_ingredients.each do |ingredient| %>
+    <tr>
+      <th style="width: 65px;">
+        <div class="measurement-col">
+          <p class="grey-tag" style="width:60px;">
+            <%= ingredient.quantity %> <%= render "shared/measurement_shorthand", ingredient: ingredient %>
+          </p>
+        </div>
+      </th>
+      <th>
+        <p>
+          <%= render "availability_tag", ingredient: ingredient %><%= ingredient.ingredient.name %>
+        </p>
+      </th>
+    </tr>
+  <% end %>
+</table>

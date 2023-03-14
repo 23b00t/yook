@@ -1,4 +1,6 @@
 require "open-uri"
+require 'ruby-units'
+
 class RecipesController < ApplicationController
   before_action :set_recipe, only: %i[show edit update destroy cooked create_grocery_list]
 
@@ -90,18 +92,26 @@ class RecipesController < ApplicationController
   def cooked
     ingredients = @recipe.recipe_ingredients
     ingredients.each do |ingredient|
-      @user_ingredient = UserIngredient.where(ingredient_id: ingredient.ingredient_id)
-      next if @user_ingredient.empty? || @user_ingredient.first.quantity <= 0
+      @user_ingredient = UserIngredient.where(ingredient_id: ingredient.ingredient_id).first
+      next if !@user_ingredient.present? || @user_ingredient.quantity <= 0
 
-      unless @user_ingredient.first.measurement == ingredient.measurement
+      unit1 = Unit.new("#{@user_ingredient.quantity} #{@user_ingredient.measurement}")
+      unit2 = Unit.new("#{ingredient.quantity} #{ingredient.measurement}")
+      begin
+        unit3 = (unit1 - unit2).to(@user_ingredient.measurement).round(4)
+      rescue ArgumentError
         @edit = true
-        flash.now[:alert] = "The measurement of the ingredient in your fridge is: #{@user_ingredient.first.measurement}.\n
-                             You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually!"
+        flash.now[:alert] = "The measurement of the ingredient in your fridge is: #{@user_ingredient.measurement}.\n
+                             You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually
+                             to #{ingredient.measurement}"
         return render :show
       end
-
-      quantity = @user_ingredient.first.quantity - ingredient.quantity
-      quantity.positive? ? @user_ingredient.update(quantity:) : @user_ingredient.update(quantity: 0)
+      quantity = unit3.scalar
+      if quantity.positive?
+        @user_ingredient.update(quantity:, measurement: @user_ingredient.measurement)
+      else
+        @user_ingredient.update(quantity: 0, measurement: @user_ingredient.measurement)
+      end
     end
     @recipe.cooked = true
     redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'

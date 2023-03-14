@@ -3,3 +3,10 @@
 @import "avatar";
 @import "form_legend_clear";
 @import "navbar";
+
+.card-index {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}

@@ -1,67 +1,81 @@
 // Background Colors
+  .primary-background {
+    background-color: #FCE183;
+    color: #3C3939;
+  }
 
+  .accent-background {
+    background-color: #898121;
+    color: #F7F1E5;
+  }
 
-.primary-background {
-  background-color: #FCE183;
-  color: #3C3939;
-}
+  .success-background {
+    background-color: #87B90C;
+    color: white;
+  }
 
-.accent-background {
-  background-color: #898121;
-  color: #F7F1E5;
-}
+  .warning-background {
+    background-color: #D3756B;
+    color: white;
+  }
 
-.success-background {
-  background-color: #87B90C;
-  color: white;
-}
+  .danger-background {
+    background-color: #d43e44;
+    color: white;
+  }
 
-.warning-background {
-  background-color: #D3756B;
-  color: white;
-}
+  .app-background {
+    background-color: white;
+    color: #3C3939 ;
+  }
 
-.danger-background {
-  background-color: #A84448;
-  color: white;
-}
+  .beige-background {
+    background-color: #F7F1E5;
+    color: #3C3939 ;
+  }
 
-.beige-background {
-  background-color: #F7F1E5;
-  color: #3C3939 ;
-}
+  .white-background {
+    background-color: white;
+    color: #3C3939 ;
+  }
 
-.white-background {
-  background-color: white;
-  color: #3C3939 ;
-}
+  .light-grey-background {
+    background-color: #D9D9D9;
+    color: #3C3939;
+  }
 
-.light-grey-background {
-  background-color: #C9C9C9;
-  color: #3C3939;
-}
-
-.dark-background {
-  background-color: #3C3939;
-  color: white;
-}
+  .dark-background {
+    background-color: #3C3939;
+    color: white;
+  }
 
 
 
 // Font Colors
+  .primary-text {
+    color: #FCE183;
+  }
 
-.beige-text {
-  color: #F7F1E5;
-}
+  .beige-text {
+    color: #F7F1E5;
+  }
 
-.white-text {
-  color: white;
-}
+  .white-text {
+    color: white;
+  }
 
-.dark-grey-text {
-  color: #3C3939;
-}
+  .dark-grey-text {
+    color: #3C3939;
+  }
 
-.accent-color-text {
-  color: rgb(169, 169, 97);
-}
+  .accent-color-text {
+    color: rgb(169, 169, 97);
+  }
+
+  .red-text {
+    color: #d43e44;
+  }
+
+  .green-text {
+    color: #87B90C;
+  }

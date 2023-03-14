@@ -1,0 +1,12 @@
+@import "colors";
+
+.icon {
+  height: 40px;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  display: flex;
+  text-decoration: none;
+  @extend .light-grey-background;
+}
