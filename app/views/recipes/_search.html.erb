@@ -19,7 +19,6 @@
 
     <!--<%= label_tag :tags, 'Tags:' %>-->
     <%= text_field_tag :tags, params[:tags], placeholder: "➡ Tags" %>
-
   </div>
 
   <%= text_field_tag :query, params[:query], data: {search_recipes_target: "input", action: "keyup->search-recipes#update"}, class: 'input search-box', placeholder: "search", style: "width: 100%" %>

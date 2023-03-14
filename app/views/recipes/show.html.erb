@@ -1,6 +1,4 @@
 <!-- Links -->
-
-
 <div class="show-recipe-container">
   <div class="actions">
     <%= link_to cooked_recipe_path(@recipe), class: "icon" do %>
@@ -18,6 +16,7 @@
     <div class='recipe-card-info' style="padding:0px; margin-bottom:8px;">
       <%= render "recipe_tags_info", recipe: @recipe %>
     </div>
+
 
   <!-- Ingredients -->
     <div class="text-box">
@@ -39,6 +38,7 @@
 
 <!--
 <% if @edit %>
-  <%= render 'shared/list_ingredient', ingredients: @user_ingredient %>
+  <%= render 'shared/list_ingredient', ingredients: [@user_ingredient] %>
 <% end %>
 -->
+

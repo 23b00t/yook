@@ -12,4 +12,10 @@ export default class extends Controller {
         this.listTarget.outerHTML = data
       })
   }
+  resetForm() {
+    const form = this.formTarget;
+    form.querySelectorAll("input, select, textarea").forEach(input => {
+      input.value = input.defaultValue || "";
+    });
+  }
 }

@@ -1,6 +1,8 @@
-<p>Here will be a plus icon with a pop-up</p>
+<%# <p>Here will be a plus icon with a pop-up</p> %>
+<div class='d-none' data-show-filters-target="button">
   <%= simple_form_for ingredient do |f| %>
-      <%= text_field_tag :name, nil, placeholder: "Name of the ingredient" %>
+      <%= f.label :name %>
+      <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select"}} %>
       <%= f.input :quantity, placeholder: "How much?"%>
       <%= f.input :measurement, collection: %w[milliliter liter deciliter gram kilogram miligram], placeholder: "Which measurment?" %>
       <% if ingredient.class == UserIngredient %>
@@ -8,3 +10,4 @@
       <% end %>
       <%= f.button :submit%>
   <%end%>
+</div>

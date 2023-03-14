@@ -2,6 +2,9 @@
   <%= render 'shared/list_ingredient', ingredients: @groceries %>
 </div>
 
-<div class="sticky-bottom" style="background-color: silver">
+<div class="sticky-bottom" style="background-color: silver" data-controller="show-filters">
   <%= render 'shared/add_ingredient_item', ingredient: @new_ingredient%>
+  <button aria-label="Edit movie" data-action="click->show-filters#displayForm">
+    <i class="fa-solid fa-plus fa-xs ml-2"></i>
+  </button>
 </div>

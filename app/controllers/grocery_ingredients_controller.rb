@@ -14,13 +14,14 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def create
-    @ing = Ingredient.find_by(name: params[:name].downcase.capitalize)
+    @ing = Ingredient.find_by(name: params[:grocery_ingredient][:ingredient_id].downcase.capitalize)
 
     if @ing
       @grocery_item = GroceryIngredient.new(grocery_ingredient_params)
       @grocery_item.user_id = current_user.id
       @grocery_item.ingredient_id = @ing.id
       @grocery_item.save
+      redirect_to grocery_ingredients_path
     else
       # create the ingredient, or as them to add an ingredient that exists?
     end
