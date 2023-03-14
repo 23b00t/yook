@@ -100,7 +100,11 @@ class RecipesController < ApplicationController
       begin
         unit3 = (unit1 - unit2).to(@user_ingredient.measurement).round(4)
       rescue ArgumentError
-        flash[:alert] = ""
+        @edit = true
+        flash.now[:alert] = "The measurement of the ingredient in your fridge is: #{@user_ingredient.measurement}.\n
+                             You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually
+                             to #{ingredient.measurement}"
+        return render :show
       end
       quantity = unit3.scalar
       if quantity.positive?
