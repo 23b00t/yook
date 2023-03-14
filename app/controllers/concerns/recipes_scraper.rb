@@ -1,17 +1,37 @@
 require "json"
-require "open-uri"
+
 require "nokogiri"
+require "httparty"
+stupid_measurement_types = %w[
+  cup
+  cups
+  tbsp
+  tsp
+  cloves
+  tablespoons
+  tablespoon
+  teaspoon
+  teaspoons
+  g
+  gram
+  kg
+  kilogram
+  mg
+  milligram
+  l
+  liter
+  ml
+  milliliter
+]
+
+
 
 class RecipesScraper
   attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size, :image_url
 
   def initialize(url)
-    @title = "Unnamed recipe"
-    @ingredients = "Sorry, we cant find any ingredients to this recipe"
-    @error = ""
-    @description = "There is no desxription to this meal"
     begin
-      @doc = Nokogiri::HTML(URI.open(url))
+      @doc = Nokogiri::HTML(HTTParty.get(url).body)
       scrape
     rescue
       @error = true
@@ -20,16 +40,15 @@ class RecipesScraper
 
   def scrape_ingredients
     ingredients = []
-    @doc.css('.mntl-structured-ingredients p').each do |element|
-      parts = element.css("span")
-      hash = { measurement: parts[1].text, quantity: parts[0].text, name: parts[2].text }
-      ingredients << hash
+    @doc.css('ul li').each do |element|
+      parts = element.css("p").text
+      ingredients << parts unless parts.empty?
     end
     return ingredients
   end
 
   def scrape_name
-    name = @doc.css(".article-heading").text.delete("\n").strip
+    name = @doc.at_css("h1").text.delete("\n").strip
     return name
   end
 
@@ -50,8 +69,17 @@ class RecipesScraper
   end
 
   def scrape_img_url
-    url = @doc.css("img")
-    return url
+    @doc.css("img").each do |img|
+      unless img.attributes["id"].nil?
+        @url = img.attributes["src"]
+        @url = img.attributes["data-src"] if @url.nil?
+      end
+    end
+    if @url.nil?
+      @url = @doc.at_css("img").attributes["src"]
+      @url = @doc.at_css("img").attributes["data-src"] if @url.nil?
+    end
+    return @url
   end
 
   def scrape
@@ -64,5 +92,11 @@ class RecipesScraper
   end
 end
 
-test = RecipesScraper.new("https://www.allrecipes.com/recipe/142027/sweet-restaurant-slaw/")
-p test.image_url
+test1 = RecipesScraper.new("https://realfood.tesco.com/recipes/simple-lasagne.html")
+test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/285077/easy-one-pot-ground-turkey-pasta/")
+
+puts "________________________________"
+p test1.ingredients
+puts "________________________________"
+p test2.ingredients
+puts "________________________________"
