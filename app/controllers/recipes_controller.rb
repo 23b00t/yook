@@ -97,7 +97,15 @@ class RecipesController < ApplicationController
 
       unit1 = Unit.new("#{@user_ingredient.quantity} #{@user_ingredient.measurement}")
       unit2 = Unit.new("#{ingredient.quantity} #{ingredient.measurement}")
-      unit3 = (unit1 - unit2).to(@user_ingredient.measurement).round(4)
+      begin
+        unit3 = (unit1 - unit2).to(@user_ingredient.measurement).round(4)
+      rescue ArgumentError
+        @edit = true
+        flash.now[:alert] = "The measurement of the ingredient in your fridge is: #{@user_ingredient.measurement}.\n
+                             You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually
+                             to #{ingredient.measurement}"
+        return render :show
+      end
       quantity = unit3.scalar
       if quantity.positive?
         @user_ingredient.update(quantity:, measurement: @user_ingredient.measurement)
