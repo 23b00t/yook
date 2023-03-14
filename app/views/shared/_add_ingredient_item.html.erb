@@ -1,10 +1,11 @@
-<p>Here will be a plus icon with a pop-up</p>
+<div class="input ingredient-list pt-3 mt-2">
   <%= simple_form_for ingredient do |f| %>
-      <%= text_field_tag :name, nil, placeholder: "Name of the ingredient" %>
-      <%= f.input :quantity, placeholder: "How much?"%>
-      <%= f.input :measurement, collection: %w[milliliter liter deciliter gram kilogram miligram], placeholder: "Which measurment?" %>
+      <%= text_field_tag :name, nil, placeholder: "Add to inventory" %>
+      <%= f.input :quantity, label_html: { class:"d-none"}, placeholder: "amount" %>
+      <%= f.input :measurement, collection: %w[ml l kg g mg], label_html: { class:"d-none"}, placeholder:"g" %>
       <% if ingredient.class == UserIngredient %>
         <%= f.input :favorited, as: :boolean %>
       <% end %>
-      <%= f.button :submit%>
+      <%= f.button :submit, "✔️" %>
   <%end%>
+</div>

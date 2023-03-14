@@ -1,20 +1,19 @@
-<% if ingredients.count > 0 %>
-  <% ingredients.each do |ingredient| %>
-      <p style="background-color: green" id="<%=ingredient.id%>">
-        <%= ingredient.ingredient.name %>
-        <%= simple_form_for ingredient do |f| %>
-          <%= f.input :quantity %>
-          <%= f.input :measurement, collection: %w[milliliter liter gram kilogram milligram] %>
-          <% if ingredient.class == UserIngredient %>
-            <%= f.input :favorited, as: :boolean %>
-          <% end %>
-          <%= f.button :submit %>
+<% ingredients_sorted = ingredients.sort %>
+<h1>Inventory</h1>
+<div class="d-flex flex-column gap-2">
+  <% if ingredients.count > 0 %>
+    <% ingredients.each do |ingredient| %>
+      <div class="input ingredient-list pt-3">
+        <p><%= ingredient.ingredient.name %></p>
+        <%= simple_form_for ingredient, defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}}, html: {class: nil} do |f| %>
+            <%= f.input :quantity, label_html: { class:"d-none"}, div_html: {style: "margin-bottom:0px;"} %>
+            <%= f.input :measurement, collection: %w[ml l kg g mg], label_html: { class:"d-none"} %>
+            <% if ingredient.class == UserIngredient %>
+              <%= f.input :favorited, as: :boolean %>
+            <% end %>
+            <%= f.button :submit, "✔️" %>
         <%end%>
-      </p>
-      <% if ingredient.class == GroceryIngredient %>
-        <%= link_to "Delete grocery", grocery_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-      <% else %>
-        <%= link_to "Delete", user_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-      <% end %>
+      </div>
+    <% end %>
   <% end %>
-<% end %>
+</div>
