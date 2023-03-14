@@ -1,37 +1,14 @@
 require "json"
 
 require "nokogiri"
-require "httparty"
-stupid_measurement_types = %w[
-  cup
-  cups
-  tbsp
-  tsp
-  cloves
-  tablespoons
-  tablespoon
-  teaspoon
-  teaspoons
-  g
-  gram
-  kg
-  kilogram
-  mg
-  milligram
-  l
-  liter
-  ml
-  milliliter
-]
-
-
+require "open-uri"
 
 class RecipesScraper
   attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size, :image_url
 
   def initialize(url)
     begin
-      @doc = Nokogiri::HTML(HTTParty.get(url).body)
+      @doc = Nokogiri::HTML(URI.open(url).body)
       scrape
     rescue
       @error = true
@@ -94,9 +71,3 @@ end
 
 test1 = RecipesScraper.new("https://realfood.tesco.com/recipes/simple-lasagne.html")
 test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/285077/easy-one-pot-ground-turkey-pasta/")
-
-puts "________________________________"
-p test1.ingredients
-puts "________________________________"
-p test2.ingredients
-puts "________________________________"

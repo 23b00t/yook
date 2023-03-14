@@ -82,5 +82,5 @@ gem "cloudinary"
 gem "pg_search"
 gem "pry-byebug"
 
-gem "httparty"
+
 gem 'ruby-units', require: 'ruby_units/namespaced'
