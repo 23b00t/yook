@@ -7,12 +7,8 @@ class RecipesScraper
   attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size, :image_url
 
   def initialize(url)
-    begin
-      @doc = Nokogiri::HTML(HTTParty.get(url).body)
-      scrape
-    rescue
-      @error = true
-    end
+    @doc = Nokogiri::HTML(HTTParty.get(url).body)
+    scrape
   end
 
   def scrape_ingredients
@@ -20,8 +16,27 @@ class RecipesScraper
     @doc.css('ul li').each do |element|
       parts = element.css("p").text
       parts = parts.split
-
-      ingredients << {quantity: parts[0].to_i, measurement: parts[1], name: parts[2..].join(" ")} unless parts.empty?
+      case parts[0]
+      when "½"
+        parts[0] = 0.5
+      when "¼"
+        parts[0] = 0.25
+      end
+      p parts
+      if parts.count >= 3
+        quantity = parts[0].to_f
+        measurement = parts[1]
+        name = parts[2..].join(" ")
+      elsif parts.count == 2
+        quantity = parts[0].to_f
+        measurement = "..."
+        name = parts[1..].join(" ")
+      else
+        quantity = 1
+        measurement = "..."
+        name = parts[0..].join(" ")
+      end
+      ingredients << { quantity: quantity, measurement: measurement, name: name } unless parts.empty?
     end
     return ingredients
   end
@@ -33,10 +48,12 @@ class RecipesScraper
 
   def scrape_description
     description = []
-    @doc.css(".recipe__steps p").each do |element|
-      description << element.text.delete("\n").strip
+    @count = 0
+    @doc.css(".recipe__steps li").each do |element|
+      @count += 1
+      description << "(Step #{@count})\n #{element.text.delete("\n").strip}\n"
     end
-    return description
+    return description.join
   end
 
   def scrape_time_serving
@@ -71,5 +88,5 @@ class RecipesScraper
   end
 end
 
-test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/285077/easy-one-pot-ground-turkey-pasta/")
-p test2.ingredients
+test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/16947/amazingly-easy-irish-soda-bread/")
+puts test2.ingredients
