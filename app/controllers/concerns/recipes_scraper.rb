@@ -19,7 +19,9 @@ class RecipesScraper
     ingredients = []
     @doc.css('ul li').each do |element|
       parts = element.css("p").text
-      ingredients << parts unless parts.empty?
+      parts = parts.split
+
+      ingredients << {quantity: parts[0].to_i, measurement: parts[1], name: parts[2..].join(" ")} unless parts.empty?
     end
     return ingredients
   end
@@ -69,7 +71,5 @@ class RecipesScraper
   end
 end
 
-
 test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/285077/easy-one-pot-ground-turkey-pasta/")
-
-p test2.title
+p test2.ingredients
