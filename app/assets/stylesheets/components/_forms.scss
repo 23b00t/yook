@@ -2,7 +2,7 @@
 
 .input {
   border: 0px;
-  padding: 1px 10px 1px 10px;
+  padding: 3px 10px 3px 10px;
   border-radius: 999px;
   @extend .light-grey-background;
 }
@@ -32,6 +32,12 @@
   justify-content: space-between;
 }
 
+.ingredient-list div {
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
 .ingredient-list form {
   display: flex;
   flex: row;
@@ -42,14 +48,17 @@
 .ingredient-list form input {
   height: 100%;
   border: 0px;
+  border-radius: 999px;
   margin-bottom: 0px;
   padding: 0px;
+  font-weight: 300;
   text-align: right;
+  // border: 1px solid #3C3939;
   @extend .light-grey-background;
 }
 
 .ingredient-list form div {
-  margin-bottom: 0px;
+  margin: 0px;
   max-width: 30%;
   min-width: 20%;
   text-align: right;
@@ -61,10 +70,19 @@
   height: 100%;
   border: 0px;
   margin-bottom: 0px;
+  font-weight: 300;
   padding: 0px;
   @extend .light-grey-background;
 }
 
 .text-align-right {
   justify-content: end;
+}
+
+.ingredient-delete {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  padding-right: 8px;
 }

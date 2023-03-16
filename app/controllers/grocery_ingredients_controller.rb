@@ -3,7 +3,7 @@ class GroceryIngredientsController < ApplicationController
 
   def index
     GroceryIngredient.all.each { |ingredient| convert(ingredient) }
-    @groceries = (GroceryIngredient.all.select { |ingredient| ingredient.user == current_user }).sort
+    @groceries = (GroceryIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
     @new_ingredient = GroceryIngredient.new
   end
 
