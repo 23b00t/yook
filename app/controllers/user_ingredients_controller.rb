@@ -22,7 +22,7 @@ class UserIngredientsController < ApplicationController
   end
 
   def create
-    @ingredient = Ingredient.find_by(name: params[:user_ingredient][:ingredient_id].downcase.capitalize)
+    @ingredient = Ingredient.find_by(name: params[:user_ingredient][:ingredient_id])
     if @ingredient
       if UserIngredient.find_by(user_id: @ingredient.id).nil?
         @new_users_ingredient = UserIngredient.new(user_ingredient_params)

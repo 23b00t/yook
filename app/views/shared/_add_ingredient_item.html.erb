@@ -2,8 +2,8 @@
   <div class="form-box">
     <%= simple_form_for ingredient do |f| %>
         <%= f.label :name %>
-
         <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select"}} %>
+
         <div class="row">
           <div class="col-6">
             <%= f.input :quantity, placeholder: "Amount?"%>
@@ -12,6 +12,7 @@
             <%= f.input :measurement, collection: %w[ml l kg g mg], placeholder: "Which measurment?" %>
           </div>
         </div>
+
         <% if ingredient.class == UserIngredient %>
           <%= f.input :favorited, as: :boolean %>
         <% end %>
