@@ -50,7 +50,7 @@
   border: 0px;
   border-radius: 999px;
   margin-bottom: 0px;
-  padding: 0px;
+  padding: 0px 5px 0px 0px;
   font-weight: 300;
   text-align: right;
   // border: 1px solid #3C3939;
@@ -85,4 +85,62 @@
   justify-content: center;
   flex-direction: column;
   padding-right: 8px;
+}
+
+
+
+// Adding an ingredient
+
+.add-list-ingredient-form {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  max-height: 25px;
+  overflow: hidden;
+}
+
+.ingredient-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
+.ingredient-name input {
+  @extend .light-grey-background;
+}
+
+.ingredient-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+
+.ingredient-info div {
+  margin: 0px;
+  max-width: 30%;
+  min-width: 20%;
+  text-align: right;
+  margin-right: 3px;
+}
+
+.ingredient-info input {
+  height: 100%;
+  border: 0px;
+  border-radius: 999px;
+  margin-bottom: 0px;
+  padding: 0px 5px 0px 0px;
+  font-weight: 300;
+  text-align: right;
+  @extend .light-grey-background;
+}
+
+.ingredient-info select {
+  height: 100%;
+  border: 0px;
+  margin-bottom: 0px;
+  font-weight: 300;
+  padding: 0px;
+  @extend .light-grey-background;
 }

@@ -6,18 +6,7 @@
         <!--trash icon, favorite star, and name -->
 
         <div class="d-flex flex-row flex-nowrap justify-content-start">
-            <%= link_to user_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ingredient-delete" do %>
-              <i class="fa-solid fa-trash-can light-grey-background pr-1" style="font-size:14px;" ></i>
-            <% end %>
-          <% if ingredient.class == UserIngredient %>
-            <%= link_to user_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ingredient-delete" do %>
-              <i class="fa-solid fa-trash-can light-grey-background pr-1" style="font-size:14px;" ></i>
-            <% end %>
-          <% else %>
-            <%= link_to grocery_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ingredient-delete" do %>
-              <i class="fa-solid fa-trash-can light-grey-background pr-1" style="font-size:14px;"></i>
-            <% end %>
-          <% end %>
+          <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
           <div>
             <p style="height: fit-content;"><%= ingredient.ingredient.name %></p>
           </div>
