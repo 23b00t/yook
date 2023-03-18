@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :recipe_ingredients, only: :update
+  resources :recipe_ingredients, only: %i[update destroy]
   resources :ingredients, only: :index
 
   resources :user_ingredients

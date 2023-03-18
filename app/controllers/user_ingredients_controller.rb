@@ -5,7 +5,7 @@ class UserIngredientsController < ApplicationController
 
   def index
     UserIngredient.all.each { |ingredient| convert(ingredient) }
-    @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user_id = current_user.id }).sort
+    @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
     @new_ingredient = UserIngredient.new
   end
 
@@ -44,7 +44,7 @@ class UserIngredientsController < ApplicationController
     redirect_to user_ingredients_path
   end
 
-   
+
   private
 
   def user_ingredient_params
