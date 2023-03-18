@@ -3,7 +3,7 @@ class GroceryIngredientsController < ApplicationController
 
   def index
     GroceryIngredient.all.each { |ingredient| convert(ingredient) }
-    @groceries = GroceryIngredient.all.select { |ingredient| ingredient.user == current_user }
+    @groceries = (GroceryIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
     @new_ingredient = GroceryIngredient.new
   end
 
@@ -14,7 +14,7 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def create
-    @ing = Ingredient.find_by(name: params[:grocery_ingredient][:ingredient_id].downcase.capitalize)
+    @ing = Ingredient.find_by(name: params[:grocery_ingredient][:ingredient_id])
 
     if @ing
       @grocery_item = GroceryIngredient.new(grocery_ingredient_params)
@@ -23,7 +23,7 @@ class GroceryIngredientsController < ApplicationController
       @grocery_item.save
       redirect_to grocery_ingredients_path
     else
-      # create the ingredient, or as them to add an ingredient that exists?
+      redirect_to grocery_ingredients_path, alert: "Something went wrong!"
     end
   end
 

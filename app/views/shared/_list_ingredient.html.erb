@@ -1,20 +1,29 @@
-<% if ingredients.count > 0 %>
-  <% ingredients.each do |ingredient| %>
-      <p style="background-color: green" id="<%=ingredient.id%>">
-        <%= ingredient.ingredient.name %>
-        <%= simple_form_for @recipe_ingredient && @recipe_ingredient.id == ingredient.id ? @recipe_ingredient : ingredient do |f| %>
-          <%= f.input :quantity %>
-          <%= f.input :measurement, collection: %w[milliliter liter gram kilogram milligram] %>
-          <% if ingredient.class == UserIngredient %>
-            <%= f.input :favorited, as: :boolean %>
-          <% end %>
-          <%= f.button :submit %>
+<h1>Inventory</h1>
+<div class="d-flex flex-column gap-2">
+  <% if ingredients.count > 0 %>
+    <% ingredients.each do |ingredient| %>
+      <div class="input ingredient-list">
+        <!--trash icon, favorite star, and name -->
+
+        <div class="d-flex flex-row flex-nowrap justify-content-start">
+          <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
+          <div>
+            <p style="height: fit-content;"><%= ingredient.ingredient.name %></p>
+          </div>
+        </div>
+
+        <!--form to update ingredient-->
+        <%= simple_form_for @recipe_ingredient && @recipe_ingredient.id == ingredient.id ? @recipe_ingredient : ingredient, defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}} do |f| %>
+            <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
+            <%= f.input :measurement, collection: %w[ml l kg g mg], label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
+            <!--
+            <% if ingredient.class == UserIngredient %>
+              <%= f.input :favorited, as: :boolean %>
+            <% end %>
+            -->
+            <%= f.button :submit, "✔️" %>
         <%end%>
-      </p>
-      <% if ingredient.class == GroceryIngredient %>
-        <%= link_to "Delete grocery", grocery_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-      <% else %>
-        <%= link_to "Delete", user_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-      <% end %>
+      </div>
+    <% end %>
   <% end %>
-<% end %>
+</div>

@@ -1,13 +1,31 @@
-<%# <p>Here will be a plus icon with a pop-up</p> %>
-<div class='d-none' data-show-filters-target="button">
+
+<!--
+<div class='d-none input ingredient-list pt-3 mt-2' data-show-filters-target="button">
   <%= simple_form_for ingredient do |f| %>
-      <%= f.label :name %>
+      <%# <%= f.label :name %>
       <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select"}} %>
-      <%= f.input :quantity, placeholder: "How much?"%>
-      <%= f.input :measurement, collection: %w[milliliter liter deciliter gram kilogram miligram], placeholder: "Which measurment?" %>
+      <%= f.input :quantity, placeholder: "0", label_html: { class:"d-none" } %>
+      <%= f.input :measurement, collection: %w[ml l kg g mg], placeholder: "kg", label_html: { class:"d-none" } %>
       <% if ingredient.class == UserIngredient %>
         <%= f.input :favorited, as: :boolean %>
       <% end %>
-      <%= f.button :submit%>
+      <%= f.button :submit, "✔️" %>
   <%end%>
+</div>
+-->
+
+<div class='d-none input mt-2' data-show-filters-target="button">
+    <%= simple_form_for ingredient, html: {class: "add-list-ingredient-form"} do |f| %>
+        <div class="ingredient-name">
+          <% if ingredient.class == UserIngredient %>
+            <%= f.input :favorited, as: :boolean, label: "Star", wrapper_html: {style:"margin-bottom:0px !important;margin-right:5px;"}%>
+          <% end %>
+          <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select"}} %>
+        </div>
+        <div class="ingredient-info">
+          <%= f.input :quantity, placeholder: "0", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
+          <%= f.input :measurement, collection: %w[ml l kg g mg], placeholder: "kg", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
+          <%= f.button :submit, "✔️" %>
+        </div>
+    <%end%>
 </div>

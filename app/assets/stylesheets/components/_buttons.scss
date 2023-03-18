@@ -29,3 +29,12 @@
   text-align: center;
   text-decoration-line: underline;
 }
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  position: absolute;
+  right: 16px;
+  top: 285px;
+}

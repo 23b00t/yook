@@ -5,8 +5,7 @@ class UserIngredientsController < ApplicationController
 
   def index
     UserIngredient.all.each { |ingredient| convert(ingredient) }
-    @user_ingredients = UserIngredient.all.select { |i| i.quantity.positive? && i.favorited && i.user_id = current_user.id }
-    @user_ingredients += UserIngredient.all.select { |i| i.quantity.positive? && !i.favorited && i.user_id = current_user.id }
+    @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user_id = current_user.id }).sort
     @new_ingredient = UserIngredient.new
   end
 
@@ -23,7 +22,7 @@ class UserIngredientsController < ApplicationController
   end
 
   def create
-    @ingredient = Ingredient.find_by(name: params[:user_ingredient][:ingredient_id].downcase.capitalize)
+    @ingredient = Ingredient.find_by(name: params[:user_ingredient][:ingredient_id])
     if @ingredient
       if UserIngredient.find_by(user_id: @ingredient.id).nil?
         @new_users_ingredient = UserIngredient.new(user_ingredient_params)
@@ -45,6 +44,7 @@ class UserIngredientsController < ApplicationController
     redirect_to user_ingredients_path
   end
 
+   
   private
 
   def user_ingredient_params

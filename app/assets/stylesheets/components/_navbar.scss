@@ -1,21 +1,8 @@
 @import "colors";
 
-.navbar-lewagon {
-  justify-content: space-between;
-  border-bottom: 1px grey;
-  @extend .app-background;
-}
-
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
-}
-
-.navbar-lewagon .navbar-brand img {
-  width: 40px;
-}
 
 .new-navbar {
-  height: 40px;
+  height: 55px;
   margin: auto;
   border-bottom: 1px solid #3C3939;
   display: flex;
@@ -32,7 +19,7 @@
 }
 
 .new-navbar i {
-  font-size: 18px;
+  font-size: 25px;
   @extend .primary-text;
 }
 
@@ -42,4 +29,21 @@
 
 .new-navbar a {
   width: fit-content;
+}
+
+
+// Old navbar
+
+.navbar-lewagon {
+  justify-content: space-between;
+  border-bottom: 1px grey;
+  @extend .app-background;
+}
+
+.navbar-lewagon .navbar-collapse {
+  flex-grow: 0;
+}
+
+.navbar-lewagon .navbar-brand img {
+  width: 40px;
 }
