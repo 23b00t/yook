@@ -1,3 +1,5 @@
+require 'ruby-units'
+
 class RecipeIngredientsController < ApplicationController
   before_action :set_recipe_ingredient, only: %i[update destroy]
   before_action :set_recipe, only: %i[create index update]
@@ -14,8 +16,12 @@ class RecipeIngredientsController < ApplicationController
   end
 
   def index
-    # raise
     @recipe_ingredients = @recipe.recipe_ingredients
+    @recipe_ingredients.each do |recipe|
+      recipe.measurement = Unit.new(recipe.measurement).units
+    rescue ArgumentError
+      recipe.measurement = "g"
+    end
     @ingredient = RecipeIngredient.new
   end
 
