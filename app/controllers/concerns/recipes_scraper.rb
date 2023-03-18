@@ -49,7 +49,7 @@ class RecipesScraper
   def scrape_description
     description = []
     @count = 0
-    @doc.css(".recipe__steps li").each do |element|
+    @doc.css("ol li").each do |element|
       @count += 1
       description << "(Step #{@count})\n #{element.text.delete("\n").strip}\n"
     end
@@ -65,15 +65,19 @@ class RecipesScraper
   end
 
   def scrape_img_url
-    @doc.css("img").each do |img|
+    @list = []
+    @doc.css("img").find do |img|
       unless img.attributes["id"].nil?
         @url = img.attributes["src"]
         @url = img.attributes["data-src"] if @url.nil?
+        @list << @url
       end
     end
-    if @url.nil?
+    if @list.empty?
       @url = @doc.at_css("img").attributes["src"]
       @url = @doc.at_css("img").attributes["data-src"] if @url.nil?
+    else
+      @url = @list.first
     end
     return @url
   end
@@ -88,5 +92,5 @@ class RecipesScraper
   end
 end
 
-test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/16947/amazingly-easy-irish-soda-bread/")
-puts test2.ingredients
+test2 = RecipesScraper.new("https://www.simplyrecipes.com/recipes/lasagna/")
+puts test2.image_url
