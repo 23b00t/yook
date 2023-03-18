@@ -49,7 +49,8 @@ class RecipesController < ApplicationController
           new_ing.ingredient = Ingredient.find_by(name: ingredient[:name])
           new_ing.save
         end
-        redirect_to edit_recipe_path(@recipe)
+        raise
+        redirect_to recipe_recipe_ingredients_path(@recipe)
       end
     else
       params[:recipe][:tags] = params[:recipe][:tags].join(' ')
@@ -74,7 +75,7 @@ class RecipesController < ApplicationController
     params[:recipe][:tags] = params[:recipe][:tags].join(' ')
     if @recipe.update(recipe_params)
       session[:recipe_id] = @recipe.id
-      redirect_to ingredients_path
+      redirect_to recipe_recipe_ingredients_path(@recipe)
     else
       render :edit, status: :unprocessable_entity
     end
