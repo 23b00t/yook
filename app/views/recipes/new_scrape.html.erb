@@ -1,0 +1,8 @@
+<h1>Add recipe</h1>
+<div class="inline-form">
+  <h3>Recipe info</h3>
+  <%= simple_form_for @recipe do |f| %>
+    <%= text_field_tag :link, nil, placeholder: "Paste link", class: 'input-link' %>
+    <%= f.button :submit, 'Create', class: "button button-primary" %>
+  <% end %>
+</div>

@@ -7,6 +7,10 @@
   @extend .light-grey-background;
 }
 
+.input-label {
+  font-weight: 300;
+}
+
 .search-box {
   display: flex;
   flex-direction: column;

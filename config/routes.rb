@@ -3,6 +3,9 @@ Rails.application.routes.draw do
 
   root to: 'recipes#index'
 
+  get 'recipes/new_scrape', to: 'recipes#new_scrape'
+  get 'recipes/new_manual', to: 'recipes#new_manual'
+
   resources :recipes do
     resources :recipe_ingredients, only: :create
     member do

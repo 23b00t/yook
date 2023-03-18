@@ -19,11 +19,15 @@
   <p class="tag">⭐️ <%= recipe.rating %>/5</p>
 <% end %>
 
-<p class="tag">⚡️ <%= recipe.difficulty %></p>
+<% unless recipe.difficulty.empty? %>
+  <p class="tag">⚡️ <%= recipe.difficulty %></p>
+<% end %>
 
-<p class="tag">🍜 Serves: <%= recipe.serving_size %></p>
+<% unless recipe.serving_size.nil? %>
+  <p class="tag">🍜 Serves: <%= recipe.serving_size %></p>
+<% end %>
 
-<% unless recipe.tags.nil? %>
+<% unless recipe.tags.nil? || recipe.tags.empty? %>
   <p class="tag">#<%= recipe.tags %></p>
 <% end %>
 
