@@ -81,4 +81,9 @@ gem 'faker'
 gem "cloudinary"
 gem "pg_search"
 gem "pry-byebug"
+
+
+
 gem 'ruby-units', require: 'ruby_units/namespaced'
+
+gem "httparty"
