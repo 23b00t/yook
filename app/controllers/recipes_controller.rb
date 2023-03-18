@@ -74,7 +74,7 @@ class RecipesController < ApplicationController
     params[:recipe][:tags] = params[:recipe][:tags].join(' ')
     if @recipe.update(recipe_params)
       session[:recipe_id] = @recipe.id
-      redirect_to ingredients_path
+      redirect_to recipe_recipe_ingredients_path(@recipe)
     else
       render :edit, status: :unprocessable_entity
     end

@@ -14,9 +14,9 @@ class RecipeIngredientsController < ApplicationController
   end
 
   def index
-    # raise
     @recipe_ingredients = @recipe.recipe_ingredients
     @ingredient = RecipeIngredient.new
+    # raise
   end
 
   def update
