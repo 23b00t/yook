@@ -1,11 +1,8 @@
+<h1>Grocery List</h1>
 <div>
   <%= render 'shared/list_ingredient', ingredients: @groceries %>
 </div>
 
 <div data-controller="show-filters">
   <%= render 'shared/add_ingredient_item', ingredient: @new_ingredient%>
-  <button aria-label="Edit movie" data-action="click->show-filters#displayForm"
-          class="small-icon mt-2" style="border:none;">
-    <i class="fa-solid fa-plus"></i>
-  </button>
 </div>

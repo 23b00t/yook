@@ -1,2 +1,6 @@
-<h1>Create recipe</h1>
-<%= render 'form', recipe: @recipe %>
+<h1>Add recipe</h1>
+
+<div class="d-flex flex-column align-items-center">
+  <%= link_to "Upload link", recipes_new_scrape_path, class: "button button-primary"%>
+  <%= link_to "Add manually", recipes_new_manual_path, class: "button button-secondary"%>
+</div>

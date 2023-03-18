@@ -1,11 +1,12 @@
+<<<<<<< HEAD
 <div data-controller="edit-ingredient">
+=======
+<h1>In your fridge</h1>
+<div>
+>>>>>>> f173da34bf49cdac8aa1950332db7c2405cd3905
   <%= render 'shared/list_ingredient', ingredients: @user_ingredients %>
 </div>
 
 <div data-controller="show-filters">
   <%= render 'shared/add_ingredient_item', ingredient: @new_ingredient%>
-  <button aria-label="Edit movie" data-action="click->show-filters#displayForm"
-          class="small-icon mt-2" style="border:none;">
-    <i class="fa-solid fa-plus"></i>
-  </button>
 </div>

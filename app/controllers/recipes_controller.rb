@@ -24,6 +24,14 @@ class RecipesController < ApplicationController
     @recipe = Recipe.new
   end
 
+  def new_scrape
+    @recipe = Recipe.new
+  end
+
+  def new_manual
+    @recipe = Recipe.new
+  end
+
   def create
     if params[:link].present?
       scrape = RecipesScraper.new(params[:link])
@@ -41,7 +49,7 @@ class RecipesController < ApplicationController
           new_ing.ingredient = Ingredient.find_by(name: ingredient[:name])
           new_ing.save
         end
-        redirect_to edit_recipe_path(@recipe)
+        redirect_to recipe_recipe_ingredients_path(@recipe)
       end
     else
       params[:recipe][:tags] = params[:recipe][:tags].join(' ')
@@ -49,7 +57,7 @@ class RecipesController < ApplicationController
       @recipe.user = current_user
       if @recipe.save
         session[:recipe_id] = @recipe.id
-        redirect_to ingredients_path
+        redirect_to recipe_recipe_ingredients_path(@recipe)
       else
         render :new, status: :unprocessable_entity
       end
@@ -66,7 +74,7 @@ class RecipesController < ApplicationController
     params[:recipe][:tags] = params[:recipe][:tags].join(' ')
     if @recipe.update(recipe_params)
       session[:recipe_id] = @recipe.id
-      redirect_to ingredients_path
+      redirect_to recipe_recipe_ingredients_path(@recipe)
     else
       render :edit, status: :unprocessable_entity
     end
@@ -114,7 +122,7 @@ class RecipesController < ApplicationController
         @user_ingredient.update(quantity: 0, measurement: @user_ingredient.measurement)
       end
     end
-    @recipe.cooked = true
+    @recipe.update(cooked: true)
     redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
   end
 

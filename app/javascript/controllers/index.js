@@ -19,5 +19,8 @@ application.register("search-recipes", SearchRecipesController)
 import ShowFiltersController from "./show_filters_controller"
 application.register("show-filters", ShowFiltersController)
 
+import StarRatingController from "./star_rating_controller"
+application.register("star-rating", StarRatingController)
+
 import TomSelectController from "./tom_select_controller"
 application.register("tom-select", TomSelectController)
