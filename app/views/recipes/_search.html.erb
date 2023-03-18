@@ -2,6 +2,7 @@
 
   <div class='d-none search-box' data-show-filters-target="button">
     <%= submit_tag 'Apply filters', style: "background-color: #87B90C; color: white;" %>
+
     <!-- <%= label_tag :cooked, 'Cooked:'  %> -->
     <%= f.select :cooked, options_for_select([['➡ Cooked?', ''], ['Yes', 'true'], ['No', 'false']], selected: params[:cooked])%>
 
@@ -19,6 +20,7 @@
 
     <!--<%= label_tag :tags, 'Tags:' %>-->
     <%= text_field_tag :tags, params[:tags], placeholder: "➡ Tags" %>
+    <button type="button" data-action="click->search-recipes#resetForm" class="button button-secondary">Reset filters</button>
   </div>
 
   <%= text_field_tag :query, params[:query], data: {search_recipes_target: "input", action: "keyup->search-recipes#update"}, class: 'input search-box', placeholder: "search", style: "width: 100%" %>
