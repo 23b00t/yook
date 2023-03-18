@@ -19,7 +19,7 @@
   <p class="tag">⭐️ <%= recipe.rating %>/5</p>
 <% end %>
 
-<% unless recipe.difficulty.empty? %>
+<% unless recipe.difficulty.nil? || recipe.difficulty.empty? %>
   <p class="tag">⚡️ <%= recipe.difficulty %></p>
 <% end %>
 

@@ -27,4 +27,6 @@
     <%= render 'shared/list_ingredient', ingredients: @recipe.recipe_ingredients %>
 <% end %>
 
+<%= render 'shared/add_ingredient_item', ingredient: RecipeIngredient.new %>
+
 <%= link_to 'Add description', edit_description_recipe_path(@recipe) %>

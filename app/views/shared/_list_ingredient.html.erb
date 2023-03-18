@@ -1,4 +1,3 @@
-<h1>Inventory</h1>
 <div class="d-flex flex-column gap-2">
   <% if ingredients.count > 0 %>
     <% ingredients.each do |ingredient| %>
@@ -13,14 +12,9 @@
         </div>
 
         <!--form to update ingredient-->
-        <%= simple_form_for @recipe_ingredient && @recipe_ingredient.id == ingredient.id ? @recipe_ingredient : ingredient, defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}} do |f| %>
+        <%= simple_form_for @recipe_ingredient && @recipe_ingredient.id == ingredient.id ? @recipe_ingredient : ingredient, url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "", defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}} do |f| %>
             <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
             <%= f.input :measurement, collection: %w[ml l kg g mg], label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
-            <!--
-            <% if ingredient.class == UserIngredient %>
-              <%= f.input :favorited, as: :boolean %>
-            <% end %>
-            -->
             <%= f.button :submit, "✔️" %>
         <%end%>
       </div>
