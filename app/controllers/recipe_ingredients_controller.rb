@@ -23,6 +23,7 @@ class RecipeIngredientsController < ApplicationController
       recipe.measurement = "g"
     end
     @ingredient = RecipeIngredient.new
+    # raise
   end
 
   def update

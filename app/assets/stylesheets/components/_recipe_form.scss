@@ -23,3 +23,13 @@
   display: flex;
   justify-content: space-between;
 }
+
+.description-input {
+  height: max-content;
+}
+
+.description-input textarea {
+  @extend .dark-background;
+  width: 100%;
+  height: max-content;
+}
