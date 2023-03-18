@@ -12,6 +12,7 @@ class RecipesController < ApplicationController
     end
 
     filter unless params[:query].nil?
+    @recipes = @recipes.select { |recipe| recipe.user == current_user }
 
     respond_to do |format|
       format.html
