@@ -98,7 +98,6 @@
   align-content: center;
   justify-content: space-between;
   max-height: 25px;
-  overflow: hidden;
 }
 
 .ingredient-name {
@@ -144,8 +143,17 @@
   font-weight: 300;
   padding: 0px;
   @extend .light-grey-background;
+}
 
 .form-box {
   width: 60%;
   margin: auto;
+}
+
+.ts-wrapper {
+  height: 25px;
+}
+
+.ts-controller {
+  height: 25px;
 }
