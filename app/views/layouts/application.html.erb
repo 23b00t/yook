@@ -25,7 +25,9 @@
   <body class='app-background'>
     <%= render "shared/navbar" %>
     <%= render "shared/flashes" %>
-    <%= render "recipes/recipe_image" %>
+    <% if @recipe %>
+      <%= render "recipes/recipe_image", recipe: @recipe %>
+    <% end %>
     <div class="container" style="padding-bottom:60px;">
       <%= yield %>
     </div>

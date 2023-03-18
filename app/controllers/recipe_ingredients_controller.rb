@@ -1,4 +1,6 @@
 class RecipeIngredientsController < ApplicationController
+  before_action :set_recipe_ingredient, only: %i[update destroy]
+
   def create
     @recipe_ingredient = RecipeIngredient.new(recipe_ingredient_params)
     @recipe = Recipe.find(params[:recipe_id])
@@ -15,7 +17,6 @@ class RecipeIngredientsController < ApplicationController
   end
 
   def update
-    @recipe_ingredient = RecipeIngredient.find(params[:id])
     @recipe = Recipe.find(session[:recipe_id])
     @ingredients = []
     if @recipe_ingredient.update(recipe_ingredient_params)
@@ -25,7 +26,16 @@ class RecipeIngredientsController < ApplicationController
     end
   end
 
+  def destroy
+    @recipe_ingredient.destroy
+    redirect_to ingredients_path, status: :see_other
+  end
+
   private
+
+  def set_recipe_ingredient
+    @recipe_ingredient = RecipeIngredient.find(params[:id])
+  end
 
   def recipe_ingredient_params
     params.require("recipe_ingredient").permit(:quantity, :measurement, :ingredient_id)
