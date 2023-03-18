@@ -18,6 +18,8 @@ class RecipeIngredientsController < ApplicationController
   def index
     @recipe_ingredients = @recipe.recipe_ingredients
     @recipe_ingredients.each do |recipe|
+      next if %w[cup unit quart gallon pint].include? recipe.measurement
+
       recipe.measurement = Unit.new(recipe.measurement).units
     rescue ArgumentError
       recipe.measurement = "g"
