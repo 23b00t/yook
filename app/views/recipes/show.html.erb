@@ -4,6 +4,9 @@
     <%= link_to cooked_recipe_path(@recipe), class: "icon" do %>
       <i class="fa-solid fa-check icon"></i>
     <% end %>
+    <%= link_to create_grocery_list_recipe_path(@recipe), class: "icon" do %>
+      <i class="fa-solid fa-cart-shopping"></i>
+    <% end %>
     <%= link_to edit_recipe_path, class: "icon" do %>
       <i class="fa-solid fa-pencil icon"></i>
     <% end %>
@@ -41,4 +44,3 @@
   <%= render 'shared/list_ingredient', ingredients: [@user_ingredient] %>
 <% end %>
 -->
-

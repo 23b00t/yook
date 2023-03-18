@@ -44,6 +44,7 @@ class UserIngredientsController < ApplicationController
     redirect_to user_ingredients_path
   end
 
+   
   private
 
   def user_ingredient_params

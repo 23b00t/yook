@@ -10,3 +10,9 @@
   text-decoration: none;
   @extend .light-grey-background;
 }
+
+.small-icon {
+  @extend .icon;
+  height: 30px;
+  width: 30px;
+}
