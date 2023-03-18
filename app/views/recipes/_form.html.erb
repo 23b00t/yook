@@ -15,7 +15,7 @@
           #homemadefood #instagram #fitness #chocolate #eat #kitchen #veganrecipes #glutenfree #foodlovers #cake #weightloss #cheflife #yummyfood #veganfood
         ], input_html: {multiple: true, data: {controller: "tom-select"}}, wrapper_html: {style: "width:70%;"} %>
     </div>
-    <%= f.input :rating %>
+    <%= f.input :rating, collection: (1..5).to_a, input_html: {data: {controller: "star-rating"}} %>
     <%= f.input :photo, as: :file, label: "Upload a picture of your dish" %>
   </div>
   <div>
