@@ -122,7 +122,7 @@ class RecipesController < ApplicationController
         @user_ingredient.update(quantity: 0, measurement: @user_ingredient.measurement)
       end
     end
-    @recipe.cooked = true
+    @recipe.update(cooked: true)
     redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
   end
 
