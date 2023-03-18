@@ -1,0 +1,25 @@
+@import 'colors';
+@import 'forms';
+@import 'boxes';
+
+.inline-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-link {
+  @extend .input;
+}
+
+.manual-input input {
+  @extend .input;
+}
+
+.manual-input select {
+  @extend .input;
+}
+
+.recipe-input-row {
+  display: flex;
+  justify-content: space-between;
+}

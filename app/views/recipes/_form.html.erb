@@ -1,19 +1,24 @@
-<%= simple_form_for recipe do |f| %>
-  <% if current_path = :new %>
-    <%= text_field_tag :link, nil, placeholder: "the Link" %> <%= f.button :submit, 'add recipe with the link' %>
-  <% end %>
-  <%= f.input :title, label: "Title", error: 'A title is mandatory, please specify one' %>
-  <%= f.input :cooking_time %>
-  <%= f.input :rating, collection: (1..5).to_a, input_html: {data: {controller: "star-rating"}} %>
-  <%= f.input :difficulty, collection: %i[easy medium hard] %>
-  <%= f.input :serving_size %>
-  <%= f.input :tags, collection: %w[
-      #fun #superfood #recipes #food #foodie #foodporn #cooking #recipe #foodphotography #instafood #foodblogger
-      #yummy #healthyfood #homemade #foodstagram #delicious #easyrecipes #foodlover #tasty #healthy #recipeoftheday #healthylifestyle
-      #healthyrecipes #dinner #homecooking #vegan #instagood #chef #cook #foodies #breakfast #foodblog #baking #foodpics #foodiesofinstagram
-      #indianfood #lunch #vegetarian #yum #dessert #love #healthyeating #chicken #nutrition #cookingathome #health #foodgasm #recipeshare
-      #homemadefood #instagram #fitness #chocolate #eat #kitchen #veganrecipes #glutenfree #foodlovers #cake #weightloss #cheflife #yummyfood #veganfood
-    ], input_html: {multiple: true, data: {controller: "tom-select"}} %>
-  <%= f.input :photo, as: :file, label: "Upload a picture of your dish" %>
-  <%= f.button :submit, 'Add ingredients' %>
+<%= simple_form_for recipe, defaults: { label_html: {style: "font-weight:300;"}} do |f| %>
+  <div class="dark-box manual-input">
+    <%= f.input :title, label: "Title", error: 'Title is required' %>
+    <div class="recipe-input-row equal-row">
+      <%= f.input :cooking_time, label: "Time", wrapper_html: {style:"width:40%"} %>
+      <%= f.input :difficulty, collection: %i[easy medium hard], wrapper_html: {style:"width:55%"} %>
+    </div>
+    <div class="recipe-input-row unequal-row">
+      <%= f.input :serving_size, label: "Servings", wrapper_html: { style: "width:25%;"} %>
+      <%= f.input :tags, collection: %w[
+          #fun #superfood #recipes #food #foodie #foodporn #cooking #recipe #foodphotography #instafood #foodblogger
+          #yummy #healthyfood #homemade #foodstagram #delicious #easyrecipes #foodlover #tasty #healthy #recipeoftheday #healthylifestyle
+          #healthyrecipes #dinner #homecooking #vegan #instagood #chef #cook #foodies #breakfast #foodblog #baking #foodpics #foodiesofinstagram
+          #indianfood #lunch #vegetarian #yum #dessert #love #healthyeating #chicken #nutrition #cookingathome #health #foodgasm #recipeshare
+          #homemadefood #instagram #fitness #chocolate #eat #kitchen #veganrecipes #glutenfree #foodlovers #cake #weightloss #cheflife #yummyfood #veganfood
+        ], input_html: {multiple: true, data: {controller: "tom-select"}}, wrapper_html: {style: "width:70%;"} %>
+    </div>
+    <%= f.input :rating %>
+    <%= f.input :photo, as: :file, label: "Upload a picture of your dish" %>
+  </div>
+  <div>
+    <%= f.button :submit, 'Save and Continue', class: "button button-primary" %>
+  </div>
 <%end%>

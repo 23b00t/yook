@@ -24,6 +24,14 @@ class RecipesController < ApplicationController
     @recipe = Recipe.new
   end
 
+  def new_scrape
+    @recipe = Recipe.new
+  end
+
+  def new_manual
+    @recipe = Recipe.new
+  end
+
   def create
     if params[:link].present?
       scrape = RecipesScraper.new(params[:link])
