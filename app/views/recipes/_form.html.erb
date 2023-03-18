@@ -4,7 +4,7 @@
   <% end %>
   <%= f.input :title, label: "Title", error: 'A title is mandatory, please specify one' %>
   <%= f.input :cooking_time %>
-  <%= f.input :rating %>
+  <%= f.input :rating, collection: (1..5).to_a, input_html: {data: {controller: "star-rating"}} %>
   <%= f.input :difficulty, collection: %i[easy medium hard] %>
   <%= f.input :serving_size %>
   <%= f.input :tags, collection: %i[
