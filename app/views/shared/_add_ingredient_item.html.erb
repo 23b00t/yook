@@ -14,7 +14,7 @@
 </div>
 -->
 
-<div class='d-none input mt-2' data-show-filters-target="button">
+<div class='d-none input mt-2 py-2' data-show-filters-target="button">
     <%= simple_form_for ingredient, html: {class: "add-list-ingredient-form"} do |f| %>
         <div class="ingredient-name">
           <% if ingredient.class == UserIngredient %>
@@ -29,3 +29,28 @@
         </div>
     <%end%>
 </div>
+
+<!--
+<div class='d-none input pt-3 mt-2 container px-4' data-show-filters-target="button">
+  <div class="form-box">
+    <%= simple_form_for ingredient do |f| %>
+        <%= f.label :name %>
+        <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select"}} %>
+
+        <div class="row">
+          <div class="col-6">
+            <%= f.input :quantity, placeholder: "Amount?"%>
+          </div>
+          <div class="col-6">
+            <%= f.input :measurement, collection: %w[ml l kg g mg], placeholder: "Which measurment?" %>
+          </div>
+        </div>
+
+        <% if ingredient.class == UserIngredient %>
+          <%= f.input :favorited, as: :boolean %>
+        <% end %>
+        <%= f.button :submit, "✔️" %>
+    <%end%>
+  </div>
+</div>
+-->

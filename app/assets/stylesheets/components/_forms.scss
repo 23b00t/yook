@@ -97,8 +97,7 @@
   flex-direction: row;
   align-content: center;
   justify-content: space-between;
-  max-height: 25px;
-  overflow: hidden;
+  max-height: 30px;
 }
 
 .ingredient-name {
@@ -149,4 +148,12 @@
 .form-box {
   width: 60%;
   margin: auto;
+}
+
+.ts-wrapper {
+  height: 25px;;
+}
+
+.ts-control {
+  height: 25px;
 }
