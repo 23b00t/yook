@@ -18,11 +18,11 @@
   @extend .dark-grey-text;
 }
 
-.recipe-card >img {
+.recipe-card > img {
   height: 85px;
   width: 100%;
   object-fit: cover;
-  opacity: 0.90;
+  opacity: 0.70;
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
 }
