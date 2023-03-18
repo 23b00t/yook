@@ -57,7 +57,7 @@ class RecipesController < ApplicationController
       @recipe.user = current_user
       if @recipe.save
         session[:recipe_id] = @recipe.id
-        redirect_to ingredients_path
+        redirect_to recipe_recipe_ingredients_path(@recipe)
       else
         render :new, status: :unprocessable_entity
       end
