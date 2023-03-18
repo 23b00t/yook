@@ -4,8 +4,8 @@ class RecipeFilter
   end
 
   def filter_by_cooked(cooked)
-    cooked = cooked == 'yes'
-    @scope = @scope.select { |recipe| recipe.cooked == cooked || recipe.cooked.nil? }
+    cooked = cooked == 'true'
+    @scope = @scope.select { |recipe| recipe.cooked == cooked }
     self
   end
 
