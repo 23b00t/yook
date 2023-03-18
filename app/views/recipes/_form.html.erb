@@ -7,13 +7,13 @@
   <%= f.input :rating, collection: (1..5).to_a, input_html: {data: {controller: "star-rating"}} %>
   <%= f.input :difficulty, collection: %i[easy medium hard] %>
   <%= f.input :serving_size %>
-  <%= f.input :tags, collection: %i[
+  <%= f.input :tags, collection: %w[
       #fun #superfood #recipes #food #foodie #foodporn #cooking #recipe #foodphotography #instafood #foodblogger
       #yummy #healthyfood #homemade #foodstagram #delicious #easyrecipes #foodlover #tasty #healthy #recipeoftheday #healthylifestyle
       #healthyrecipes #dinner #homecooking #vegan #instagood #chef #cook #foodies #breakfast #foodblog #baking #foodpics #foodiesofinstagram
       #indianfood #lunch #vegetarian #yum #dessert #love #healthyeating #chicken #nutrition #cookingathome #health #foodgasm #recipeshare
       #homemadefood #instagram #fitness #chocolate #eat #kitchen #veganrecipes #glutenfree #foodlovers #cake #weightloss #cheflife #yummyfood #veganfood
-    ], input_html: { multiple: true } %>
+    ], input_html: {multiple: true, data: {controller: "tom-select"}} %>
   <%= f.input :photo, as: :file, label: "Upload a picture of your dish" %>
   <%= f.button :submit, 'Add ingredients' %>
 <%end%>
