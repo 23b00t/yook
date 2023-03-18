@@ -49,7 +49,6 @@ class RecipesController < ApplicationController
           new_ing.ingredient = Ingredient.find_by(name: ingredient[:name])
           new_ing.save
         end
-        raise
         redirect_to recipe_recipe_ingredients_path(@recipe)
       end
     else
