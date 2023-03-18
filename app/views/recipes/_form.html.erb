@@ -8,11 +8,9 @@
     <div class="recipe-input-row unequal-row">
       <%= f.input :serving_size, label: "Servings", wrapper_html: { style: "width:25%;"} %>
       <%= f.input :tags, collection: %w[
-          #fun #superfood #recipes #food #foodie #foodporn #cooking #recipe #foodphotography #instafood #foodblogger
-          #yummy #healthyfood #homemade #foodstagram #delicious #easyrecipes #foodlover #tasty #healthy #recipeoftheday #healthylifestyle
-          #healthyrecipes #dinner #homecooking #vegan #instagood #chef #cook #foodies #breakfast #foodblog #baking #foodpics #foodiesofinstagram
-          #indianfood #lunch #vegetarian #yum #dessert #love #healthyeating #chicken #nutrition #cookingathome #health #foodgasm #recipeshare
-          #homemadefood #instagram #fitness #chocolate #eat #kitchen #veganrecipes #glutenfree #foodlovers #cake #weightloss #cheflife #yummyfood #veganfood
+          #familyfun #superfood #healthy #breakfast #lunch #dinner #dessert
+          #vegan #vegetarian #glutenfree #pescatarian #keto #paleo #meat #raw #fresh #heavy #baking
+          #indian #vietnamese #chinese #sudanese #german #italian #french #spanish #korean #mexican #peruvian #ethiopian
         ], input_html: {multiple: true, data: {controller: "tom-select"}}, wrapper_html: {style: "width:70%;"} %>
     </div>
     <%= f.input :rating, collection: (1..5).to_a, input_html: {data: {controller: "star-rating"}} %>

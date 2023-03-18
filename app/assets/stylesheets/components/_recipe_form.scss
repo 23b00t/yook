@@ -1,6 +1,7 @@
 @import 'colors';
 @import 'forms';
 @import 'boxes';
+@import 'container_and_text';
 
 .inline-form form {
   display: flex;
@@ -32,4 +33,27 @@
   @extend .dark-background;
   width: 100%;
   height: max-content;
+}
+
+.recipe-input-row .ts-wrapper {
+  min-height: 30px;
+  height: fit-content;
+  border-radius: 15px;
+  background: #d9d9d9;
+  padding: 0px;
+}
+
+.recipe-input-row .ts-wrapper.multi.has-items .ts-control {
+  padding: 4px 8px 0px;
+}
+
+.recipe-input-row .ts-control {
+  background: #d9d9d9;
+  border-radius: 15px;
+  border: 0px;
+  height: fit-content;
+}
+
+.recipe-input-row .ts-control div {
+  @extend .tag;
 }
