@@ -26,7 +26,7 @@
   height: 85px;
   width: 100%;
   object-fit: cover;
-  opacity: 0.70;
+  // opacity: 0.70;
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
 }
@@ -55,10 +55,19 @@
 .dark-box {
   @extend .box;
   @extend .dark-background;
+  width: 100%;
 }
 
 .measurement-col {
   display: flex;
   justify-content: flex-start;
   margin-right: 5px;
+}
+
+.ingredient-list-name {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: start;
+  min-width: fit-content;
 }
