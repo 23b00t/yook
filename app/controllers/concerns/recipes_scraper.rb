@@ -40,7 +40,7 @@ class RecipesScraper
       # end
       ingredients << { quantity:, measurement:, name: } unless parts.empty?
     end
-
+    raise
     ingredients
   end
 
@@ -93,7 +93,7 @@ class RecipesScraper
   private
 
   def valid_unit?(unit_string)
-    Unit.parse(unit_string)
+    Unit.new(unit_string)
     true
   rescue ArgumentError
     false
