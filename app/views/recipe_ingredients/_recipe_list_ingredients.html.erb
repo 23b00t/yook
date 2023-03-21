@@ -17,7 +17,7 @@
             url: recipe_recipe_ingredient_path(@recipe, @recipe_ingredient || ingredient),
             defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}} do |f| %>
               <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
-              <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbs unit quart gallon pint], label_html: { class:"d-none"},
+              <%= f.input :measurement, collection: %w[g kg mg l ml oz cup tsp tbs unit quart gallon pint], label_html: { class:"d-none"},
                   wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"},
                   selected: @recipe_ingredient ? @recipe_ingredient.measurement : ingredient.measurement %>
               <%= f.button :submit, "✔️" %>
