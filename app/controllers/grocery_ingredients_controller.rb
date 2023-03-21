@@ -32,6 +32,10 @@ class GroceryIngredientsController < ApplicationController
     redirect_to grocery_ingredients_path
   end
 
+  def purchased
+    raise
+  end
+
   private
 
   def set_grocery_ingredient
