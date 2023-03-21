@@ -1,22 +1,22 @@
 <div class="input ingredient-list" data-controller="edit-ingredient" data-edit-ingredient-target="item">
-        <!--trash icon, favorite star, and name -->
-
-  <div class="d-flex flex-row flex-nowrap justify-content-start">
+  <div class="ingredient-list-form-and-buttons">
     <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
-      <div>
-        <p style="height: fit-content;"><%= ingredient.ingredient.name %></p>
-      </div>
+    <%= simple_form_for @recipe_ingredient && @recipe_ingredient.id == ingredient.id ? @recipe_ingredient : ingredient,
+      url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "",
+      defaults: { input_html: {style: "margin-bottom:0px; height:100%; background-image:none; padding:0px;"}},
+      data: {edit_ingredient_target: "form", action: "edit-ingredient#send"} do |f| %>
+      <%= f.button :submit, "✔️" %>
+      <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
+      <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbsp unit quart gallon pint], label_html: { class:"d-none"},
+        wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"},
+        selected: @recipe_ingredient ? @recipe_ingredient.measurement : ingredient.measurement %>
+    <%end%>
   </div>
 
-        <!--form to update ingredient-->
-  <%= simple_form_for @recipe_ingredient && @recipe_ingredient.id == ingredient.id ? @recipe_ingredient : ingredient,
-    url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "",
-    defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}},
-    data: {edit_ingredient_target: "form", action: "edit-ingredient#send"} do |f| %>
-    <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
-    <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbsp unit quart gallon pint], label_html: { class:"d-none"},
-      wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"},
-      selected: @recipe_ingredient ? @recipe_ingredient.measurement : ingredient.measurement %>
-    <%= f.button :submit, "✔️" %>
-  <%end%>
+  <div class="ingredient-list-name">
+    <p><%= ingredient.ingredient.name.titleize %></p>
+    <% if ingredient.class == RecipeIngredient %>
+      <p><em><%= ingredient.comment %></em></p>
+    <% end %>
+  </div>
 </div>
