@@ -66,7 +66,10 @@ class RecipesController < ApplicationController
 
   def show
     @edit = false
-    @steps = @recipe.description.split(/\(Step \d+\)/).reject(&:empty?)
+    @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)/).reject(&:empty?).reject do |item|
+      item == "(" || item == ")" || item == "S" || item == " " || item == "s"
+    end
+    # @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)/).reject(&:empty?)
   end
 
   def edit; end
