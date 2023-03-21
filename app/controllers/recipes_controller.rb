@@ -66,6 +66,7 @@ class RecipesController < ApplicationController
 
   def show
     @edit = false
+    @steps = @recipe.description.split(/\(Step \d+\)/).reject(&:empty?)
   end
 
   def edit; end
