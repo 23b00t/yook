@@ -88,4 +88,4 @@ gem 'ruby-units', require: 'ruby_units/namespaced'
 
 gem "httparty"
 
-gem 'jbuilder'
+

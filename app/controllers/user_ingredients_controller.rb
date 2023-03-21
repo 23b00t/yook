@@ -22,20 +22,20 @@ class UserIngredientsController < ApplicationController
   end
 
   def create
-    @ingredient = Ingredient.find_by(name: params[:user_ingredient][:ingredient_id])
-    if @ingredient
-      if UserIngredient.find_by(user_id: @ingredient.id).nil?
-        @new_users_ingredient = UserIngredient.new(user_ingredient_params)
-        @new_users_ingredient.ingredient_id = @ingredient.id
-        @new_users_ingredient.user_id = current_user.id
-        @new_users_ingredient.save
+    @ingredient = Ingredient.new(name: params[:user_ingredient][:ingredient_id])
+    @ingredient = Ingredient.find_by(name: params[:user_ingredient][:ingredient_id]) unless @ingredient.save
+
+    @new_users_ingredient = UserIngredient.new(user_ingredient_params)
+    @new_users_ingredient.user_id = current_user.id
+    @new_users_ingredient.ingredient_id = @ingredient.id
+    respond_to do |format|
+      if @new_users_ingredient.save
+        format.html { redirect_to user_ingredients_path }
+        format.json
       else
         @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
-        redirect_to user_ingredients_path(@anchor_user, anchor: dom_id(@employee))
+        redirect_to user_ingredients_path(anchor: @anchor_user), alert: "You already have this ingredient in Fridge! please change the quantity manualy!"
       end
-      redirect_to user_ingredients_path
-    else
-      redirect_to user_ingredients_path, alert: "Something went wrong!"
     end
   end
 
