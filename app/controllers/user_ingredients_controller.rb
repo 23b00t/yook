@@ -34,7 +34,8 @@ class UserIngredientsController < ApplicationController
         format.json
       else
         @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
-        redirect_to user_ingredients_path(anchor: @anchor_user), alert: "You already have this ingredient in Fridge! please change the quantity manualy!"
+        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! please change the quantity manualy!")}
+        format.json
       end
     end
   end

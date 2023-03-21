@@ -1,5 +1,5 @@
 <h1>In your fridge</h1>
-<div data-controller="add-ingredient">
+<div data-controller="add-ingredient" data-add-ingredient-target="document">
   <div>
     <%= render 'shared/list_ingredient', ingredients: @user_ingredients %>
   </div>
@@ -8,5 +8,3 @@
     <%= render 'shared/add_ingredient_item', ingredient: @new_ingredient%>
   </div>
 </div
-
-
