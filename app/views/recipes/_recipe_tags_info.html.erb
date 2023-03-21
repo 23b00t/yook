@@ -27,9 +27,6 @@
   <p class="tag">🍜 Serves: <%= recipe.serving_size %></p>
 <% end %>
 
-<% unless recipe.tags.nil? || recipe.tags.empty? %>
-  <p class="tag">#<%= recipe.tags %></p>
-<% end %>
 
 <p class="tag">
   <% if recipe.cooked? %>
@@ -38,3 +35,10 @@
     ➡ Not cooked
   <% end %>
 </p>
+
+<% unless recipe.tags.nil? || recipe.tags.empty? %>
+  <% recipe.tags.split.each do |tag| %>
+    <p class="tag"><%= tag %></p>
+  <% end %>
+
+<% end %>

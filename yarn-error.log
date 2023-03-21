@@ -1,8 +1,15 @@
 Arguments: 
+
   /home/enlin/.nvm/versions/node/v16.15.1/bin/node /home/enlin/.nvm/versions/node/v16.15.1/bin/yarn install
 
 PATH: 
   ./bin:./node_modules/.bin:/home/enlin/.nvm/versions/node/v16.15.1/bin:/home/enlin/.rbenv/shims:/home/enlin/.rbenv/bin:/home/enlin/.pyenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/Common Files/Oracle/Java/javapath:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Python/Scripts/:/mnt/d/Python/:/mnt/d/Scripts/:/mnt/d/:/mnt/c/Users/Hi-Tech/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Hi-Tech/.dotnet/tools:/mnt/d/Py_Charm/PyCharm Community Edition 2022.1/bin:/mnt/d/Visual Studio/sys/Microsoft VS Code/bin:/mnt/c/Users/Hi-Tech/AppData/Local/Programs/Microsoft VS Code/bin:/usr/local/sbin
+
+  /Users/ameliakroner/.nvm/versions/node/v16.15.1/bin/node /Users/ameliakroner/.nvm/versions/node/v16.15.1/bin/yarn add start-rating.js
+
+PATH: 
+  ./bin:./node_modules/.bin:/Users/ameliakroner/.nvm/versions/node/v16.15.1/bin:/Users/ameliakroner/.rbenv/shims:/Users/ameliakroner/.rbenv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/ameliakroner/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:./bin:./node_modules/.bin:/Users/ameliakroner/.nvm/versions/node/v16.15.1/bin:/Users/ameliakroner/.rbenv/shims:/Users/ameliakroner/.rbenv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/ameliakroner/.pyenv/bin:/usr/local/sbin:/usr/local/sbin
+
 
 Yarn version: 
   1.22.19
@@ -11,11 +18,28 @@ Node version:
   16.15.1
 
 Platform: 
+
   linux x64
 
 Trace: 
   Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
       at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:71:26)
+
+  darwin arm64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/start-rating.js: Not found
+      at Request.params.callback [as _callback] (/Users/ameliakroner/.nvm/versions/node/v16.15.1/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at Request.self.callback (/Users/ameliakroner/.nvm/versions/node/v16.15.1/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:527:28)
+      at Request.<anonymous> (/Users/ameliakroner/.nvm/versions/node/v16.15.1/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:527:28)
+      at IncomingMessage.<anonymous> (/Users/ameliakroner/.nvm/versions/node/v16.15.1/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:641:28)
+      at IncomingMessage.emit (node:events:539:35)
+      at endReadableNT (node:internal/streams/readable:1345:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
 
 npm manifest: 
   {

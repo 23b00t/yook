@@ -43,10 +43,10 @@ class RecipesController < ApplicationController
       else
         @recipe.save
         scrape.ingredients.each do |ingredient|
-          new_ing = RecipeIngredient.new({ measurement: ingredient[:measurement], quantity: ingredient[:quantity] })
-          Ingredient.new({ name: ingredient[:name] }).save
+          new_ing = RecipeIngredient.new({ measurement: ingredient[:measurement], quantity: ingredient[:quantity], comment: ingredient[:comment] })
+          ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name], creator: current_user })
           new_ing.recipe = @recipe
-          new_ing.ingredient = Ingredient.find_by(name: ingredient[:name])
+          new_ing.ingredient = ing
           new_ing.save
         end
         redirect_to recipe_recipe_ingredients_path(@recipe)

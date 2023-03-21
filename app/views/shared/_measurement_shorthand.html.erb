@@ -16,4 +16,6 @@
   tbsp
 <% elsif ingredient.measurement.downcase.include?("teaspoon")%>
   tsp
+<% elsif ingredient.measurement.downcase.include?("ounce") %>
+  oz
 <% end %>

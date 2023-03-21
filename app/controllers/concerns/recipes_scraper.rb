@@ -1,7 +1,7 @@
 require "json"
-
 require "nokogiri"
 require "httparty"
+require 'ruby-units'
 
 class RecipesScraper
   attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size, :image_url
@@ -14,31 +14,25 @@ class RecipesScraper
   def scrape_ingredients
     ingredients = []
     @doc.css('ul li').each do |element|
-      parts = element.css("p").text
-      parts = parts.split
-      case parts[0]
-      when "½"
-        parts[0] = 0.5
-      when "¼"
-        parts[0] = 0.25
+      parts = element.css("p").text.split.reject(&:empty?)
+      next if parts.empty?
+
+      name = parts.select { |word| Ingredient.where('name ILIKE ?', word).present? }.join(' ')
+      case parts.first
+      when "½" then parts[0] = "0.5"
+      when "¼" then parts[0] = "0.25"
       end
-      p parts
-      if parts.count >= 3
-        quantity = parts[0].to_f
-        measurement = parts[1]
-        name = parts[2..].join(" ")
-      elsif parts.count == 2
-        quantity = parts[0].to_f
-        measurement = "..."
-        name = parts[1..].join(" ")
-      else
-        quantity = 1
-        measurement = "..."
-        name = parts[0..].join(" ")
+      quantity = parts.first if numeric?(parts.first)
+      measurement = parts.select { |unit| valid_unit?(unit) }.first
+      comment = parts.reject { |word| word.eql?(quantity) || word.eql?(measurement) || name.include?(word) }.join(' ')
+      if name.empty?
+        name = comment
+        comment = ''
       end
-      ingredients << { quantity: quantity, measurement: measurement, name: name } unless parts.empty?
+      ingredients << { quantity:, measurement:, name:, comment: }
     end
-    return ingredients
+    # raise
+    ingredients
   end
 
   def scrape_name
@@ -90,7 +84,24 @@ class RecipesScraper
     @serving_size = scrape_time_serving[3]
     @image_url = scrape_img_url
   end
-end
 
-test2 = RecipesScraper.new("https://www.simplyrecipes.com/recipes/lasagna/")
-puts test2.image_url
+  private
+
+  def valid_unit?(unit_string)
+    unit = Unit.new(unit_string).units
+    return false if unit.empty?
+
+    true
+  rescue ArgumentError
+    false
+  end
+
+  def numeric?(string)
+    true if Float(string)
+  rescue ArgumentError
+    false
+  end
+end
+# test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/16947/amazingly-easy-irish-soda-bread/")
+# puts test2.ingredients
+

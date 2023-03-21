@@ -7,6 +7,8 @@
 #   Character.create(name: "Luke", movie: movies.first)
 require 'faker'
 require 'csv'
+require 'uri'
+require 'net/http'
 
 metric_measurement = ["kilogram", "gram", "milligram", "liter", "milliliter"]
 
@@ -20,6 +22,11 @@ user = User.create!(email: 'test@test.com', password: 'password')
 p 'create ingredients'
 CSV.foreach('db/Foodlist.csv', headers: true, header_converters: :symbol) do |row|
   Ingredient.create(name: row[:name], group: row[:food_group])
+end
+
+CSV.foreach('db/ingredients.csv') do |row|
+  Ingredient.create(name: row[0])
+  p row[0]
 end
 
 p 'create recipes and its ingredients'
