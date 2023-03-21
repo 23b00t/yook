@@ -129,11 +129,12 @@ class RecipesController < ApplicationController
 
   def create_grocery_list
     @recipe.recipe_ingredients.each do |ingredient|
-      next if UserIngredient.all.where(ingredient_id: ingredient.ingredient).present?
+      user_ingredient = UserIngredient.find_by(ingredient_id: ingredient.ingredient)
+      next if user_ingredient.present? && user_ingredient.quantity >= ingredient.quantity
 
-      grocery_ingredient = GroceryIngredient.where(ingredient: ingredient.ingredient)
+      grocery_ingredient = GroceryIngredient.find_by(ingredient: ingredient.ingredient)
       if grocery_ingredient.present?
-        new_quantity = grocery_ingredient.first.quantity + ingredient.quantity
+        new_quantity = grocery_ingredient.quantity + ingredient.quantity
         GroceryIngredient.update(quantity: new_quantity)
       else
         GroceryIngredient.create(
