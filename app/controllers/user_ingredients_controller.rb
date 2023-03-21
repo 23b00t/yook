@@ -6,6 +6,13 @@ class UserIngredientsController < ApplicationController
   def index
     UserIngredient.all.each { |ingredient| convert(ingredient) }
     @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
+    @user_ingredients.each do |user_ingredient|
+      next if %w[cup unit quart gallon pint].include? user_ingredient.measurement
+
+      user_ingredient.measurement = Unit.new(user_ingredient.measurement).units
+    rescue ArgumentError
+      user_ingredient.measurement = "g"
+    end
     @new_ingredient = UserIngredient.new
   end
 

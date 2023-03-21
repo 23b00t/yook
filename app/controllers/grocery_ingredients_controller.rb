@@ -4,8 +4,14 @@ class GroceryIngredientsController < ApplicationController
   before_action :set_grocery_ingredient, only: %i[update destroy]
 
   def index
-    GroceryIngredient.all.each { |ingredient| }
     @groceries = (GroceryIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
+    @groceries.each do |grocery|
+      next if %w[cup unit quart gallon pint].include? grocery.measurement
+
+      grocery.measurement = Unit.new(grocery.measurement).units
+    rescue ArgumentError
+      grocery.measurement = "g"
+    end
     @new_ingredient = GroceryIngredient.new
   end
 
