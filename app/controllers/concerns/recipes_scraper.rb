@@ -24,8 +24,14 @@ class RecipesScraper
       end
       quantity = parts.first if numeric?(parts.first)
       measurement = parts.select { |unit| valid_unit?(unit) }.first
-      ingredients << { quantity:, measurement:, name: }
+      comment = parts.reject { |word| word.eql?(quantity) || word.eql?(measurement) || name.include?(word) }.join(' ')
+      if name.empty?
+        name = comment
+        comment = ''
+      end
+      ingredients << { quantity:, measurement:, name:, comment: }
     end
+    # raise
     ingredients
   end
 
