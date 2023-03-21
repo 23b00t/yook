@@ -47,7 +47,7 @@ class RecipesController < ApplicationController
           ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name], creator: current_user })
           new_ing.recipe = @recipe
           new_ing.ingredient = ing
-          new_ing.save!
+          new_ing.save
         end
         redirect_to recipe_recipe_ingredients_path(@recipe)
       end

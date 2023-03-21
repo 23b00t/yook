@@ -15,7 +15,7 @@
           <!--form to update ingredient-->
           <%= simple_form_for @grocery_ingredient && @grocery_ingredient.id == ingredient.id ? @grocery_ingredient : ingredient, url: grocery_ingredient_path(ingredient), defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}} do |f| %>
               <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
-              <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbs unit quart gallon pint], label_html: { class:"d-none"},
+              <%= f.input :measurement, collection: %w[g kg mg l ml oz cup tsp tbs unit quart gallon pint], label_html: { class:"d-none"},
                   wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"},
                   selected: @grocery_ingredient ? @grocery_ingredient.measurement : ingredient.measurement %>
               <%= f.button :submit, "✔️" %>
