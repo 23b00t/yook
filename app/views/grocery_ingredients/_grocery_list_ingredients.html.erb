@@ -18,7 +18,6 @@
               <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbs unit quart gallon pint], label_html: { class:"d-none"},
                   wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"},
                   selected: @grocery_ingredient ? @grocery_ingredient.measurement : ingredient.measurement %>
-              <%#= check_box_tag 'grocery_ingredient_ids[]', ingredient.id, false, { class: 'grocery-checkbox' } %>
               <%= f.button :submit, "✔️" %>
           <%end%>
           <%= form_tag purchased_grocery_ingredients_path, method: :post do %>

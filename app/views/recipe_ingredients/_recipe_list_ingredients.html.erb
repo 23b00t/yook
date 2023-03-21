@@ -7,7 +7,8 @@
         <div class="ingredient-list-name">
           <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
           <div>
-            <p style="height: fit-content;"><%= ingredient.ingredient.name %></p>
+            <p style="height: fit-content;"><%= ingredient.ingredient.name.capitalize %></p>
+            <p style="height: fit-content; margin-left: 10px;"><em><%= ingredient.comment %></em></p>
           </div>
         </div>
 
