@@ -17,30 +17,15 @@ class RecipesScraper
       parts = element.css("p").text.split.reject(&:empty?)
       next if parts.empty?
 
-      name = parts.select { |e| Ingredient.where('name ILIKE ?', e).present? }.join
+      name = parts.select { |word| Ingredient.where('name ILIKE ?', word).present? }.join(' ')
       case parts.first
       when "½" then parts[0] = "0.5"
       when "¼" then parts[0] = "0.25"
       end
       quantity = parts.first if numeric?(parts.first)
-      measurement = parts.select { |unit| valid_unit?(unit) }
-
-      # if parts.count >= 3
-      #   quantity = parts[0].to_f
-      #   measurement = parts[1]
-      #   name = parts[2..].join(" ")
-      # elsif parts.count == 2
-      #   quantity = parts[0].to_f
-      #   measurement = "..."
-      #   name = parts[1..].join(" ")
-      # else
-      #   quantity = 1
-      #   measurement = "..."
-      #   name = parts[0..].join(" ")
-      # end
-      ingredients << { quantity:, measurement:, name: } unless parts.empty?
+      measurement = parts.select { |unit| valid_unit?(unit) }.first
+      ingredients << { quantity:, measurement:, name: }
     end
-    raise
     ingredients
   end
 
@@ -93,14 +78,18 @@ class RecipesScraper
   private
 
   def valid_unit?(unit_string)
-    Unit.new(unit_string)
+    unit = Unit.new(unit_string).units
+    return false if unit.empty?
+
     true
   rescue ArgumentError
     false
   end
 
   def numeric?(string)
-    true if Float(string) rescue false
+    true if Float(string)
+  rescue ArgumentError
+    false
   end
 end
 
