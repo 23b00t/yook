@@ -21,6 +21,10 @@
               <%#= check_box_tag 'grocery_ingredient_ids[]', ingredient.id, false, { class: 'grocery-checkbox' } %>
               <%= f.button :submit, "✔️" %>
           <%end%>
+          <%= form_tag purchased_grocery_ingredients_path, method: :post do %>
+            <%= check_box_tag 'grocery_ingredient_ids[]', ingredient.id, false, { class: 'grocery-checkbox' } %>
+            <%= submit_tag 'Purchased' %>
+          <% end %>
         </div>
       <% end %>
   <% end %>
