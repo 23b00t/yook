@@ -1,6 +1,9 @@
 
 <div class='d-none input mt-2' data-show-filters-target="button">
-    <%= simple_form_for ingredient, url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "", html: {class: "add-list-ingredient-form"} do |f| %>
+    <%= simple_form_for ingredient,
+    data: {add_ingredient_target: "form", action: "submit->add-ingredient#send"},
+    url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "",
+    html: {class: "add-list-ingredient-form"} do |f| %>
         <div class="ingredient-name">
           <% if ingredient.class == UserIngredient %>
             <%= f.input :favorited, as: :boolean, label: "Star", wrapper_html: {style:"margin-bottom:0px !important;margin-right:5px;"}%>
