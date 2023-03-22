@@ -35,7 +35,7 @@ class RecipesController < ApplicationController
   def create
     if params[:link].present?
       scrape = RecipesScraper.new(params[:link])
-      @recipe = Recipe.new(title: scrape.title, cooking_time: scrape.cooking_time, serving_size: scrape.serving_size, description: scrape.description)
+      @recipe = Recipe.new(title: scrape.title, cooking_time: transform_time(scrape.cooking_time), serving_size: scrape.serving_size, description: scrape.description)
       @recipe.scraped_img_url = scrape.image_url
       @recipe.user = current_user
       if scrape.error.present?
@@ -53,6 +53,7 @@ class RecipesController < ApplicationController
       end
     else
       params[:recipe][:tags] = params[:recipe][:tags].join(' ')
+      params[:recipe][:cooking_time] = transform_time(params[:recipe][:cooking_time])
       @recipe = Recipe.new(recipe_params)
       @recipe.user = current_user
       if @recipe.save
@@ -76,6 +77,7 @@ class RecipesController < ApplicationController
 
   def update
     params[:recipe][:tags] = params[:recipe][:tags].join(' ')
+    params[:recipe][:cooking_time] = transform_time(params[:recipe][:cooking_time])
     if @recipe.update(recipe_params)
       session[:recipe_id] = @recipe.id
       redirect_to recipe_recipe_ingredients_path(@recipe)
@@ -171,5 +173,21 @@ class RecipesController < ApplicationController
                            .sort_by_user_ingredients(params[:active])
     @matches = @recipes.instance_variable_get(:@matches)
     @recipes = @recipes.results
+  end
+
+  def transform_time(time)
+    match = time.match(/(\d+)\s*(hrs?|hours?|h?)?\s*(\d+)?\s*(mins?|minutes?)?/)
+    return "0" unless match
+
+    if match[2].to_s.downcase.start_with?("h")
+      hours = match[1].to_i
+      minutes = match[3].to_i
+    else
+      hours = 0
+      minutes = match[1].to_i
+    end
+    return "0" if hours.zero? && minutes.zero?
+
+    return ((hours * 60) + minutes).to_s
   end
 end
