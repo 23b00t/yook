@@ -1,7 +1,8 @@
-<!-- favorite button -->
+<!-- favorite button
 <%= link_to user_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ingredient-delete" do %>
   <i class="fa-regular fa-star"></i>
 <% end %>
+-->
 
 <!--delete button-->
 <% if ingredient.class == UserIngredient %>
@@ -9,6 +10,10 @@
     <i class="fa-solid fa-trash-can light-grey-background pr-1" style="font-size:14px;" ></i>
   <% end %>
 <% elsif ingredient.class == GroceryIngredient %>
+  <%= form_tag purchased_grocery_ingredients_path(ingredient), method: :post do %>
+    <%= check_box_tag 'grocery_ingredient_ids[]', ingredient.id, false, { class: 'grocery-checkbox' } %>
+    <%= submit_tag ''%>
+  <% end %>
   <%= link_to grocery_ingredient_path(ingredient), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "ingredient-delete" do %>
     <i class="fa-solid fa-trash-can light-grey-background pr-1" style="font-size:14px;"></i>
   <% end %>

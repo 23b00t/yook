@@ -1,4 +1,4 @@
-<table class="no-bullets">
+<table>
   <% recipe.recipe_ingredients.each do |ingredient| %>
     <tr>
       <th style="width: 65px;">
@@ -10,7 +10,7 @@
       </th>
       <th>
         <p>
-          <%= render "availability_tag", ingredient: ingredient %><%= ingredient.ingredient.name %>
+          <%= render "availability_tag", ingredient: ingredient %><%= ingredient.ingredient.name.capitalize %> <em><%= ingredient.comment %></em>
         </p>
       </th>
     </tr>

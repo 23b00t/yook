@@ -28,25 +28,45 @@
   @extend .input;
 }
 
+// Ingredient list
 .ingredient-list {
   @extend .input;
   display: flex;
+  flex-direction: row;
   overflow: hidden;
-  vertical-align: middle;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: left;
+  border-radius: 15px;
+  gap: 0px;
 }
 
-.ingredient-list div {
+// .ingredient-list div {
+//   display: flex;
+//   align-content: center;
+//   flex-wrap: wrap;
+// }
+
+.ingredient-list-form-and-buttons {
   display: flex;
-  align-content: center;
-  flex-wrap: wrap;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  max-width: 50%;
+  justify-content: start;
 }
 
 .ingredient-list form {
   display: flex;
   flex: row;
-  justify-content: end;
+  justify-content: start;
   width: fit-content;
+}
+
+
+.ingredient-list-name {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  max-width: 50%;
 }
 
 .ingredient-list form input {
@@ -66,7 +86,7 @@
   max-width: 30%;
   min-width: 20%;
   text-align: right;
-  margin-right: 3px;
+  margin-right: 0px;
   @extend .light-grey-background;
 }
 
@@ -115,6 +135,9 @@
   @extend .light-grey-background;
 }
 
+
+// For adding a new ingredient to a recipe
+
 .ingredient-info {
   display: flex;
   flex-direction: row;
@@ -160,4 +183,5 @@
 
 .ts-control {
   height: 25px;
+  border-radius: 99px;
 }

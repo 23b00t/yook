@@ -43,10 +43,10 @@ class RecipesController < ApplicationController
       else
         @recipe.save
         scrape.ingredients.each do |ingredient|
-          new_ing = RecipeIngredient.new({ measurement: ingredient[:measurement], quantity: ingredient[:quantity] })
-          Ingredient.new({ name: ingredient[:name] }).save
+          new_ing = RecipeIngredient.new({ measurement: ingredient[:measurement], quantity: ingredient[:quantity], comment: ingredient[:comment] })
+          ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name], creator: current_user })
           new_ing.recipe = @recipe
-          new_ing.ingredient = Ingredient.find_by(name: ingredient[:name])
+          new_ing.ingredient = ing
           new_ing.save
         end
         redirect_to recipe_recipe_ingredients_path(@recipe)
@@ -66,6 +66,10 @@ class RecipesController < ApplicationController
 
   def show
     @edit = false
+    @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)/).reject(&:empty?).reject do |item|
+      item == "(" || item == ")" || item == "S" || item == " " || item == "s"
+    end
+    # @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)/).reject(&:empty?)
   end
 
   def edit; end
@@ -128,11 +132,12 @@ class RecipesController < ApplicationController
 
   def create_grocery_list
     @recipe.recipe_ingredients.each do |ingredient|
-      next if UserIngredient.all.where(ingredient_id: ingredient.ingredient).present?
+      user_ingredient = UserIngredient.find_by(ingredient_id: ingredient.ingredient)
+      next if user_ingredient.present? && user_ingredient.quantity >= ingredient.quantity
 
-      grocery_ingredient = GroceryIngredient.where(ingredient: ingredient.ingredient)
+      grocery_ingredient = GroceryIngredient.find_by(ingredient: ingredient.ingredient)
       if grocery_ingredient.present?
-        new_quantity = grocery_ingredient.first.quantity + ingredient.quantity
+        new_quantity = grocery_ingredient.quantity + ingredient.quantity
         GroceryIngredient.update(quantity: new_quantity)
       else
         GroceryIngredient.create(

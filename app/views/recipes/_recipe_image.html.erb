@@ -1,4 +1,4 @@
-<% unless params[:id].nil? || Recipe.find(params[:id]).nil? %>
+<% unless recipe.id.nil? || Recipe.find(recipe.id).nil? %>
     <div class="recipe-image">
         <% if recipe.photo.attached? %>
             <%= cl_image_tag recipe.photo.key%>

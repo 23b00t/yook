@@ -1,4 +1,18 @@
-
-<p><%= recipe.description %></p>
-
-
+<table>
+  <% steps.each_with_index do |step, index| %>
+    <tr>
+      <th style="width: 65px; vertical-align: top;">
+        <div class="measurement-col">
+          <p class="grey-tag" style="width:60px; text-transform: capitalize;">
+            Step <%= index + 1 %>
+          </p>
+        </div>
+      </th>
+      <th style="vertical-align: top;">
+        <p>
+          <%= step.titleize %>
+        </p>
+      </th>
+    </tr>
+  <% end %>
+</table>
