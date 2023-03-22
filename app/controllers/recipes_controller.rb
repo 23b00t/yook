@@ -140,7 +140,7 @@ class RecipesController < ApplicationController
       grocery_ingredient = GroceryIngredient.find_by(ingredient: ingredient.ingredient)
       if grocery_ingredient.present?
         new_quantity = grocery_ingredient.quantity + ingredient.quantity
-        GroceryIngredient.update(quantity: new_quantity)
+        grocery_ingredient.update(quantity: new_quantity)
       else
         GroceryIngredient.create(
           ingredient: ingredient.ingredient, measurement: ingredient.measurement,
