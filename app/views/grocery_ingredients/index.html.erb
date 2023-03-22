@@ -1,5 +1,5 @@
-
-  <h1>Grocery List</h1>
+<h1>Grocery List</h1>
+<div data-controller="add-ingredient">
   <div>
     <%= render 'shared/list_ingredient', ingredients: @groceries %>
   </div>
@@ -7,3 +7,5 @@
   <div data-controller="show-filters">
     <%= render 'shared/add_ingredient_item', ingredient: @new_ingredient%>
   </div>
+  <div data-add-ingredient-target="flash"></div>
+</div>

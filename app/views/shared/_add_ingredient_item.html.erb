@@ -1,24 +1,25 @@
+<div data-add-ingredient-target="new_form">
+  <div class='d-none input mt-2' data-show-filters-target="button">
+      <%= simple_form_for ingredient,
+      data: {add_ingredient_target: "form", action: "submit->add-ingredient#send"},
+      url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "",
+      html: {class: "add-list-ingredient-form"} do |f| %>
+          <div class="ingredient-name">
+            <% if ingredient.class == UserIngredient %>
+              <%= f.input :favorited, as: :boolean, label: "Star", wrapper_html: {style:"margin-bottom:0px !important;margin-right:5px;"}%>
+            <% end %>
+            <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select", add_ingredient_target: ""}} %>
+          </div>
+          <div class="ingredient-info">
+            <%= f.input :quantity, placeholder: "0", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
+            <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbsp unit quart gallon pint lb oz], placeholder: "kg", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
+            <%= f.button :submit, "✔️" %>
+          </div>
+      <%end%>
+  </div>
 
-<div class='d-none input mt-2' data-show-filters-target="button">
-    <%= simple_form_for ingredient,
-    data: {add_ingredient_target: "form", action: "submit->add-ingredient#send"},
-    url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "",
-    html: {class: "add-list-ingredient-form"} do |f| %>
-        <div class="ingredient-name">
-          <% if ingredient.class == UserIngredient %>
-            <%= f.input :favorited, as: :boolean, label: "Star", wrapper_html: {style:"margin-bottom:0px !important;margin-right:5px;"}%>
-          <% end %>
-          <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select"}} %>
-        </div>
-        <div class="ingredient-info">
-          <%= f.input :quantity, placeholder: "0", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
-          <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbsp unit quart gallon pint lb oz], placeholder: "kg", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
-          <%= f.button :submit, "✔️" %>
-        </div>
-    <%end%>
+  <button aria-label="Edit movie" data-action="click->show-filters#displayForm"
+          class="small-icon mt-2" style="border:none;">
+    <i class="fa-solid fa-plus"></i>
+  </button>
 </div>
-
-<button aria-label="Edit movie" data-action="click->show-filters#displayForm"
-        class="small-icon mt-2" style="border:none;">
-  <i class="fa-solid fa-plus"></i>
-</button>

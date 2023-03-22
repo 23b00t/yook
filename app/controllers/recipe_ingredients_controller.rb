@@ -8,10 +8,15 @@ class RecipeIngredientsController < ApplicationController
     @recipe_ingredient = RecipeIngredient.new(recipe_ingredient_params)
     @recipe_ingredient.recipe = @recipe
     @recipe_ingredient.ingredient = Ingredient.where(name: recipe_ingredient_params[:ingredient_id]).first
-    if @recipe_ingredient.save
-      redirect_to recipe_recipe_ingredients_path, notice: "Added Ingredient"
-    else
-      redirect_to recipe_recipe_ingredients_path, alert: "Error"
+    respond_to do |format|
+      if @recipe_ingredient.save
+        format.html { redirect_to user_ingredients_path }
+        format.json
+      else
+        @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
+        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! please change the quantity manualy!")}
+        format.json
+      end
     end
   end
 
