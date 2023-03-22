@@ -17,7 +17,6 @@ class UserIngredientsController < ApplicationController
   end
 
   def update
-    raise
     @ingredient.update(user_ingredient_params)
     convert(@ingredient)
     referring_url = request.referrer

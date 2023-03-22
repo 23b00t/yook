@@ -1,10 +1,11 @@
 <h1><%= @recipe.title %></h1>
-<div class="dark-box" data-controller="add-ingredient" data-add-ingredient-target="document">
+<div class="dark-box" data-controller="add-ingredient">
   <h2>Add ingredients</h2>
   <%= render 'shared/list_ingredient', ingredients: @recipe_ingredients %>
   <div data-controller="show-filters">
     <%= render 'shared/add_ingredient_item', ingredient: @ingredient, recipe: @recipe %>
   </div>
+  <div data-add-ingredient-target="flash"></div>
 </div>
 
 

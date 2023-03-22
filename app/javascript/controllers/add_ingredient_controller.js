@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="add-ingredient"
 export default class extends Controller {
 
-  static targets = ["form", "list", "document", "new_form"]
+  static targets = ["form", "list", "flash", "new_form"]
 
   connect(){
   }
@@ -26,10 +26,10 @@ export default class extends Controller {
       console.log(data.my_form)
       if (data.my_ingredient) {
         this.listTarget.innerHTML += data.my_ingredient
-        this.documentTarget.innerHTML += data.my_flash
+        this.flashTarget.innerHTML = data.my_flash
         this.new_formTarget.innerHTML = data.my_form
       } else {
-        this.documentTarget.innerHTML += data.my_flash
+        this.flashTarget.innerHTML = data.my_flash
         this.new_formTarget.innerHTML = data.my_form
       }
     })
