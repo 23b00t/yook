@@ -6,6 +6,7 @@ export default class extends Controller {
   static targets = ["form", "list", "flash", "new_form"]
 
   connect(){
+    console.log("abboba")
   }
 
   send(event) {

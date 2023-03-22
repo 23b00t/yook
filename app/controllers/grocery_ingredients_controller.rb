@@ -4,7 +4,7 @@ class GroceryIngredientsController < ApplicationController
   before_action :set_grocery_ingredient, only: %i[update destroy]
 
   def index
-    @groceries = (GroceryIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
+    @groceries = (GroceryIngredient.all.select { |i| i.quantity && i.user == current_user }).sort
     @groceries.each do |grocery|
       next if %w[cup unit quart gallon pint].include? grocery.measurement
 
@@ -34,8 +34,7 @@ class GroceryIngredientsController < ApplicationController
         format.html { redirect_to grocery_ingredients_path }
         format.json
       else
-        @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
-        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! please change the quantity manualy!")}
+        format.html
         format.json
       end
     end

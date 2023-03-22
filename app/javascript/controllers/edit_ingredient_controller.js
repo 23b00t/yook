@@ -9,6 +9,7 @@ export default class extends Controller {
   }
 
   // send(event) {
+  //   event.preventDefault()
   //   console.log("ingredient eddited")
 
 
