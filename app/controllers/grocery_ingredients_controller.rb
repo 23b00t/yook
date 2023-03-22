@@ -14,16 +14,22 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def create
-    @ing = Ingredient.find_by(name: params[:grocery_ingredient][:ingredient_id])
+    @ing = Ingredient.new(name: params[:grocery_ingredient][:ingredient_id])
+    @ing = Ingredient.find_by(name: params[:grocery_ingredient][:ingredient_id]) unless @ing.save
 
-    if @ing
-      @grocery_item = GroceryIngredient.new(grocery_ingredient_params)
-      @grocery_item.user_id = current_user.id
-      @grocery_item.ingredient_id = @ing.id
-      @grocery_item.save
-      redirect_to grocery_ingredients_path
-    else
-      redirect_to grocery_ingredients_path, alert: "Something went wrong!"
+    @grocery_item = GroceryIngredient.new(grocery_ingredient_params)
+    @grocery_item.user_id = current_user.id
+    @grocery_item.ingredient_id = @ing.id
+
+    respond_to do |format|
+      if @grocery_item.save
+        format.html { redirect_to grocery_ingredients_path }
+        format.json
+      else
+        @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
+        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! please change the quantity manualy!")}
+        format.json
+      end
     end
   end
 

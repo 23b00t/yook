@@ -9,14 +9,14 @@
   </div>
 
         <!--form to update ingredient-->
-  <%= simple_form_for @recipe_ingredient && @recipe_ingredient.id == ingredient.id ? @recipe_ingredient : ingredient,
-    url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "",
-    defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}},
-    data: {edit_ingredient_target: "form", action: "edit-ingredient#send"} do |f| %>
+  <%= simple_form_for ingredient,
+    url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : user_ingredients_path,
+    defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}} do |f| %>
     <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
     <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbsp unit quart gallon pint], label_html: { class:"d-none"},
       wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"},
-      selected: @recipe_ingredient ? @recipe_ingredient.measurement : ingredient.measurement %>
+      selected: ingredient.measurement %>
     <%= f.button :submit, "✔️" %>
+
   <%end%>
 </div>

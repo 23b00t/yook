@@ -1,8 +1,10 @@
 <h1>Grocery List</h1>
-<div>
-  <%= render 'shared/list_ingredient', ingredients: @groceries %>
-</div>
+<div data-controller="add-ingredient" data-add-ingredient-target="document">
+  <div>
+    <%= render 'shared/list_ingredient', ingredients: @groceries %>
+  </div>
 
-<div data-controller="show-filters">
-  <%= render 'shared/add_ingredient_item', ingredient: @new_ingredient%>
+  <div data-controller="show-filters">
+    <%= render 'shared/add_ingredient_item', ingredient: @new_ingredient%>
+  </div>
 </div>
