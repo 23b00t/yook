@@ -1,25 +1,7 @@
-<div class="d-flex flex-column gap-2">
+<div class="d-flex flex-column gap-2" data-add-ingredient-target="list">
   <% if ingredients.count > 0 %>
     <% ingredients.each do |ingredient| %>
-      <div class="input ingredient-list">
-        <!--trash icon, favorite star, and name -->
-
-        <div class="ingredient-list-name">
-          <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
-          <div>
-            <p style="height: fit-content;"><%= ingredient.ingredient.name %></p>
-          </div>
-        </div>
-
-        <!--form to update ingredient-->
-        <%= simple_form_for @user_ingredient && @user_ingredient.id == ingredient.id ? @user_ingredient : ingredient, url: user_ingredient_path(ingredient), defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}} do |f| %>
-            <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
-            <%= f.input :measurement, collection: %w[g kg mg l ml oz cup tsp tbs unit quart gallon pint], label_html: { class:"d-none"},
-                wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"},
-                selected: @user_ingredient ? @user_ingredient.measurement : ingredient.measurement %>
-            <%= f.button :submit, "✔️" %>
-        <%end%>
-      </div>
+      <%= render 'user_ingredient_item', ingredient: ingredient %>
     <% end %>
   <% end %>
 </div>

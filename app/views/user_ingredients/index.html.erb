@@ -1,7 +1,7 @@
 <h1>In your fridge</h1>
 <div data-controller="add-ingredient">
   <div>
-    <%= render 'shared/list_ingredient', ingredients: @user_ingredients %>
+    <%= render 'user_list_ingredients', ingredients: @user_ingredients %>
   </div>
   <div data-controller="show-filters">
     <%= render 'shared/add_ingredient_item', ingredient: @new_ingredient%>

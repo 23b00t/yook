@@ -1,8 +1,8 @@
+
 <div class="input ingredient-list" data-controller="edit-ingredient" data-edit-ingredient-target="item">
   <div class="ingredient-list-form-and-buttons">
     <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
-    <%= simple_form_for ingredient,
-      url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "",
+    <%= simple_form_for @user_ingredient && @user_ingredient.id == ingredient.id ? @user_ingredient : ingredient, url: user_ingredient_path(ingredient), defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}},
       defaults: { input_html: {style: "margin-bottom:0px; height:100%; background-image:none; padding:0px;"}},
       data: {edit_ingredient_target: "form", action: "edit-ingredient#send"} do |f| %>
       <%= f.button :submit, "✔️" %>
