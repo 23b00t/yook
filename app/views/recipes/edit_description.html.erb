@@ -3,6 +3,7 @@
   <%= form_with model: @recipe, url: update_description_recipe_path(@recipe), method: :patch do |f| %>
     <div class="dark-box description-input">
       <h3>Directions</h3>
+      <p><em>Separate each step by writing (Step #)</em></p>
       <%= f.text_area :description, rows: 10, html: { style: "width:100%;"} %>
     </div>
     <div>

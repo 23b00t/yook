@@ -49,7 +49,11 @@ class RecipesController < ApplicationController
           new_ing.ingredient = ing
           new_ing.save
         end
-        redirect_to recipe_recipe_ingredients_path(@recipe)
+        if @recipe.scraped_img_url
+          redirect_to edit_recipe_path(@recipe)
+        else
+          redirect_to recipe_recipe_ingredients_path(@recipe)
+        end
       end
     else
       params[:recipe][:tags] = params[:recipe][:tags].join(' ')
@@ -58,7 +62,11 @@ class RecipesController < ApplicationController
       @recipe.user = current_user
       if @recipe.save
         session[:recipe_id] = @recipe.id
-        redirect_to recipe_recipe_ingredients_path(@recipe)
+        if @recipe.scraped_img_url
+          redirect_to edit_recipe_path(@recipe)
+        else
+          redirect_to recipe_recipe_ingredients_path(@recipe)
+        end
       else
         render :new, status: :unprocessable_entity
       end
@@ -67,8 +75,9 @@ class RecipesController < ApplicationController
 
   def show
     @edit = false
-    @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)/).reject(&:empty?).reject do |item|
-      item == "(" || item == ")" || item == "S" || item == " " || item == "s"
+    @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)( |)/).reject(&:empty?).reject do |item|
+      item == "(" || item == ")" || item == "S" || item == " " || item == "s" || item == "." || item == "" ||
+        item == " " || item.nil? || item == "-"
     end
     # @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)/).reject(&:empty?)
   end
