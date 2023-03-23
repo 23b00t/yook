@@ -5,9 +5,6 @@
       url: ingredient.class == RecipeIngredient ? recipe_recipe_ingredients_path(@recipe) : "",
       html: {class: "add-list-ingredient-form"} do |f| %>
           <div class="ingredient-name">
-            <% if ingredient.class == UserIngredient %>
-              <%= f.input :favorited, as: :boolean, label: "Star", wrapper_html: {style:"margin-bottom:0px !important;margin-right:5px;"}%>
-            <% end %>
             <%= f.select :ingredient_id, Ingredient.all.pluck(:name).unshift(''), {}, {data: {controller: "tom-select", add_ingredient_target: ""}} %>
           </div>
           <div class="ingredient-info">
