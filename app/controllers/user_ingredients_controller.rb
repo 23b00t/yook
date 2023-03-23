@@ -8,7 +8,8 @@ class UserIngredientsController < ApplicationController
       convert(ingredient)
       ingredient.destroy if ingredient.quantity.zero?
     end
-    @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
+    @user_ingredients = (UserIngredient.all.select { |i| i.favorited? && i.quantity.positive? && i.user == current_user }).sort
+    @user_ingredients += (UserIngredient.all.select { |i| not(i.favorited?) && i.quantity.positive? && i.user == current_user }).sort
     @user_ingredients.each do |user_ingredient|
       next if %w[cup unit quart gallon pint].include? user_ingredient.measurement
 

@@ -1,5 +1,12 @@
 
 <div class="input ingredient-list" data-controller="edit-ingredient" data-edit-ingredient-target="item">
+  <div style="margin-right:5px;">
+    <% if ingredient.favorited? %>
+      <i class="fa-solid fa-star primary-text"></i>
+    <% else %>
+      <i class="fa-regular fa-star dark-grey-text"></i>
+    <% end %>
+  </div>
   <div class="ingredient-list-form-and-buttons">
     <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
     <%= simple_form_for ingredient, defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}},

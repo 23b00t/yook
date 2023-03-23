@@ -3,8 +3,16 @@ import StarRating from "star-rating.js"
 
 export default class extends Controller {
   connect() {
-    // console.log(this.element.nextElementSibling.innerHTML)
-    new StarRating(this.element)
-    // this.element.nextElementSibling.innerHTML = "<span class='gl-star-rating--stars s0' role='tooltip' data-rating='0' aria-label=''>"
+    new StarRating(this.element, {
+      classNames: {
+          active: "gl-active",
+          base: "gl-star-rating",
+          selected: "gl-selected",
+      },
+      clearable: true,
+      maxStars: 10,
+      stars: null,
+      tooltip: false,
+  })
   }
 }
