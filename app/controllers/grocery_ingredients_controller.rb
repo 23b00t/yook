@@ -54,27 +54,25 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def purchased
-    purchased = params[:grocery_ingredient_ids]
-    purchased.each do |grocery_ingredient_id|
-      grocery_ingredient = GroceryIngredient.find(grocery_ingredient_id)
-      ingredient_id = grocery_ingredient.ingredient_id
-      user_ingredient = UserIngredient.where(ingredient_id:).first
-      if user_ingredient.present?
-        unit1 = Unit.new("#{grocery_ingredient.quantity} #{grocery_ingredient.measurement}")
-        unit2 = Unit.new("#{user_ingredient.quantity} #{user_ingredient.measurement}")
-        begin
-          unit3 = (unit1 + unit2).to(user_ingredient.measurement).round(4)
-        rescue ArgumentError
+    purchased = params[:grocery_ingredient_id]
+    grocery_ingredient = GroceryIngredient.find(purchased)
+    ingredient_id = grocery_ingredient.ingredient_id
+    user_ingredient = UserIngredient.where(ingredient_id:).first
+    if user_ingredient.present?
+      unit1 = Unit.new("#{grocery_ingredient.quantity} #{grocery_ingredient.measurement}")
+      unit2 = Unit.new("#{user_ingredient.quantity} #{user_ingredient.measurement}")
+      begin
+        unit3 = (unit1 + unit2).to(user_ingredient.measurement).round(4)
+      rescue ArgumentError
           flash.now[:alert] = "Measurement is not compatible"
-        end
+      end
         quantity = unit3.scalar
         user_ingredient.update(quantity:)
-      else
+    else
         UserIngredient.create(quantity: grocery_ingredient.quantity, measurement: grocery_ingredient.measurement, ingredient_id:, user: current_user)
-      end
-      grocery_ingredient.delete
     end
-    redirect_to user_ingredients_path
+    grocery_ingredient.delete
+    redirect_to grocery_ingredients_path(notice: "Ingredient was purchased! Check your Inventory!")
   end
 
   private
