@@ -8,8 +8,11 @@ class GroceryIngredientsController < ApplicationController
     @groceries.each do |grocery|
       grocery.destroy if grocery.quantity.zero?
       next if %w[cup unit quart gallon pint].include? grocery.measurement
-
-      grocery.measurement = Unit.new(grocery.measurement).units
+      begin
+        grocery.measurement = Unit.new(grocery.measurement).units
+      rescue
+        #error
+      end
     rescue ArgumentError
       grocery.measurement = "g"
     end
