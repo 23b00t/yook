@@ -6,6 +6,7 @@ class GroceryIngredientsController < ApplicationController
   def index
     @groceries = (GroceryIngredient.all.select { |i| i.quantity && i.user == current_user }).sort
     @groceries.each do |grocery|
+      grocery.destroy if grocery.quantity.zero?
       next if %w[cup unit quart gallon pint].include? grocery.measurement
 
       grocery.measurement = Unit.new(grocery.measurement).units
@@ -16,9 +17,16 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def update
-    @ingredient.update(grocery_ingredient_params)
-    #convert(@ingredient)
-    redirect_to grocery_ingredients_path
+    respond_to do |format|
+      if @ingredient.update(grocery_ingredient_params)
+        convert(@ingredient)
+        format.html { redirect_to grocery_ingredients_path }
+        format.text { render partial: "grocery_ingredient_item", locals: { ingredient: @ingredient, notice: "Updated successfully" }, formats: [:html] }
+      else
+        format.html { redirect_to grocery_ingredients_path, notice: "quantity cant be lower than 0" }
+        format.text { render partial: "grocery_ingredient_item", locals: { ingredient: set_grocery_ingredient, notice: "quantity cant be lower than 0" }, formats: [:html] }
+      end
+    end
   end
 
   def create
@@ -83,17 +91,17 @@ class GroceryIngredientsController < ApplicationController
   def convert(ingredient)
     if ingredient.quantity >= 1000
       case ingredient.measurement
-      when "gram"
+      when "g"
         ingredient.quantity /= 1000
-        ingredient.measurement = "kilogram"
+        ingredient.measurement = "kg"
         ingredient.save
-      when "milligram"
+      when "mg"
         ingredient.quantity /= 1000
-        ingredient.measurement = "gram"
+        ingredient.measurement = "g"
         ingredient.save
-      when "milliliter"
+      when "ml"
         ingredient.quantity /= 1000
-        ingredient.measurement = "liter"
+        ingredient.measurement = "l"
         ingredient.save
       end
     end

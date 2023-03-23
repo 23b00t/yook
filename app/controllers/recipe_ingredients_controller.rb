@@ -33,10 +33,14 @@ class RecipeIngredientsController < ApplicationController
   end
 
   def update
-    if @recipe_ingredient.update(recipe_ingredient_params)
-      redirect_to recipe_recipe_ingredients_path, notice: "Updated successfully"
-    else
-      render 'ingredients/index', status: :unprocessable_entity
+    respond_to do |format|
+      if @recipe_ingredient.update(recipe_ingredient_params)
+        format.html { redirect_to recipe_recipe_ingredients_path }
+        format.text { render partial: "recipe_ingredient_item", locals: { ingredient: @recipe_ingredient, notice: "Updated successfully" }, formats: [:html] }
+      else
+        format.html { redirect_to recip_recipe_ingredients_path, notice: "quantity cant be lower than 0" }
+        format.text { render partial: "recipe_ingredient_item", locals: { ingredient: set_recipe_ingredient, notice: "quantity cant be lower than 0" }, formats: [:html] }
+      end
     end
   end
 
