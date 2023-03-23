@@ -23,6 +23,7 @@
   </head>
 
   <body class='app-background'>
+  <%= render "shared/flashes" %>
     <%= render "shared/navbar" %>
     <% if @recipe %>
       <%= render "recipes/recipe_image", recipe: @recipe %>
