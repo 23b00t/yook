@@ -5,28 +5,27 @@ export default class extends Controller {
   static targets = ["form", "item"]
 
   connect() {
-
+    console.log(this.formTarget)
+    console.log(this.itemTarget)
   }
 
-  // send(event) {
-  //   event.preventDefault()
-  //   console.log("ingredient eddited")
+  send(event) {
+    event.preventDefault()
 
+    console.log(new FormData(this.formTarget))
 
-  //   var token = document.getElementsByName('csrf-token')[0].content
-  //   const url = this.formTarget.action
-  //   const options = {
-  //     method: "PATCH",
-  //     headers: {"Accept": "text/plain", "X-CSRF-Token": token},
-  //     body: new FormData(this.formTarget)
-  //   }
-  //   fetch(url, options)
-  //   .then(respond => respond.text())
-  //   .then((data) => {
-  //     console.log(data.my_ingredient)
-  //     if (data.my_ingredient) {
-  //       this.listTarget.innerHTML = data.my_ingredient
-  //     }
-  //   })
-  // }
+    var token = document.getElementsByName('csrf-token')[0].content
+    const url = this.formTarget.action
+    const options = {
+      method: "PATCH",
+      headers: {"Accept": "text/plain", "X-CSRF-Token": token},
+      body: new FormData(this.formTarget)
+    }
+    fetch(url, options)
+    .then(response => response.text())
+    .then((data) => {
+      this.itemTarget.outerHTML = data
+    })
+  }
+
 }

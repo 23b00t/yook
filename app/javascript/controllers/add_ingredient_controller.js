@@ -11,7 +11,6 @@ export default class extends Controller {
 
   send(event) {
     event.preventDefault()
-    console.log("Ingredient added")
 
     var token = document.getElementsByName('csrf-token')[0].content
     const url = this.formTarget.action

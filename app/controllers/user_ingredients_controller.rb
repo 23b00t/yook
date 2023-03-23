@@ -4,7 +4,10 @@ class UserIngredientsController < ApplicationController
   before_action :set_user_ingredient, only: %i[update destroy]
 
   def index
-    UserIngredient.all.each { |ingredient| convert(ingredient) }
+    UserIngredient.all.each do |ingredient|
+      convert(ingredient)
+      ingredient.destroy if ingredient.quantity.zero?
+    end
     @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
     @user_ingredients.each do |user_ingredient|
       next if %w[cup unit quart gallon pint].include? user_ingredient.measurement
@@ -17,14 +20,23 @@ class UserIngredientsController < ApplicationController
   end
 
   def update
-    @ingredient.update(user_ingredient_params)
-    convert(@ingredient)
-    referring_url = request.referrer
-    if referring_url.end_with?('cooked')
-      id = referring_url.match(%r{(\d+)/(cooked)$})
-      redirect_to cooked_recipe_path(id[1])
+    if @ingredient.update(user_ingredient_params)
+      convert(@ingredient)
+      referring_url = request.referrer
+      respond_to do |format|
+        if referring_url.end_with?('cooked')
+          id = referring_url.match(%r{(\d+)/(cooked)$})
+          format.html { redirect_to cooked_recipe_path(id[1]) }
+        else
+          format.html { redirect_to user_ingredients_path }
+          format.text { render partial: "user_ingredient_item", locals: { ingredient: @ingredient, notice: "Updated successfully" }, formats: [:html] }
+        end
+      end
     else
-      redirect_to user_ingredients_path
+      respond_to do |format|
+        format.html { redirect_to user_ingredients_path }
+        format.text { render partial: "user_ingredient_item", locals: { ingredient: set_user_ingredient, notice: "quantity cant be lower than 0" }, formats: [:html] }
+      end
     end
   end
 
@@ -66,18 +78,18 @@ class UserIngredientsController < ApplicationController
   #automaticly converts measurment 1000g = 1kg and so on
   def convert(ingredient)
     if ingredient.quantity >= 1000
-      case ingredient.measurement.downcase
-      when "gram"
+      case ingredient.measurement
+      when "g"
         ingredient.quantity /= 1000
-        ingredient.measurement = "kilogram"
+        ingredient.measurement = "kg"
         ingredient.save
-      when "milligram"
+      when "mg"
         ingredient.quantity /= 1000
-        ingredient.measurement = "gram"
+        ingredient.measurement = "g"
         ingredient.save
-      when "milliliter"
+      when "ml"
         ingredient.quantity /= 1000
-        ingredient.measurement = "liter"
+        ingredient.measurement = "l"
         ingredient.save
       end
     end
