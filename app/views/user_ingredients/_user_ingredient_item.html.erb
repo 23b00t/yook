@@ -7,7 +7,7 @@
       data: {edit_ingredient_target: "form", action: "edit-ingredient#send"} do |f| %>
       <%= f.button :submit, "✔️" %>
       <%= f.input :quantity, label_html: { class:"d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"} %>
-      <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbs unit quart gallon pint], label_html: { class:"d-none"},
+      <%= f.input :measurement, collection: %w[g kg mg l ml oz lbs cup tsp tbs unit quart gallon pint], label_html: { class:"d-none"},
         wrapper_html: { style: "margin-bottom:0px !important;"}, input_html: { class: "light-grey-background"},
         selected: @recipe_ingredient ? @recipe_ingredient.measurement : ingredient.measurement %>
     <%end%>
