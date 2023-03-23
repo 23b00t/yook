@@ -13,6 +13,9 @@ application.register("edit-ingredient", EditIngredientController)
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
+import PurchaseIngredientController from "./purchase_ingredient_controller"
+application.register("purchase-ingredient", PurchaseIngredientController)
+
 import SearchRecipesController from "./search_recipes_controller"
 application.register("search-recipes", SearchRecipesController)
 

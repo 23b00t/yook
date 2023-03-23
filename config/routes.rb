@@ -22,7 +22,7 @@ Rails.application.routes.draw do
 
   resources :user_ingredients
 
-  resources :grocery_ingredients, only: %i[index create update destroy] do
-    post 'purchased', on: :collection
-  end
+  resources :grocery_ingredients, only: %i[index create update destroy]
+
+  post 'grocery_ingredient', to: 'grocery_ingredients#purchased', as: :purchase_ingredient
 end
