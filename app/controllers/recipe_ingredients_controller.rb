@@ -11,12 +11,11 @@ class RecipeIngredientsController < ApplicationController
     respond_to do |format|
       if @recipe_ingredient.save
         format.html { redirect_to user_ingredients_path }
-        format.json
       else
         @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
-        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! please change the quantity manualy!")}
-        format.json
+        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! Please change the quantity manualy!")}
       end
+      format.json
     end
   end
 

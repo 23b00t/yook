@@ -1,4 +1,5 @@
 require "pry-byebug"
+
 class UserIngredientsController < ApplicationController
   include ActionView::RecordIdentifier
   before_action :set_user_ingredient, only: %i[update destroy]
@@ -43,12 +44,11 @@ class UserIngredientsController < ApplicationController
     respond_to do |format|
       if @new_users_ingredient.save
         format.html { redirect_to user_ingredients_path }
-        format.json
       else
         @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
         format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! please change the quantity manualy!")}
-        format.json
       end
+      format.json
     end
   end
 
@@ -56,7 +56,6 @@ class UserIngredientsController < ApplicationController
     @ingredient.destroy
     redirect_to user_ingredients_path
   end
-
 
   private
 

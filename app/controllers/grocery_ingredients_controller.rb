@@ -1,6 +1,7 @@
 require 'ruby-units'
 
 class GroceryIngredientsController < ApplicationController
+  include UnitHelpers # adjust_measurement and substract_ingredients methods
   before_action :set_grocery_ingredient, only: %i[update destroy]
 
   def index
@@ -31,13 +32,8 @@ class GroceryIngredientsController < ApplicationController
     @grocery_item.ingredient_id = @ing.id
 
     respond_to do |format|
-      if @grocery_item.save
-        format.html { redirect_to grocery_ingredients_path }
-        format.json
-      else
-        format.html
-        format.json
-      end
+      @grocery_item.save ? format.html { redirect_to grocery_ingredients_path } : format.html
+      format.json
     end
   end
 
@@ -50,22 +46,20 @@ class GroceryIngredientsController < ApplicationController
     purchased = params[:grocery_ingredient_id]
     grocery_ingredient = GroceryIngredient.find(purchased)
     ingredient_id = grocery_ingredient.ingredient_id
-    user_ingredient = UserIngredient.where(ingredient_id:).first
+    user_ingredient = UserIngredient.find_by(ingredient_id:)
     if user_ingredient.present?
-      unit1 = Unit.new("#{grocery_ingredient.quantity} #{grocery_ingredient.measurement}")
-      unit2 = Unit.new("#{user_ingredient.quantity} #{user_ingredient.measurement}")
       begin
-        unit3 = (unit1 + unit2).to(user_ingredient.measurement).round(4)
-      rescue ArgumentError
-          flash.now[:alert] = "Measurement is not compatible"
-      end
-        quantity = unit3.scalar
+        new_measurement = sum_ingredients(grocery_ingredient, user_ingredient)
+        quantity = new_measurement.scalar
         user_ingredient.update(quantity:)
+      rescue ArgumentError
+        flash.now[:alert] = "Measurement is not compatible. Please add #{grocery_ingredient.quantity} #{grocery_ingredient.measurement} #{grocery_ingredient.ingredient.name} manually"
+      end
     else
-        UserIngredient.create(quantity: grocery_ingredient.quantity, measurement: grocery_ingredient.measurement, ingredient_id:, user: current_user)
+      UserIngredient.create(quantity: grocery_ingredient.quantity, measurement: grocery_ingredient.measurement, ingredient_id:, user: current_user)
     end
     grocery_ingredient.delete
-    redirect_to grocery_ingredients_path(notice: "Ingredient was purchased! Check your Inventory!")
+    redirect_to user_ingredients_path, flash: flash[:alert].present? ? { alert: flash[:alert] } : { notice: "Ingredient was purchased! Check your Inventory!" }
   end
 
   private

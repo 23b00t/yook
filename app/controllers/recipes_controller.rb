@@ -2,14 +2,12 @@ require "open-uri"
 require 'ruby-units'
 
 class RecipesController < ApplicationController
+  include TimeHelper # transform_time method
+  include UnitHelpers # adjust_measurement and substract_ingredients methods
   before_action :set_recipe, only: %i[show edit update destroy cooked create_grocery_list]
 
   def index
-    if params[:query].present?
-      @recipes = Recipe.search_by_title_and_description(params[:query])
-    else
-      @recipes = Recipe.all
-    end
+    @recipes = params[:query].present? ? Recipe.search_by_title_and_description(params[:query]) : Recipe.all
 
     filter unless params[:query].nil?
     @recipes = @recipes.select { |recipe| recipe.user == current_user }
@@ -69,12 +67,7 @@ class RecipesController < ApplicationController
   end
 
   def show
-    @edit = false
-    @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)( |)/).reject(&:empty?).reject do |item|
-      item == "(" || item == ")" || item == "S" || item == " " || item == "s" || item == "." || item == "" ||
-        item == " " || item.nil? || item == "-"
-    end
-    # @steps = @recipe.description.split(/(\(|.| |)(s|S)tep( |)\d( |)(.|-)/).reject(&:empty?)
+    @steps = @recipe.description.split(/\(Step \d+\)/).reject(&:empty?)
   end
 
   def edit; end
@@ -114,18 +107,14 @@ class RecipesController < ApplicationController
       @user_ingredient = UserIngredient.where(ingredient_id: ingredient.ingredient_id).first
       next if !@user_ingredient.present? || @user_ingredient.quantity <= 0
 
-      unit1 = Unit.new("#{@user_ingredient.quantity} #{@user_ingredient.measurement}")
-      unit2 = Unit.new("#{ingredient.quantity} #{ingredient.measurement}")
       begin
-        unit3 = (unit1 - unit2).to(@user_ingredient.measurement).round(4)
+        new_measurement = substract_ingredients(@user_ingredient, ingredient)
       rescue ArgumentError
-        @edit = true
-        flash.now[:alert] = "The measurement of the ingredient in your fridge is: #{@user_ingredient.measurement}.\n
-                             You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually
-                             to #{ingredient.measurement}"
-        return render :show
+        flash[:alert] = "The measurement of the #{ingredient.ingredient.name.capitalize} in your fridge is: #{@user_ingredient.measurement}.\n
+                         You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually"
+        next
       end
-      quantity = unit3.scalar
+      quantity = new_measurement.scalar
       if quantity.positive?
         @user_ingredient.update(quantity:, measurement: @user_ingredient.measurement)
       else
@@ -133,7 +122,12 @@ class RecipesController < ApplicationController
       end
     end
     @recipe.update(cooked: true)
-    redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
+    if flash[:alert].present?
+      redirect_to user_ingredients_path, alert: flash[:alert]
+    else
+      redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
+    end
+
   end
 
   def create_grocery_list
@@ -142,6 +136,9 @@ class RecipesController < ApplicationController
       next if user_ingredient.present? && user_ingredient.quantity >= ingredient.quantity
 
       grocery_ingredient = GroceryIngredient.find_by(ingredient: ingredient.ingredient)
+
+      # Handle different meassurements
+
       if grocery_ingredient.present?
         new_quantity = grocery_ingredient.quantity + ingredient.quantity
         grocery_ingredient.update(quantity: new_quantity)
@@ -177,27 +174,5 @@ class RecipesController < ApplicationController
                            .sort_by_user_ingredients(params[:active])
     @matches = @recipes.instance_variable_get(:@matches)
     @recipes = @recipes.results
-  end
-
-  def transform_time(time)
-    match = time.match(/(\d+)\s*(hrs?|hours?|h?)?\s*(\d+)?\s*(mins?|minutes?)?/)
-    return "0" unless match
-
-    if match[2].to_s.downcase.start_with?("h")
-      hours = match[1].to_i
-      minutes = match[3].to_i
-    else
-      hours = 0
-      minutes = match[1].to_i
-    end
-    return "0" if hours.zero? && minutes.zero?
-
-    return ((hours * 60) + minutes).to_s
-  end
-
-  def adjust_measurement(measurement)
-    Unit.new(measurement).units
-  rescue ArgumentError
-    'U'
   end
 end
