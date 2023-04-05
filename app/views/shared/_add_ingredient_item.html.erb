@@ -15,7 +15,7 @@
           </div>
           <div class="ingredient-info">
             <%= f.input :quantity, placeholder: "0", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
-            <%= f.input :measurement, collection: %w[g kg mg l ml cup tsp tbsp unit quart gallon pint lb oz], placeholder: "kg", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
+            <%= f.input :measurement, collection: { "g" => "g", "kg" => "kg", "mg" => "mg", "l" => "l", "ml" => "ml", "cup" => "cu", "tsp" => "tsp", "tbsp" => "tbs", "unit" => "U", "quart" => "qt", "gallon" => "gal", "pint" => "pt", "pound" => "lbs", "ounce" => "oz" }, placeholder: "kg", label_html: {class: "d-none"}, wrapper_html: { style: "margin-bottom:0px !important;"} %>
             <%= f.button :submit, "✔️" %>
           </div>
       <%end%>

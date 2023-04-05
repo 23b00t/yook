@@ -5,17 +5,7 @@ class GroceryIngredientsController < ApplicationController
 
   def index
     @groceries = (GroceryIngredient.all.select { |i| i.quantity && i.user == current_user }).sort
-    @groceries.each do |grocery|
-      grocery.destroy if grocery.quantity.zero?
-      next if %w[cup unit quart gallon pint].include? grocery.measurement
-      begin
-        grocery.measurement = Unit.new(grocery.measurement).units
-      rescue
-        #error
-      end
-    rescue ArgumentError
-      grocery.measurement = "g"
-    end
+    @groceries.delete_if(&:quantity.zero?)
     @new_ingredient = GroceryIngredient.new
   end
 
@@ -88,23 +78,15 @@ class GroceryIngredientsController < ApplicationController
     params.require(:grocery_ingredient).permit(:name, :measurement, :quantity)
   end
 
-  #automaticly converts measurment 1000g = 1kg and so on
   def convert(ingredient)
-    if ingredient.quantity >= 1000
-      case ingredient.measurement
-      when "g"
-        ingredient.quantity /= 1000
-        ingredient.measurement = "kg"
-        ingredient.save
-      when "mg"
-        ingredient.quantity /= 1000
-        ingredient.measurement = "g"
-        ingredient.save
-      when "ml"
-        ingredient.quantity /= 1000
-        ingredient.measurement = "l"
-        ingredient.save
-      end
+    return unless ingredient.quantity >= 1000 || %w[g ml mg].include?(ingredient.measurement)
+
+    ingredient.quantity /= 1000
+    case ingredient.measurement
+    when "g" then ingredient.measurement = "kg"
+    when "mg" then ingredient.measurement = "g"
+    when "ml" then ingredient.measurement = "l"
     end
+    ingredient.save
   end
 end

@@ -8,15 +8,7 @@ class UserIngredientsController < ApplicationController
       convert(ingredient)
       ingredient.destroy if ingredient.quantity.zero?
     end
-    @user_ingredients = (UserIngredient.all.select { |i| i.favorited? && i.quantity.positive? && i.user == current_user }).sort
-    @user_ingredients += (UserIngredient.all.select { |i| not(i.favorited?) && i.quantity.positive? && i.user == current_user }).sort
-    @user_ingredients.each do |user_ingredient|
-      next if %w[cup unit quart gallon pint].include? user_ingredient.measurement
-
-      user_ingredient.measurement = Unit.new(user_ingredient.measurement).units
-    rescue ArgumentError
-      user_ingredient.measurement = "g"
-    end
+    @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
     @new_ingredient = UserIngredient.new
   end
 
@@ -76,23 +68,15 @@ class UserIngredientsController < ApplicationController
     @ingredient = UserIngredient.find(params[:id])
   end
 
-  #automaticly converts measurment 1000g = 1kg and so on
   def convert(ingredient)
-    if ingredient.quantity >= 1000
-      case ingredient.measurement
-      when "g"
-        ingredient.quantity /= 1000
-        ingredient.measurement = "kg"
-        ingredient.save
-      when "mg"
-        ingredient.quantity /= 1000
-        ingredient.measurement = "g"
-        ingredient.save
-      when "ml"
-        ingredient.quantity /= 1000
-        ingredient.measurement = "l"
-        ingredient.save
-      end
+    return unless ingredient.quantity >= 1000 || %w[g ml mg].include?(ingredient.measurement)
+
+    ingredient.quantity /= 1000
+    case ingredient.measurement
+    when "g" then ingredient.measurement = "kg"
+    when "mg" then ingredient.measurement = "g"
+    when "ml" then ingredient.measurement = "l"
     end
+    ingredient.save
   end
 end
