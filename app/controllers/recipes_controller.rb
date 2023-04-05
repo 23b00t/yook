@@ -43,30 +43,25 @@ class RecipesController < ApplicationController
       else
         @recipe.save
         scrape.ingredients.each do |ingredient|
-          new_ing = RecipeIngredient.new({ measurement: ingredient[:measurement], quantity: ingredient[:quantity], comment: ingredient[:comment] })
+          new_ing = RecipeIngredient.new({ measurement: adjust_measurement(ingredient[:measurement]), quantity: ingredient[:quantity], comment: ingredient[:comment] })
           ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name], creator: current_user })
           new_ing.recipe = @recipe
           new_ing.ingredient = ing
           new_ing.save
         end
-        if @recipe.scraped_img_url
-          redirect_to edit_recipe_path(@recipe)
-        else
-          redirect_to recipe_recipe_ingredients_path(@recipe)
-        end
+        redirect_to edit_recipe_path(@recipe)
       end
     else
       params[:recipe][:tags] = params[:recipe][:tags].join(' ')
       params[:recipe][:cooking_time] = transform_time(params[:recipe][:cooking_time])
       @recipe = Recipe.new(recipe_params)
       @recipe.user = current_user
+      @recipe.ingredients.each do |ingredient|
+        ingredient.measurement = adjust_measurement(ingredient)
+      end
       if @recipe.save
         session[:recipe_id] = @recipe.id
-        if @recipe.scraped_img_url
-          redirect_to edit_recipe_path(@recipe)
-        else
-          redirect_to recipe_recipe_ingredients_path(@recipe)
-        end
+        redirect_to recipe_recipe_ingredients_path(@recipe)
       else
         render :new, status: :unprocessable_entity
       end
@@ -198,5 +193,11 @@ class RecipesController < ApplicationController
     return "0" if hours.zero? && minutes.zero?
 
     return ((hours * 60) + minutes).to_s
+  end
+
+  def adjust_measurement(measurement)
+    Unit.new(measurement).units
+  rescue ArgumentError
+    'U'
   end
 end
