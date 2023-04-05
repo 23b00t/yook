@@ -5,7 +5,7 @@ class GroceryIngredientsController < ApplicationController
 
   def index
     @groceries = (GroceryIngredient.all.select { |i| i.quantity && i.user == current_user }).sort
-    @groceries.delete_if(&:quantity.zero?)
+    @groceries.delete_if { |grocery| grocery.quantity.zero? }
     @new_ingredient = GroceryIngredient.new
   end
 
