@@ -1,9 +1,9 @@
-require "open-uri" # neccessary?
-require 'ruby-units'
+require "#{Rails.root}/lib/flash_messages"
 
 class RecipesController < ApplicationController
   include TimeHelper # transform_time method
   include UnitHelpers # adjust_measurement and substract_ingredients methods
+
   before_action :set_recipe, only: %i[show edit update destroy cooked create_grocery_list]
 
   def index
@@ -37,7 +37,7 @@ class RecipesController < ApplicationController
       @recipe.scraped_img_url = scrape.image_url
       @recipe.user = current_user
       if scrape.error.present?
-        redirect_to new_recipe_path, alert: "Problems importing your recipe! Have you put in the right link?"
+        redirect_to new_recipe_path, alert: FlashMessages.scrape_error
       else
         @recipe.save
         scrape.ingredients.each do |ingredient|
@@ -108,13 +108,12 @@ class RecipesController < ApplicationController
       next if !@user_ingredient.present? || @user_ingredient.quantity <= 0
 
       begin
-        new_measurement = substract_ingredients(@user_ingredient, ingredient)
+        new_quantity = substract_ingredients(@user_ingredient, ingredient)
       rescue ArgumentError
-        flash[:alert] = "The measurement of the #{ingredient.ingredient.name.capitalize} in your fridge is: #{@user_ingredient.measurement}.\n
-                         You have used #{ingredient.quantity} #{ingredient.measurement}. Please adjust it manually"
+        flash[:alert] = FlashMessages.meassurement_error(ingredient, @user_ingredient)
         next
       end
-      quantity = new_measurement.scalar
+      quantity = new_quantity.scalar
       if quantity.positive?
         @user_ingredient.update(quantity:, measurement: @user_ingredient.measurement)
       else
@@ -125,7 +124,7 @@ class RecipesController < ApplicationController
     if flash[:alert].present?
       redirect_to user_ingredients_path, alert: flash[:alert]
     else
-      redirect_to recipe_path(@recipe), notice: 'Marked as cooked and updated your fridge'
+      redirect_to recipe_path(@recipe), notice: FlashMessages.cooked_msg
     end
 
   end
@@ -149,7 +148,7 @@ class RecipesController < ApplicationController
         )
       end
     end
-    redirect_to recipe_path(@recipe), notice: 'Added missing ingredients to grocery list'
+    redirect_to recipe_path(@recipe), notice: FlashMessages.groceries_created
   end
 
   private

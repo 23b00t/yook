@@ -1,4 +1,4 @@
-require 'ruby-units'
+require "#{Rails.root}/lib/flash_messages"
 
 class RecipeIngredientsController < ApplicationController
   before_action :set_recipe_ingredient, only: %i[update destroy]
@@ -13,7 +13,7 @@ class RecipeIngredientsController < ApplicationController
         format.html { redirect_to user_ingredients_path }
       else
         @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
-        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! Please change the quantity manualy!")}
+        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: FlashMessages.doubble_entry) }
       end
       format.json
     end
@@ -28,10 +28,10 @@ class RecipeIngredientsController < ApplicationController
     respond_to do |format|
       if @recipe_ingredient.update(recipe_ingredient_params)
         format.html { redirect_to recipe_recipe_ingredients_path }
-        format.text { render partial: "recipe_ingredient_item", locals: { ingredient: @recipe_ingredient, notice: "Updated successfully" }, formats: [:html] }
+        format.text { render partial: "recipe_ingredient_item", locals: { ingredient: @recipe_ingredient, notice: FlashMessages.success }, formats: [:html] }
       else
         format.html { redirect_to recip_recipe_ingredients_path, notice: "quantity cant be lower than 0" }
-        format.text { render partial: "recipe_ingredient_item", locals: { ingredient: set_recipe_ingredient, notice: "quantity cant be lower than 0" }, formats: [:html] }
+        format.text { render partial: "recipe_ingredient_item", locals: { ingredient: set_recipe_ingredient, notice: FlashMessages.negative_quantity_error }, formats: [:html] }
       end
     end
   end

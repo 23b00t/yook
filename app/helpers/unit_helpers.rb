@@ -1,3 +1,5 @@
+require 'ruby-units'
+
 module UnitHelpers
   private
 
@@ -7,15 +9,15 @@ module UnitHelpers
     'U'
   end
 
-  def substract_ingredients(ingredient_1, ingredient_2)
-    unit_1 = Unit.new("#{ingredient_1.quantity} #{ingredient_1.measurement}")
-    unit_2 = Unit.new("#{ingredient_2.quantity} #{ingredient_2.measurement}")
-    (unit_1 - unit_2).to(ingredient_1.measurement).round(4)
+  def substract_ingredients(ingredient1, ingredient2)
+    unit1 = Unit.new("#{ingredient1.quantity} #{ingredient1.measurement}")
+    unit2 = Unit.new("#{ingredient2.quantity} #{ingredient2.measurement}")
+    (unit1 - unit2).to(ingredient1.measurement).round(4)
   end
 
-  def sum_ingredients(ingredient_1, ingredient_2)
-    unit_1 = Unit.new("#{ingredient_1.quantity} #{ingredient_1.measurement}")
-    unit_2 = Unit.new("#{ingredient_2.quantity} #{ingredient_2.measurement}")
-    (unit_1 + unit_2).to(ingredient_1.measurement).round(4)
+  def sum_ingredients(ingredient1, ingredient2)
+    unit1 = Unit.new("#{ingredient1.quantity} #{ingredient1.measurement}")
+    unit2 = Unit.new("#{ingredient2.quantity} #{ingredient2.measurement}")
+    (unit1 + unit2).to(ingredient1.measurement).round(4)
   end
 end

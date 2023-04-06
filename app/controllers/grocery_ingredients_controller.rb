@@ -1,7 +1,8 @@
-require 'ruby-units'
+require "#{Rails.root}/lib/flash_messages"
 
 class GroceryIngredientsController < ApplicationController
-  include UnitHelpers # adjust_measurement and substract_ingredients methods
+  # adjust_measurement and substract_ingredients methods
+  include UnitHelpers
   before_action :set_grocery_ingredient, only: %i[update destroy]
 
   def index
@@ -15,10 +16,10 @@ class GroceryIngredientsController < ApplicationController
       if @ingredient.update(grocery_ingredient_params)
         convert(@ingredient)
         format.html { redirect_to grocery_ingredients_path }
-        format.text { render partial: "grocery_ingredient_item", locals: { ingredient: @ingredient, notice: "Updated successfully" }, formats: [:html] }
+        format.text { render partial: "grocery_ingredient_item", locals: { ingredient: @ingredient, notice: FlashMessages.success }, formats: [:html] }
       else
-        format.html { redirect_to grocery_ingredients_path, notice: "quantity cant be lower than 0" }
-        format.text { render partial: "grocery_ingredient_item", locals: { ingredient: set_grocery_ingredient, notice: "quantity cant be lower than 0" }, formats: [:html] }
+        format.html { redirect_to grocery_ingredients_path, notice: FlashMessages.negative_quantity_error }
+        format.text { render partial: "grocery_ingredient_item", locals: { ingredient: set_grocery_ingredient, notice: FlashMessages.negative_quantity_error }, formats: [:html] }
       end
     end
   end
@@ -53,7 +54,7 @@ class GroceryIngredientsController < ApplicationController
         quantity = new_measurement.scalar
         user_ingredient.update(quantity:)
       rescue ArgumentError
-        flash.now[:alert] = "Measurement is not compatible. Please add #{grocery_ingredient.quantity} #{grocery_ingredient.measurement} #{grocery_ingredient.ingredient.name} manually"
+        flash.now[:alert] = FlashMessages.measurement_error(grocery_ingredient, user_ingredient)
       end
     else
       UserIngredient.create(quantity: grocery_ingredient.quantity, measurement: grocery_ingredient.measurement, ingredient_id:, user: current_user)
@@ -62,7 +63,7 @@ class GroceryIngredientsController < ApplicationController
     if flash[:alert].present?
       redirect_to user_ingredients_path, alert: flash[:alert]
     else
-      redirect_to grocery_ingredients_path, notice: "Ingredient was purchased! Check your Inventory!"
+      redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
     end
   end
 

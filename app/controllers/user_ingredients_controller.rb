@@ -1,4 +1,4 @@
-require "pry-byebug"
+require "#{Rails.root}/lib/flash_messages"
 
 class UserIngredientsController < ApplicationController
   include ActionView::RecordIdentifier
@@ -23,13 +23,13 @@ class UserIngredientsController < ApplicationController
           format.html { redirect_to cooked_recipe_path(id[1]) }
         else
           format.html { redirect_to user_ingredients_path }
-          format.text { render partial: "user_ingredient_item", locals: { ingredient: @ingredient, notice: "Updated successfully" }, formats: [:html] }
+          format.text { render partial: "user_ingredient_item", locals: { ingredient: @ingredient, notice: FlashMessages.success }, formats: [:html] }
         end
       end
     else
       respond_to do |format|
         format.html { redirect_to user_ingredients_path }
-        format.text { render partial: "user_ingredient_item", locals: { ingredient: set_user_ingredient, notice: "quantity cant be lower than 0" }, formats: [:html] }
+        format.text { render partial: "user_ingredient_item", locals: { ingredient: set_user_ingredient, notice: FlashMessages.negative_quantity_error }, formats: [:html] }
       end
     end
   end
@@ -46,7 +46,7 @@ class UserIngredientsController < ApplicationController
         format.html { redirect_to user_ingredients_path }
       else
         @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
-        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: "You already have this ingredient in Fridge! please change the quantity manualy!")}
+        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: FlashMessages.doubble_entry) }
       end
       format.json
     end
