@@ -59,7 +59,11 @@ class GroceryIngredientsController < ApplicationController
       UserIngredient.create(quantity: grocery_ingredient.quantity, measurement: grocery_ingredient.measurement, ingredient_id:, user: current_user)
     end
     grocery_ingredient.delete
-    redirect_to user_ingredients_path, flash: flash[:alert].present? ? { alert: flash[:alert] } : { notice: "Ingredient was purchased! Check your Inventory!" }
+    if flash[:alert].present?
+      redirect_to user_ingredients_path, alert: flash[:alert]
+    else
+      redirect_to grocery_ingredients_path, notice: "Ingredient was purchased! Check your Inventory!"
+    end
   end
 
   private

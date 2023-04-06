@@ -1,4 +1,4 @@
-require "open-uri"
+require "open-uri" # neccessary?
 require 'ruby-units'
 
 class RecipesController < ApplicationController
