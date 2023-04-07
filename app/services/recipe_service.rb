@@ -1,7 +1,9 @@
 class RecipeService
+  include TimeHelper
+  include UnitHelpers
   attr_accessor :current_user
 
-  def initialize(recipe)
+  def initialize(recipe = nil, current_user)
     @recipe = recipe
     @current_user = current_user
   end
@@ -37,6 +39,26 @@ class RecipeService
           quantity: ingredient.quantity, user: @current_user
         )
       end
+    end
+  end
+
+  def create_with_scrape(params)
+    scrape = RecipesScraper.new(params[:link])
+    @recipe = Recipe.new(title: scrape.title, cooking_time: transform_time(scrape.cooking_time), serving_size: scrape.serving_size, description: scrape.description)
+    @recipe.scraped_img_url = scrape.image_url
+    @recipe.user = @current_user
+    if scrape.error.present?
+      return { success: false, message: FlashMessages.scrape_error }
+    else
+      @recipe.save
+      scrape.ingredients.each do |ingredient|
+        new_ing = RecipeIngredient.new({ measurement: adjust_measurement(ingredient[:measurement]), quantity: ingredient[:quantity], comment: ingredient[:comment] })
+        ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name], creator: @current_user })
+        new_ing.recipe = @recipe
+        new_ing.ingredient = ing
+        new_ing.save
+      end
+      return { success: true, recipe: @recipe }
     end
   end
 end

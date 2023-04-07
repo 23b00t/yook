@@ -1,7 +1,11 @@
 require "#{Rails.root}/lib/flash_messages"
 
 class RecipesController < ApplicationController
-  before_action :set_recipe, only: %i[show edit update destroy cooked create_grocery_list]
+  include TimeHelper
+  include UnitHelpers
+
+  before_action :set_recipe, exept: %i[index new new_scrape new_manual create]
+  before_action :new_recipe, only: %i[new new_scrape new_manual]
 
   def index
     @recipes = params[:query].present? ? Recipe.search_by_title_and_description(params[:query]) : Recipe.all
@@ -15,52 +19,14 @@ class RecipesController < ApplicationController
     end
   end
 
-  def new
-    @recipe = Recipe.new
-  end
+  def new; end
 
-  def new_scrape
-    @recipe = Recipe.new
-  end
+  def new_scrape; end
 
-  def new_manual
-    @recipe = Recipe.new
-  end
+  def new_manual; end
 
   def create
-    if params[:link].present?
-      scrape = RecipesScraper.new(params[:link])
-      @recipe = Recipe.new(title: scrape.title, cooking_time: transform_time(scrape.cooking_time), serving_size: scrape.serving_size, description: scrape.description)
-      @recipe.scraped_img_url = scrape.image_url
-      @recipe.user = current_user
-      if scrape.error.present?
-        redirect_to new_recipe_path, alert: FlashMessages.scrape_error
-      else
-        @recipe.save
-        scrape.ingredients.each do |ingredient|
-          new_ing = RecipeIngredient.new({ measurement: adjust_measurement(ingredient[:measurement]), quantity: ingredient[:quantity], comment: ingredient[:comment] })
-          ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name], creator: current_user })
-          new_ing.recipe = @recipe
-          new_ing.ingredient = ing
-          new_ing.save
-        end
-        redirect_to edit_recipe_path(@recipe)
-      end
-    else
-      params[:recipe][:tags] = params[:recipe][:tags].join(' ')
-      params[:recipe][:cooking_time] = transform_time(params[:recipe][:cooking_time])
-      @recipe = Recipe.new(recipe_params)
-      @recipe.user = current_user
-      @recipe.ingredients.each do |ingredient|
-        ingredient.measurement = adjust_measurement(ingredient)
-      end
-      if @recipe.save
-        session[:recipe_id] = @recipe.id
-        redirect_to recipe_recipe_ingredients_path(@recipe)
-      else
-        render :new, status: :unprocessable_entity
-      end
-    end
+    params[:link].present? ? create_from_link : create_from_form
   end
 
   def show
@@ -70,8 +36,7 @@ class RecipesController < ApplicationController
   def edit; end
 
   def update
-    params[:recipe][:tags] = params[:recipe][:tags].join(' ')
-    params[:recipe][:cooking_time] = transform_time(params[:recipe][:cooking_time])
+    prepare_recipe_params
     if @recipe.update(recipe_params)
       session[:recipe_id] = @recipe.id
       redirect_to recipe_recipe_ingredients_path(@recipe)
@@ -85,22 +50,15 @@ class RecipesController < ApplicationController
     redirect_to recipes_path, status: :see_other
   end
 
-  def edit_description
-    @recipe = Recipe.find(params[:id])
-  end
+  def edit_description; end
 
   def update_description
-    @recipe = Recipe.find(params[:id])
-    if @recipe.update(recipe_params)
-      redirect_to recipe_path(@recipe)
-    else
-      render :edit_description
-    end
+    @recipe.update(recipe_params) ? (redirect_to recipe_path(@recipe)) : (render :edit_description)
   end
 
   def cooked
-    service = RecipeService.new(@recipe)
-    service.cooked
+    RecipeService.new(@recipe, current_user).cooked
+
     if @alert_msg.present?
       redirect_to user_ingredients_path, alert: @alert_msg
     else
@@ -109,8 +67,7 @@ class RecipesController < ApplicationController
   end
 
   def create_grocery_list
-    service = RecipeService.new(@recipe)
-    service.create_grocery_list
+    RecipeService.new(@recipe, current_user).create_grocery_list
 
     redirect_to recipe_path(@recipe), notice: FlashMessages.groceries_created
   end
@@ -127,6 +84,10 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
   end
 
+  def new_recipe
+    @recipe = Recipe.new
+  end
+
   def filter
     @recipes = RecipeFilter.new(@recipes)
                            .filter_by_cooked(params[:cooked])
@@ -137,5 +98,33 @@ class RecipesController < ApplicationController
                            .sort_by_user_ingredients(params[:active])
     @matches = @recipes.instance_variable_get(:@matches)
     @recipes = @recipes.results
+  end
+
+  def create_from_link
+    result = RecipeService.new(current_user).recipe_service.create_with_scrape(params)
+    redirect_path = result[:success] ? edit_recipe_path(result[:recipe]) : new_recipe_path
+    redirect_to redirect_path, alert: result[:message]
+  end
+
+  def create_from_form
+    prepare_recipe_params
+    @recipe = Recipe.new(recipe_params)
+    @recipe.user = current_user
+    adjust_ingredients_measurement
+    if @recipe.save
+      session[:recipe_id] = @recipe.id
+      redirect_to recipe_recipe_ingredients_path(@recipe)
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def prepare_recipe_params
+    params[:recipe][:tags] = params[:recipe][:tags].join(' ')
+    params[:recipe][:cooking_time] = transform_time(params[:recipe][:cooking_time])
+  end
+
+  def adjust_ingredients_measurement
+    @recipe.ingredients.each { |ingredient| ingredient.measurement = adjust_measurement(ingredient) }
   end
 end
