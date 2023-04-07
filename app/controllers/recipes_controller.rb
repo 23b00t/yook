@@ -4,7 +4,7 @@ class RecipesController < ApplicationController
   include TimeHelper
   include UnitHelpers
 
-  before_action :set_recipe, exept: %i[index new new_scrape new_manual create]
+  before_action :set_recipe, except: %i[index new new_scrape new_manual create]
   before_action :new_recipe, only: %i[new new_scrape new_manual]
 
   def index

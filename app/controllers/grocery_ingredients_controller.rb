@@ -13,13 +13,12 @@ class GroceryIngredientsController < ApplicationController
 
   def update
     respond_to do |format|
-      if @ingredient.update(grocery_ingredient_params)
-        convert(@ingredient)
+      if ingredient_updated?
         format.html { redirect_to grocery_ingredients_path }
-        format.text { render partial: "grocery_ingredient_item", locals: { ingredient: @ingredient, notice: FlashMessages.success }, formats: [:html] }
+        format.text { render_updated_ingredient }
       else
         format.html { redirect_to grocery_ingredients_path, notice: FlashMessages.negative_quantity_error }
-        format.text { render partial: "grocery_ingredient_item", locals: { ingredient: set_grocery_ingredient, notice: FlashMessages.negative_quantity_error }, formats: [:html] }
+        format.text { render_error_ingredient }
       end
     end
   end
@@ -44,22 +43,20 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def purchased
-    purchased = params[:grocery_ingredient_id]
-    grocery_ingredient = GroceryIngredient.find(purchased)
-    ingredient_id = grocery_ingredient.ingredient_id
-    user_ingredient = UserIngredient.find_by(ingredient_id:)
-    if user_ingredient.present?
-      sum_ingredients(grocery_ingredient, user_ingredient)
-      user_ingredient.update(quantity: @quantity) if @quantity.present?
-    else
-      UserIngredient.create(quantity: grocery_ingredient.quantity, measurement: grocery_ingredient.measurement, ingredient_id:, user: current_user)
-    end
+    purchased_id = params[:grocery_ingredient_id]
+    grocery_ingredient = GroceryIngredient.find(purchased_id)
+    user_ingredient = UserIngredient.find_by(ingredient_id: grocery_ingredient.ingredient_id)
+
+    sum_ingredients(grocery_ingredient, user_ingredient) if user_ingredient.present?
+    user_ingredient.update(quantity: @quantity) if @quantity.present?
+
+    create_user_ingredient(grocery_ingredient) unless user_ingredient
+
     grocery_ingredient.delete
-    if @alert_msg.present?
-      redirect_to user_ingredients_path, alert: @alert_msg
-    else
-      redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
-    end
+
+    return redirect_to user_ingredients_path, alert: @alert_msg if @alert_msg.present?
+
+    redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
   end
 
   private
@@ -82,5 +79,33 @@ class GroceryIngredientsController < ApplicationController
     when "ml" then ingredient.measurement = "l"
     end
     ingredient.save
+  end
+
+  def ingredient_updated?
+    if @ingredient.update(grocery_ingredient_params)
+      convert(@ingredient)
+      true
+    else
+      false
+    end
+  end
+
+  def render_updated_ingredient
+    render partial: "grocery_ingredient_item",
+           locals: { ingredient: @ingredient, notice: FlashMessages.success },
+           formats: [:html]
+  end
+
+  def render_error_ingredient
+    render partial: "grocery_ingredient_item",
+           locals: { ingredient: set_grocery_ingredient, notice: FlashMessages.negative_quantity_error },
+           formats: [:html]
+  end
+
+  def create_user_ingredient(grocery_ingredient)
+    UserIngredient.create(quantity: grocery_ingredient.quantity,
+                          measurement: grocery_ingredient.measurement,
+                          ingredient_id: grocery_ingredient.ingredient_id,
+                          user: current_user)
   end
 end
