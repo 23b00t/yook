@@ -44,17 +44,18 @@ class RecipeFilter
   end
 
   def sort_by_user_ingredients(active)
-    if active == 'true'
-      @matches = {}
-      @scope.each do |recipe|
-        @matches[recipe] = recipe.recipe_ingredients.map do |recipe_ingredient|
-          UserIngredient.where(ingredient: recipe_ingredient.ingredient).present? &&
-            UserIngredient.where(ingredient: recipe_ingredient.ingredient).first.quantity.positive?
-        end
+    return self unless active == 'true'
+
+    @matches = {}
+
+    @scope.each do |recipe|
+      @matches[recipe] = recipe.recipe_ingredients.map do |recipe_ingredient|
+        user_ingredient = UserIngredient.find_by(ingredient: recipe_ingredient.ingredient)
+        user_ingredient.present? && user_ingredient.quantity.positive?
       end
-      sort
     end
-    self
+
+    sort
   end
 
   def results
