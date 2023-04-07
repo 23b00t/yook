@@ -107,26 +107,17 @@ class RecipesController < ApplicationController
       @user_ingredient = UserIngredient.where(ingredient_id: ingredient.ingredient_id).first
       next if !@user_ingredient.present? || @user_ingredient.quantity <= 0
 
-      begin
-        new_quantity = substract_ingredients(@user_ingredient, ingredient)
-      rescue ArgumentError
-        flash[:alert] = FlashMessages.meassurement_error(ingredient, @user_ingredient)
-        next
-      end
-      quantity = new_quantity.scalar
-      if quantity.positive?
-        @user_ingredient.update(quantity:, measurement: @user_ingredient.measurement)
-      else
-        @user_ingredient.update(quantity: 0, measurement: @user_ingredient.measurement)
-      end
+      substract_ingredients(@user_ingredient, ingredient)
+      next unless @quantity.present?
+
+      @user_ingredient.update(quantity: @quantity.positive? ? @quantity : 0, measurement: @user_ingredient.measurement)
     end
     @recipe.update(cooked: true)
-    if flash[:alert].present?
-      redirect_to user_ingredients_path, alert: flash[:alert]
+    if @alert_msg.present?
+      redirect_to user_ingredients_path, alert: @alert_msg
     else
       redirect_to recipe_path(@recipe), notice: FlashMessages.cooked_msg
     end
-
   end
 
   def create_grocery_list
@@ -136,11 +127,9 @@ class RecipesController < ApplicationController
 
       grocery_ingredient = GroceryIngredient.find_by(ingredient: ingredient.ingredient)
 
-      # Handle different meassurements
-
       if grocery_ingredient.present?
-        new_quantity = grocery_ingredient.quantity + ingredient.quantity
-        grocery_ingredient.update(quantity: new_quantity)
+        sum_ingredients(grocery_ingredient, ingredient)
+        grocery_ingredient.update(quantity: @quantity) if @quantity.present?
       else
         GroceryIngredient.create(
           ingredient: ingredient.ingredient, measurement: ingredient.measurement,
