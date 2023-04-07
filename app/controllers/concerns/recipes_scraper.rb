@@ -13,25 +13,17 @@ class RecipesScraper
 
   def scrape_ingredients
     ingredients = []
+
     @doc.css('ul li').each do |element|
       parts = element.css("p").text.split.reject(&:empty?)
       next if parts.empty?
 
-      name = parts.select { |word| Ingredient.where('name ILIKE ?', word).present? }.join(' ')
-      case parts.first
-      when "½" then parts[0] = "0.5"
-      when "¼" then parts[0] = "0.25"
-      end
-      quantity = parts.first if numeric?(parts.first)
-      measurement = parts.select { |unit| valid_unit?(unit) }.first
-      comment = parts.reject { |word| word.eql?(quantity) || word.eql?(measurement) || name.include?(word) }.join(' ')
-      if name.empty?
-        name = comment
-        comment = ''
-      end
+      name = find_ingredient_name(parts)
+      quantity, measurement, comment = extract_quantity_measurement_and_comment(parts, name)
+
       ingredients << { quantity:, measurement:, name:, comment: }
     end
-    # raise
+
     ingredients
   end
 
@@ -47,7 +39,7 @@ class RecipesScraper
       @count += 1
       description << "(Step #{@count})\n #{element.text.delete("\n").strip}\n"
     end
-    return description.join
+    description.join
   end
 
   def scrape_time_serving
@@ -55,25 +47,20 @@ class RecipesScraper
     @doc.css(".mntl-recipe-details__value").each do |element|
       serving_size_time << element.text.delete("\n").strip
     end
-    return serving_size_time
+    serving_size_time
   end
 
   def scrape_img_url
-    @list = []
     @doc.css("img").find do |img|
-      unless img.attributes["id"].nil?
-        @url = img.attributes["src"]
-        @url = img.attributes["data-src"] if @url.nil?
-        @list << @url
-      end
+      next if img.attributes["id"].nil?
+
+      @url = img.attributes["src"].nil? ? img.attributes["data-src"] : img.attributes["src"]
     end
-    if @list.empty?
+    unless @url.present?
       @url = @doc.at_css("img").attributes["src"]
       @url = @doc.at_css("img").attributes["data-src"] if @url.nil?
-    else
-      @url = @list.first
     end
-    return @url
+    @url
   end
 
   def scrape
@@ -101,7 +88,28 @@ class RecipesScraper
   rescue ArgumentError
     false
   end
-end
-# test2 = RecipesScraper.new("https://www.allrecipes.com/recipe/16947/amazingly-easy-irish-soda-bread/")
-# puts test2.ingredients
 
+  def find_ingredient_name(parts)
+    name = parts.find { |word| Ingredient.where('name ILIKE ?', word).present? }
+    name || parts.join(' ')
+  end
+
+  def extract_quantity_measurement_and_comment(parts, ingredient_name)
+    handle_fractionals(parts)
+
+    quantity = parts.first if numeric?(parts.first)
+    measurement = parts.find { |unit| valid_unit?(unit) }
+    comment = parts.reject do |word|
+      word.eql?(quantity) || word.eql?(measurement) || ingredient_name.include?(word)
+    end.join(' ')
+
+    [quantity, measurement, comment]
+  end
+
+  def handle_fractionals(parts)
+    case parts.first
+    when "½" then parts[0] = "0.5"
+    when "¼" then parts[0] = "0.25"
+    end
+  end
+end

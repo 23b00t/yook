@@ -1,54 +1,35 @@
-require "#{Rails.root}/lib/flash_messages"
-
 class UserIngredientsController < ApplicationController
   include ActionView::RecordIdentifier
   before_action :set_user_ingredient, only: %i[update destroy]
+  before_action :load_flash_messages, only: %i[update create]
 
   def index
     UserIngredient.all.each do |ingredient|
       convert(ingredient)
       ingredient.destroy if ingredient.quantity.zero?
     end
-    @user_ingredients = (UserIngredient.all.select { |i| i.quantity.positive? && i.user == current_user }).sort
+    @user_ingredients = UserIngredient.where(quantity: 1..Float::INFINITY, user: current_user).sort
     @new_ingredient = UserIngredient.new
   end
 
   def update
     if @ingredient.update(user_ingredient_params)
       convert(@ingredient)
-      referring_url = request.referrer
-      respond_to do |format|
-        if referring_url.end_with?('cooked')
-          id = referring_url.match(%r{(\d+)/(cooked)$})
-          format.html { redirect_to cooked_recipe_path(id[1]) }
-        else
-          format.html { redirect_to user_ingredients_path }
-          format.text { render partial: "user_ingredient_item", locals: { ingredient: @ingredient, notice: FlashMessages.success }, formats: [:html] }
-        end
-      end
+      redirect_to redirect_path, notice: flash_messages[:success]
     else
-      respond_to do |format|
-        format.html { redirect_to user_ingredients_path }
-        format.text { render partial: "user_ingredient_item", locals: { ingredient: set_user_ingredient, notice: FlashMessages.negative_quantity_error }, formats: [:html] }
-      end
+      redirect_to user_ingredients_path, alert: flash_messages[:negative_quantity_error]
     end
   end
 
   def create
-    @ingredient = Ingredient.new(name: params[:user_ingredient][:ingredient_id])
-    @ingredient = Ingredient.find_by(name: params[:user_ingredient][:ingredient_id]) unless @ingredient.save
-
+    @ingredient = Ingredient.find_or_create_by(name: params[:user_ingredient][:ingredient_id])
     @new_users_ingredient = UserIngredient.new(user_ingredient_params)
     @new_users_ingredient.user_id = current_user.id
     @new_users_ingredient.ingredient_id = @ingredient.id
-    respond_to do |format|
-      if @new_users_ingredient.save
-        format.html { redirect_to user_ingredients_path }
-      else
-        @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
-        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: FlashMessages.doubble_entry) }
-      end
-      format.json
+    if @new_users_ingredient.save
+      redirect_to user_ingredients_path, notice: flash_messages[:success]
+    else
+      redirect_to user_ingredients_path(anchor: @new_users_ingredient.user_id), alert: flash_messages[:double_entry]
     end
   end
 
@@ -71,11 +52,24 @@ class UserIngredientsController < ApplicationController
     return unless ingredient.quantity >= 1000 || %w[g ml mg].include?(ingredient.measurement)
 
     ingredient.quantity /= 1000
-    case ingredient.measurement
-    when "g" then ingredient.measurement = "kg"
-    when "mg" then ingredient.measurement = "g"
-    when "ml" then ingredient.measurement = "l"
-    end
+    measurement_map = { "g" => "kg", "mg" => "g", "ml" => "l" }
+    ingredient.measurement = measurement_map[ingredient.measurement]
     ingredient.save
+  end
+
+  def redirect_path
+    if request.referrer.end_with?('cooked')
+      cooked_recipe_path(request.referrer.match(%r{(\d+)/(cooked)$})[1])
+    else
+      user_ingredients_path
+    end
+  end
+
+  def load_flash_messages
+    @flash_messages = FlashMessages.new
+  end
+
+  def flash_messages
+    @flash_messages.messages
   end
 end
