@@ -6,7 +6,7 @@ class GroceryIngredientsController < ApplicationController
   before_action :set_grocery_ingredient, only: %i[update destroy]
 
   def index
-    @groceries = (GroceryIngredient.all.select { |i| i.quantity && i.user == current_user }).sort
+    @groceries = (GroceryIngredient.all.select { |i| i.user == current_user }).sort
     @groceries.delete_if { |grocery| grocery.quantity.zero? }
     @new_ingredient = GroceryIngredient.new
   end
@@ -77,7 +77,6 @@ class GroceryIngredientsController < ApplicationController
     ingredient.measurement = measurement_map[ingredient.measurement]
     ingredient.save
   end
-
 
   def ingredient_updated?
     if @ingredient.update(grocery_ingredient_params)
