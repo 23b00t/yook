@@ -1,7 +1,7 @@
 require "#{Rails.root}/lib/flash_messages"
 
 class GroceryIngredientsController < ApplicationController
-  # adjust_measurement and substract_ingredients methods
+  # adjust_measurement and sum_ingredients methods
   include UnitHelpers
   before_action :set_grocery_ingredient, only: %i[update destroy]
 
@@ -49,19 +49,14 @@ class GroceryIngredientsController < ApplicationController
     ingredient_id = grocery_ingredient.ingredient_id
     user_ingredient = UserIngredient.find_by(ingredient_id:)
     if user_ingredient.present?
-      begin
-        new_measurement = sum_ingredients(grocery_ingredient, user_ingredient)
-        quantity = new_measurement.scalar
-        user_ingredient.update(quantity:)
-      rescue ArgumentError
-        flash.now[:alert] = FlashMessages.measurement_error(grocery_ingredient, user_ingredient)
-      end
+      sum_ingredients(grocery_ingredient, user_ingredient)
+      user_ingredient.update(quantity: @quantity) if @quantity.present?
     else
       UserIngredient.create(quantity: grocery_ingredient.quantity, measurement: grocery_ingredient.measurement, ingredient_id:, user: current_user)
     end
     grocery_ingredient.delete
-    if flash[:alert].present?
-      redirect_to user_ingredients_path, alert: flash[:alert]
+    if @alert_msg.present?
+      redirect_to user_ingredients_path, alert: @alert_msg
     else
       redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
     end
