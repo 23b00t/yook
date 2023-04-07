@@ -1,9 +1,6 @@
 require "#{Rails.root}/lib/flash_messages"
 
 class RecipesController < ApplicationController
-  include TimeHelper # transform_time method
-  include UnitHelpers # adjust_measurement and substract_ingredients methods
-
   before_action :set_recipe, only: %i[show edit update destroy cooked create_grocery_list]
 
   def index
@@ -102,17 +99,8 @@ class RecipesController < ApplicationController
   end
 
   def cooked
-    ingredients = @recipe.recipe_ingredients
-    ingredients.each do |ingredient|
-      @user_ingredient = UserIngredient.where(ingredient_id: ingredient.ingredient_id).first
-      next if !@user_ingredient.present? || @user_ingredient.quantity <= 0
-
-      substract_ingredients(@user_ingredient, ingredient)
-      next unless @quantity.present?
-
-      @user_ingredient.update(quantity: @quantity.positive? ? @quantity : 0, measurement: @user_ingredient.measurement)
-    end
-    @recipe.update(cooked: true)
+    service = RecipeService.new(@recipe)
+    service.cooked
     if @alert_msg.present?
       redirect_to user_ingredients_path, alert: @alert_msg
     else
@@ -121,22 +109,9 @@ class RecipesController < ApplicationController
   end
 
   def create_grocery_list
-    @recipe.recipe_ingredients.each do |ingredient|
-      user_ingredient = UserIngredient.find_by(ingredient_id: ingredient.ingredient)
-      next if user_ingredient.present? && user_ingredient.quantity >= ingredient.quantity
+    service = RecipeService.new(@recipe)
+    service.create_grocery_list
 
-      grocery_ingredient = GroceryIngredient.find_by(ingredient: ingredient.ingredient)
-
-      if grocery_ingredient.present?
-        sum_ingredients(grocery_ingredient, ingredient)
-        grocery_ingredient.update(quantity: @quantity) if @quantity.present?
-      else
-        GroceryIngredient.create(
-          ingredient: ingredient.ingredient, measurement: ingredient.measurement,
-          quantity: ingredient.quantity, user: current_user
-        )
-      end
-    end
     redirect_to recipe_path(@recipe), notice: FlashMessages.groceries_created
   end
 
