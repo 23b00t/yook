@@ -30,15 +30,7 @@ class RecipeService
 
       grocery_ingredient = GroceryIngredient.find_by(ingredient: ingredient.ingredient)
 
-      if grocery_ingredient.present?
-        sum_ingredients(grocery_ingredient, ingredient)
-        grocery_ingredient.update(quantity: @quantity) if @quantity.present?
-      else
-        GroceryIngredient.create(
-          ingredient: ingredient.ingredient, measurement: ingredient.measurement,
-          quantity: ingredient.quantity, user: @current_user
-        )
-      end
+      update_or_create_gorcery_ingredient(grocery_ingredient, ingredient)
     end
   end
 
@@ -50,6 +42,13 @@ class RecipeService
     return { success: false, message: FlashMessages.scrape_error } if scrape.error.present?
 
     @recipe.save
+    scrape_ingredients
+    { success: true, recipe: @recipe }
+  end
+
+  private
+
+  def scrape_ingredients
     scrape.ingredients.each do |ingredient|
       new_ing = RecipeIngredient.new({ measurement: adjust_measurement(ingredient[:measurement]),
                                        quantity: ingredient[:quantity], comment: ingredient[:comment] })
@@ -59,6 +58,17 @@ class RecipeService
       new_ing.ingredient = ing
       new_ing.save
     end
-    return { success: true, recipe: @recipe }
+  end
+
+  def update_or_create_gorcery_ingredient(grocery_ingredient, ingredient)
+    if grocery_ingredient.present?
+      sum_ingredients(grocery_ingredient, ingredient)
+      grocery_ingredient.update(quantity: @quantity) if @quantity.present?
+    else
+      GroceryIngredient.create(
+        ingredient: ingredient.ingredient, measurement: ingredient.measurement,
+        quantity: ingredient.quantity, user: @current_user
+      )
+    end
   end
 end
