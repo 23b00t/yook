@@ -57,7 +57,7 @@ class RecipesController < ApplicationController
   end
 
   def cooked
-    RecipeService.new(@recipe, current_user).cooked
+    RecipeService.new(current_user, @recipe).cooked
 
     if @alert_msg.present?
       redirect_to user_ingredients_path, alert: @alert_msg
@@ -67,7 +67,7 @@ class RecipesController < ApplicationController
   end
 
   def create_grocery_list
-    RecipeService.new(@recipe, current_user).create_grocery_list
+    RecipeService.new(current_user, @recipe).create_grocery_list
 
     redirect_to recipe_path(@recipe), notice: FlashMessages.groceries_created
   end
