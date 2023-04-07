@@ -7,13 +7,13 @@ class RecipeIngredientsController < ApplicationController
   def create
     @recipe_ingredient = RecipeIngredient.new(recipe_ingredient_params)
     @recipe_ingredient.recipe = @recipe
-    @recipe_ingredient.ingredient = Ingredient.where(name: recipe_ingredient_params[:ingredient_id]).first
+    @recipe_ingredient.ingredient = Ingredient.find_or_create_by(name: recipe_ingredient_params[:ingredient_id])
     respond_to do |format|
       if @recipe_ingredient.save
         format.html { redirect_to user_ingredients_path }
       else
-        @anchor_user = UserIngredient.find_by(user_id: @ingredient.id)
-        format.html { redirect_to user_ingredients_path(anchor: @anchor_user, alert: FlashMessages.doubble_entry) }
+        flash[:alert] = FlashMessages.doubble_entry
+        format.html { redirect_to user_ingredients_path(anchor: UserIngredient.find_by(user_id: @ingredient.id)) }
       end
       format.json
     end
@@ -27,18 +27,20 @@ class RecipeIngredientsController < ApplicationController
   def update
     respond_to do |format|
       if @recipe_ingredient.update(recipe_ingredient_params)
+        convert(@recipe_ingredient)
         format.html { redirect_to recipe_recipe_ingredients_path }
-        format.text { render partial: "recipe_ingredient_item", locals: { ingredient: @recipe_ingredient, notice: FlashMessages.success }, formats: [:html] }
+        format.text { render_updated_ingredient }
       else
-        format.html { redirect_to recip_recipe_ingredients_path, notice: "quantity cant be lower than 0" }
-        format.text { render partial: "recipe_ingredient_item", locals: { ingredient: set_recipe_ingredient, notice: FlashMessages.negative_quantity_error }, formats: [:html] }
+        flash[:alert] = FlashMessages.negative_quantity_error
+        format.html { redirect_to recip_recipe_ingredients_path }
+        format.text { render_error_ingredient }
       end
     end
   end
 
   def destroy
     @recipe_ingredient.destroy
-    redirect_to recipe_recipe_ingredients_path, status: :see_other
+    redirect_to recipe_recipe_ingredients_path(@recipe), notice: FlashMessages.recipe_ingredient_deleted
   end
 
   private
@@ -52,6 +54,30 @@ class RecipeIngredientsController < ApplicationController
   end
 
   def recipe_ingredient_params
-    params.require("recipe_ingredient").permit(:quantity, :measurement, :ingredient_id, :comment)
+    params.require(:recipe_ingredient).permit(:name, :measurement, :quantity)
+  end
+
+  def convert(ingredient)
+    return unless ingredient.quantity >= 1000 || %w[g ml mg].include?(ingredient.measurement)
+
+    ingredient.quantity /= 1000
+    case ingredient.measurement
+    when "g" then ingredient.measurement = "kg"
+    when "mg" then ingredient.measurement = "g"
+    when "ml" then ingredient.measurement = "l"
+    end
+    ingredient.save
+  end
+
+  def render_updated_ingredient
+    render partial: "recipe_ingredient_item",
+           locals: { ingredient: @recipe_ingredient, notice: FlashMessages.success },
+           formats: [:html]
+  end
+
+  def render_error_ingredient
+    render partial: "recipe_ingredient_item",
+           locals: { ingredient: set_recipe_ingredient, notice: FlashMessages.negative_quantity_error },
+           formats: [:html]
   end
 end
