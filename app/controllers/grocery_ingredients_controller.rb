@@ -73,13 +73,11 @@ class GroceryIngredientsController < ApplicationController
     return unless ingredient.quantity >= 1000 || %w[g ml mg].include?(ingredient.measurement)
 
     ingredient.quantity /= 1000
-    case ingredient.measurement
-    when "g" then ingredient.measurement = "kg"
-    when "mg" then ingredient.measurement = "g"
-    when "ml" then ingredient.measurement = "l"
-    end
+    measurement_map = { "g" => "kg", "mg" => "g", "ml" => "l" }
+    ingredient.measurement = measurement_map[ingredient.measurement]
     ingredient.save
   end
+
 
   def ingredient_updated?
     if @ingredient.update(grocery_ingredient_params)
