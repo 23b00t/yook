@@ -44,14 +44,17 @@ class RecipeService
 
   def create_with_scrape(params)
     scrape = RecipesScraper.new(params[:link])
-    @recipe = Recipe.new(title: scrape.title, cooking_time: transform_time(scrape.cooking_time), serving_size: scrape.serving_size, description: scrape.description)
+    @recipe = Recipe.new(title: scrape.title, cooking_time: transform_time(scrape.cooking_time),
+                         serving_size: scrape.serving_size, description: scrape.description)
     @recipe.scraped_img_url = scrape.image_url
     return { success: false, message: FlashMessages.scrape_error } if scrape.error.present?
 
     @recipe.save
     scrape.ingredients.each do |ingredient|
-      new_ing = RecipeIngredient.new({ measurement: adjust_measurement(ingredient[:measurement]), quantity: ingredient[:quantity], comment: ingredient[:comment] })
-      ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name], creator: @current_user })
+      new_ing = RecipeIngredient.new({ measurement: adjust_measurement(ingredient[:measurement]),
+                                       quantity: ingredient[:quantity], comment: ingredient[:comment] })
+      ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name],
+                                                                               creator: @current_user })
       new_ing.recipe = @recipe
       new_ing.ingredient = ing
       new_ing.save
