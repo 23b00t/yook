@@ -24,12 +24,12 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def create
-    @ing = Ingredient.new(name: params[:grocery_ingredient][:ingredient_id])
-    @ing = Ingredient.find_by(name: params[:grocery_ingredient][:ingredient_id]) unless @ing.save
+    ingredient = Ingredient.new(name: params[:grocery_ingredient][:ingredient_id])
+    ingredient = Ingredient.find_by(name: params[:grocery_ingredient][:ingredient_id]) unless ingredient.save
 
     @grocery_item = GroceryIngredient.new(grocery_ingredient_params)
     @grocery_item.user_id = current_user.id
-    @grocery_item.ingredient_id = @ing.id
+    @grocery_item.ingredient_id = ingredient.id
 
     respond_to do |format|
       @grocery_item.save ? format.html { redirect_to grocery_ingredients_path } : format.html
@@ -38,7 +38,7 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def destroy
-    @ingredient.destroy
+    @grocery_ingredient.destroy
     redirect_to grocery_ingredients_path
   end
 
@@ -62,7 +62,7 @@ class GroceryIngredientsController < ApplicationController
   private
 
   def set_grocery_ingredient
-    @ingredient = GroceryIngredient.find(params[:id])
+    @grocery_ingredient = GroceryIngredient.find(params[:id])
   end
 
   def grocery_ingredient_params
@@ -79,8 +79,8 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def ingredient_updated?
-    if @ingredient.update(grocery_ingredient_params)
-      convert(@ingredient)
+    if @grocery_ingredient.update(grocery_ingredient_params)
+      convert(@grocery_ingredient)
       true
     else
       false
@@ -89,7 +89,7 @@ class GroceryIngredientsController < ApplicationController
 
   def render_updated_ingredient
     render partial: "grocery_ingredient_item",
-           locals: { ingredient: @ingredient, notice: FlashMessages.success },
+           locals: { ingredient: @grocery_ingredient, notice: FlashMessages.success },
            formats: [:html]
   end
 
