@@ -1,10 +1,6 @@
 class IngredientsController < ApplicationController
   def index
     @recipe = Recipe.find(session[:recipe_id])
-    if params[:query].present?
-      @ingredients = Ingredient.search_by_name(params[:query])
-    else
-      @ingredients = []
-    end
+    @ingredients = params[:query].present? ? Ingredient.search_by_name(params[:query]) : []
   end
 end
