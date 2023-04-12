@@ -7,14 +7,14 @@ class RecipesScraper
   attr_accessor :title, :ingredients, :description, :error, :cooking_time, :serving_size, :image_url
 
   def initialize(url)
-    @doc = Nokogiri::HTML(HTTParty.get(url).body)
+    @document = Nokogiri::HTML(HTTParty.get(url).body)
     scrape
   end
 
   def scrape_ingredients
     ingredients = []
 
-    @doc.css('ul li').each do |element|
+    @document.css('ul li').each do |element|
       parts = element.css("p").text.split.reject(&:empty?)
       next if parts.empty?
 
@@ -28,37 +28,30 @@ class RecipesScraper
   end
 
   def scrape_name
-    name = @doc.at_css("h1").text.delete("\n").strip
-    return name
+    @document.at_css("h1").text.delete("\n").strip
   end
 
   def scrape_description
-    description = []
-    @count = 0
-    @doc.css("ol li").each do |element|
-      @count += 1
-      description << "(Step #{@count})\n #{element.text.delete("\n").strip}\n"
-    end
-    description.join
+    @document.css("ol li").map.with_index do |element, index|
+      "(Step #{index})\n #{element.text.delete("\n").strip}\n"
+    end.join
   end
 
   def scrape_time_serving
-    serving_size_time = []
-    @doc.css(".mntl-recipe-details__value").each do |element|
-      serving_size_time << element.text.delete("\n").strip
+    @document.css(".mntl-recipe-details__value").map do |element|
+      element.text.delete("\n").strip
     end
-    serving_size_time
   end
 
   def scrape_img_url
-    @doc.css("img").find do |img|
+    @document.css("img").find do |img|
       next if img.attributes["id"].nil?
 
       @url = img.attributes["src"].nil? ? img.attributes["data-src"] : img.attributes["src"]
     end
     unless @url.present?
-      @url = @doc.at_css("img").attributes["src"]
-      @url = @doc.at_css("img").attributes["data-src"] if @url.nil?
+      @url = @document.at_css("img").attributes["src"]
+      @url = @document.at_css("img").attributes["data-src"] if @url.nil?
     end
     @url
   end
