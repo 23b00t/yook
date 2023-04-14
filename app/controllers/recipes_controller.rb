@@ -101,7 +101,7 @@ class RecipesController < ApplicationController
   end
 
   def create_from_link
-    result = RecipeService.new(current_user).recipe_service.create_with_scrape(params)
+    result = RecipeService.new(current_user).create_with_scrape(params)
     redirect_path = result[:success] ? edit_recipe_path(result[:recipe]) : new_recipe_path
     redirect_to redirect_path, alert: result[:message]
   end
