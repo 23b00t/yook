@@ -1,9 +1,13 @@
 <div class="input ingredient-list" data-controller="edit-ingredient" data-edit-ingredient-target="item">
   <div class="ingredient-list-form-and-buttons">
     <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
-    <%= button_to purchase_ingredient_path(grocery_ingredient_id: ingredient.id), class: "icon" do %>
-      <i class="fa-solid fa-cart-shopping"></i>
-    <% end %>
+
+    <%#= button_to purchase_ingredient_path(grocery_ingredient_id: ingredient.id), class: "icon" do %>
+      <%# <i class="fa-solid fa-cart-shopping"></i> %>
+    <%# end %>
+
+    
+
     <%= simple_form_for @grocery_ingredient && @grocery_ingredient.id == ingredient.id ? @grocery_ingredient : ingredient, url: grocery_ingredient_path(ingredient), defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}},
       defaults: { input_html: {style: "margin-bottom:0px; height:100%; background-image:none; padding:0px;"}},
       data: {edit_ingredient_target: "form", action: "edit-ingredient#send"} do |f| %>
