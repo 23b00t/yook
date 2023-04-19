@@ -1,12 +1,8 @@
-<div class="input ingredient-list" data-controller="edit-ingredient purchase" data-edit-ingredient-target="item">
+<div class="input ingredient-list" data-controller="edit-ingredient" data-edit-ingredient-target="item" data-action="change->purchase#update">
   <div class="ingredient-list-form-and-buttons">
     <%= render 'shared/list_ingredient_icons', ingredient: ingredient%>
 
-    <%#= button_to purchase_ingredient_path(grocery_ingredient_id: ingredient.id), class: "icon" do %>
-      <%# <i class="fa-solid fa-cart-shopping"></i> %>
-    <%# end %>
-
-    <input type="checkbox" data-action="purchase#toggleSelected" data-item-id="<%= ingredient.id %>" name="purchase">
+    <input type="checkbox" data-purchase-target="checkbox" data-item-id="<%= ingredient.id %>" name="purchase">
 
     <%= simple_form_for @grocery_ingredient && @grocery_ingredient.id == ingredient.id ? @grocery_ingredient : ingredient, url: grocery_ingredient_path(ingredient), defaults: { input_html: {style: "margin-bottom:0px;height:100%;background-image: none;padding:0px;"}},
       defaults: { input_html: {style: "margin-bottom:0px; height:100%; background-image:none; padding:0px;"}},
@@ -27,5 +23,3 @@
   </div>
   <%= render 'shared/flashes', alert: alert, notice: notice %>
 </div>
-
-<button type="button" data-action="purchase#applyPurchase">Purchase Selected Items</button>

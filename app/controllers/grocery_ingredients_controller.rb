@@ -43,19 +43,21 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def purchased
-    purchased_id = params[:grocery_ingredient_id]
-    grocery_ingredient = GroceryIngredient.find(purchased_id)
-    user_ingredient = UserIngredient.find_by(ingredient_id: grocery_ingredient.ingredient_id)
+    purchased_ids = params[:grocery_ingredient_ids]
 
-    sum_ingredients(grocery_ingredient, user_ingredient) if user_ingredient.present?
-    user_ingredient.update(quantity: @quantity) if @quantity.present?
+    purchased_ids.each do |purchased_id|
+      grocery_ingredient = GroceryIngredient.find(purchased_id)
+      user_ingredient = UserIngredient.find_by(ingredient_id: grocery_ingredient.ingredient_id)
 
-    create_user_ingredient(grocery_ingredient) unless user_ingredient
+      sum_ingredients(grocery_ingredient, user_ingredient) if user_ingredient.present?
+      user_ingredient.update(quantity: @quantity) if @quantity.present?
 
-    grocery_ingredient.delete
+      create_user_ingredient(grocery_ingredient) unless user_ingredient
 
-    return redirect_to user_ingredients_path, alert: @alert_msg if @alert_msg.present?
+      grocery_ingredient.delete
+    end
 
+    redirect_to user_ingredients_path, alert: @alert_msg if @alert_msg.present?
     redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
   end
 
