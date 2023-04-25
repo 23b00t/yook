@@ -20,7 +20,11 @@ export default class extends Controller {
     .then(respond => respond.json())
     .then((data) => {
       if (data.my_ingredient) {
-        this.listTarget.innerHTML += data.my_ingredient
+        const newIngredient = document.createElement('div')
+        newIngredient.innerHTML = data.my_ingredient
+
+        this.listTarget.insertBefore(newIngredient, this.listTarget.firstChild)
+
         this.flashTarget.innerHTML = data.my_flash
         this.new_formTarget.innerHTML = data.my_form
       } else {

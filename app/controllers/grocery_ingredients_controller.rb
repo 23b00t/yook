@@ -9,6 +9,11 @@ class GroceryIngredientsController < ApplicationController
     @groceries = (GroceryIngredient.all.select { |i| i.user == current_user }).sort
     @groceries.delete_if { |grocery| grocery.quantity.zero? }
     @new_ingredient = GroceryIngredient.new
+
+    respond_to do |format|
+      format.html
+      format.text { render partial: "grocery_list_ingredients", formats: [:html], locals: { ingredients: @groceries } }
+    end
   end
 
   def update
@@ -50,15 +55,21 @@ class GroceryIngredientsController < ApplicationController
       user_ingredient = UserIngredient.find_by(ingredient_id: grocery_ingredient.ingredient_id)
 
       sum_ingredients(grocery_ingredient, user_ingredient) if user_ingredient.present?
-      user_ingredient.update(quantity: @quantity) if @quantity.present?
+      user_ingredient.update(quantity: @quantity) if @quantity.present? && user_ingredient.present?
 
       create_user_ingredient(grocery_ingredient) unless user_ingredient
 
       grocery_ingredient.delete
     end
 
-    redirect_to user_ingredients_path, alert: @alert_msg if @alert_msg.present?
-    redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
+    # return redirect_to user_ingredients_path, alert: @alert_msg if @alert_msg.present?
+
+    # redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
+    if @alert_msg.present?
+      render json: { alert: @alert_msg }
+    else
+      render json: { notice: FlashMessages.purchased }
+    end
   end
 
   private

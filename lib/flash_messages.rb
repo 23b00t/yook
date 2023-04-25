@@ -31,6 +31,6 @@ module FlashMessages
   end
 
   def purchased
-    "Ingredient was purchased! Check your Inventory!"
+    "Ingredient(s) was purchased! Check your Inventory!"
   end
 end
