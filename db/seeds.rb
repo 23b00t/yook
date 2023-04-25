@@ -1,16 +1,4 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
-require 'faker'
 require 'csv'
-require 'uri'
-require 'net/http'
-
-metric_measurement = ["kilogram", "gram", "milligram", "liter", "milliliter"]
 
 p 'clear db'
 User.destroy_all
@@ -24,22 +12,16 @@ CSV.foreach('db/Foodlist.csv', headers: true, header_converters: :symbol) do |ro
   Ingredient.create(name: row[:name], group: row[:food_group])
 end
 
-CSV.foreach('db/ingredients.csv') do |row|
-  Ingredient.create(name: row[0])
-  p row[0]
-end
+# CSV.foreach('db/ingredients.csv') do |row|
+#   Ingredient.create(name: row[0])
+#   p row[0]
+# end
 
-p 'create recipes and its ingredients'
-10.times do
-  recipe = Recipe.create!(title: Faker::Food.dish, cooking_time: rand(120), description: Faker::Food.description, rating: rand(5), difficulty: 'hard', serving_size: 4, user_id: user.id)
-  5.times do
-    ingredient = Ingredient.all.sample
-    RecipeIngredient.create!(recipe_id: recipe.id, ingredient_id: ingredient.id, measurement: metric_measurement.sample, quantity: rand(5))
-  end
-end
+p 'Scrape recipes'
+RecipeService.new(user).create_with_scrape(link: "https://www.allrecipes.com/recipe/14276/strawberry-spinach-salad-i/")
+RecipeService.new(user).create_with_scrape(link: "https://www.allrecipes.com/recipe/8887/chicken-marsala/")
+RecipeService.new(user).create_with_scrape(link: "https://www.allrecipes.com/recipe/15925/creamy-au-gratin-potatoes/")
+RecipeService.new(user).create_with_scrape(link: "https://www.allrecipes.com/recipe/282286/easy-veggie-pasta-primavera/")
+RecipeService.new(user).create_with_scrape(link: "https://www.allrecipes.com/recipe/16947/amazingly-easy-irish-soda-bread/")
 
-p 'create inventar'
-20.times do
-  ingredient = Ingredient.all.sample
-  UserIngredient.create(measurement: metric_measurement.sample, quantity: rand(10), user_id: user.id, ingredient_id: ingredient.id)
-end
+p 'All done'
