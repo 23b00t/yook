@@ -4,15 +4,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["form", "item"]
 
-  connect() {
-    console.log(this.formTarget)
-    console.log(this.itemTarget)
-  }
-
   send(event) {
     event.preventDefault()
-
-    console.log(new FormData(this.formTarget))
 
     var token = document.getElementsByName('csrf-token')[0].content
     const url = this.formTarget.action

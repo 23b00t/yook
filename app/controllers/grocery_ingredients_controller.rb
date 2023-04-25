@@ -9,6 +9,11 @@ class GroceryIngredientsController < ApplicationController
     @groceries = (GroceryIngredient.all.select { |i| i.user == current_user }).sort
     @groceries.delete_if { |grocery| grocery.quantity.zero? }
     @new_ingredient = GroceryIngredient.new
+
+    respond_to do |format|
+      format.html
+      format.text { render partial: "grocery_list_ingredients", formats: [:html], locals: { ingredients: @groceries } }
+    end
   end
 
   def update
@@ -43,20 +48,28 @@ class GroceryIngredientsController < ApplicationController
   end
 
   def purchased
-    purchased_id = params[:grocery_ingredient_id]
-    grocery_ingredient = GroceryIngredient.find(purchased_id)
-    user_ingredient = UserIngredient.find_by(ingredient_id: grocery_ingredient.ingredient_id)
+    purchased_ids = params[:grocery_ingredient_ids]
 
-    sum_ingredients(grocery_ingredient, user_ingredient) if user_ingredient.present?
-    user_ingredient.update(quantity: @quantity) if @quantity.present?
+    purchased_ids.each do |purchased_id|
+      grocery_ingredient = GroceryIngredient.find(purchased_id)
+      user_ingredient = UserIngredient.find_by(ingredient_id: grocery_ingredient.ingredient_id)
 
-    create_user_ingredient(grocery_ingredient) unless user_ingredient
+      sum_ingredients(grocery_ingredient, user_ingredient) if user_ingredient.present?
+      user_ingredient.update(quantity: @quantity) if @quantity.present? && user_ingredient.present?
 
-    grocery_ingredient.delete
+      create_user_ingredient(grocery_ingredient) unless user_ingredient
 
-    return redirect_to user_ingredients_path, alert: @alert_msg if @alert_msg.present?
+      grocery_ingredient.delete
+    end
 
-    redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
+    # return redirect_to user_ingredients_path, alert: @alert_msg if @alert_msg.present?
+
+    # redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
+    if @alert_msg.present?
+      render json: { alert: @alert_msg }
+    else
+      render json: { notice: FlashMessages.purchased }
+    end
   end
 
   private

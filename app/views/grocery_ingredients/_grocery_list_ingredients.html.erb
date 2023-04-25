@@ -1,7 +1,8 @@
-<div class="d-flex flex-column gap-2"  data-add-ingredient-target="list">
+<div class="d-flex flex-column gap-2"  data-add-ingredient-target="list" data-purchase-target="list" data-controller="purchase">
   <% if ingredients.count > 0 %>
     <% ingredients.each do |ingredient| %>
       <%= render 'grocery_ingredient_item', ingredient: ingredient %>
     <% end %>
   <% end %>
+  <button type="button" data-action="click->purchase#applyPurchase" class="button button-primary">Purchased Selected</button>
 </div>

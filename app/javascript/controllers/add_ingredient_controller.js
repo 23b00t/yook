@@ -5,10 +5,6 @@ export default class extends Controller {
 
   static targets = ["form", "list", "flash", "new_form"]
 
-  connect(){
-    console.log("abboba")
-  }
-
   send(event) {
     event.preventDefault()
 
@@ -23,9 +19,12 @@ export default class extends Controller {
     fetch(url, options)
     .then(respond => respond.json())
     .then((data) => {
-      console.log(data.my_form)
       if (data.my_ingredient) {
-        this.listTarget.innerHTML += data.my_ingredient
+        const newIngredient = document.createElement('div')
+        newIngredient.innerHTML = data.my_ingredient
+
+        this.listTarget.insertBefore(newIngredient, this.listTarget.firstChild)
+
         this.flashTarget.innerHTML = data.my_flash
         this.new_formTarget.innerHTML = data.my_form
       } else {

@@ -4,7 +4,7 @@ class RecipeFilter
   end
 
   def filter_by_cooked(cooked)
-    return self if cooked.empty?
+    return self if cooked.nil? || cooked.empty?
 
     cooked = cooked == 'true'
     @scope = @scope.select { |recipe| recipe.cooked == cooked }
