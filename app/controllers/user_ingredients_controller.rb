@@ -1,6 +1,8 @@
 require "#{Rails.root}/lib/flash_messages"
 
 class UserIngredientsController < ApplicationController
+  # adjust_measurement and unit transformation methods
+  include UnitHelpers
   include ActionView::RecordIdentifier
   before_action :set_user_ingredient, only: %i[update destroy]
 
@@ -50,18 +52,6 @@ class UserIngredientsController < ApplicationController
 
   def set_user_ingredient
     @ingredient = UserIngredient.find(params[:id])
-  end
-
-  def convert(ingredient)
-    return unless ingredient.quantity >= 1000 || %w[g ml mg].include?(ingredient.measurement)
-
-    ingredient.quantity /= 1000
-    case ingredient.measurement
-    when "g" then ingredient.measurement = "kg"
-    when "mg" then ingredient.measurement = "g"
-    when "ml" then ingredient.measurement = "l"
-    end
-    ingredient.save
   end
 
   def cooked?(referring_url, format)

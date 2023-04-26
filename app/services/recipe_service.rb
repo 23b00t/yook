@@ -52,8 +52,8 @@ class RecipeService
     scrape.ingredients.each do |ingredient|
       new_ing = RecipeIngredient.new({ measurement: adjust_measurement(ingredient[:measurement]),
                                        quantity: ingredient[:quantity], comment: ingredient[:comment] })
-      ing = Ingredient.find_by(name: ingredient[:name]) || Ingredient.create({ name: ingredient[:name],
-                                                                               creator: @current_user })
+      ing = Ingredient.where('lower(name) = ?', ingredient[:name].downcase).first ||
+            Ingredient.create({ name: ingredient[:name], creator: @current_user })
       new_ing.recipe = recipe
       new_ing.ingredient = ing
       new_ing.save
