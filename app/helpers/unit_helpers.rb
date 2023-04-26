@@ -28,4 +28,13 @@ module UnitHelpers
       @alert_msg = FlashMessages.measurement_error(ingredient1, ingredient2)
     end
   end
+
+  def convert(ingredient)
+    return unless ingredient.quantity >= 1000 || %w[g ml mg].include?(ingredient.measurement)
+
+    ingredient.quantity /= 1000
+    measurement_map = { "g" => "kg", "mg" => "g", "ml" => "l" }
+    ingredient.measurement = measurement_map[ingredient.measurement]
+    ingredient.save
+  end
 end

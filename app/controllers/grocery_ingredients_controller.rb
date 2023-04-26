@@ -1,7 +1,7 @@
 require "#{Rails.root}/lib/flash_messages"
 
 class GroceryIngredientsController < ApplicationController
-  # adjust_measurement and sum_ingredients methods
+  # adjust_measurement and unit transformation methods
   include UnitHelpers
   before_action :set_grocery_ingredient, only: %i[update destroy]
 
@@ -73,15 +73,6 @@ class GroceryIngredientsController < ApplicationController
 
   def grocery_ingredient_params
     params.require(:grocery_ingredient).permit(:name, :measurement, :quantity)
-  end
-
-  def convert(ingredient)
-    return unless ingredient.quantity >= 1000 || %w[g ml mg].include?(ingredient.measurement)
-
-    ingredient.quantity /= 1000
-    measurement_map = { "g" => "kg", "mg" => "g", "ml" => "l" }
-    ingredient.measurement = measurement_map[ingredient.measurement]
-    ingredient.save
   end
 
   def ingredient_updated?
