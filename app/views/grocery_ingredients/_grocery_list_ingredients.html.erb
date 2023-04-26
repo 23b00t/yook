@@ -4,5 +4,8 @@
       <%= render 'grocery_ingredient_item', ingredient: ingredient %>
     <% end %>
   <% end %>
-  <button type="button" data-action="click->purchase#applyPurchase" class="button button-primary">Purchased Selected</button>
+  <div class="d-flex">
+    <button type="button" data-action="click->purchase#selectAll" class="button button-secondary me-2">Select All</button>
+    <button type="button" data-action="click->purchase#applyPurchase" class="button button-primary">Purchased Selected</button>
+  </div>
 </div>

@@ -43,4 +43,11 @@ export default class extends Controller {
       this.listTarget.outerHTML = data
     })
   }
+
+  selectAll() {
+    this.checkboxTargets.forEach((checkbox) => {
+      checkbox.checked = true;
+    });
+    this.update();
+  }
 }
