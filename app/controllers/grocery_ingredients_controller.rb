@@ -62,14 +62,7 @@ class GroceryIngredientsController < ApplicationController
       grocery_ingredient.delete
     end
 
-    # return redirect_to user_ingredients_path, alert: @alert_msg if @alert_msg.present?
-
-    # redirect_to grocery_ingredients_path, notice: FlashMessages.purchased
-    if @alert_msg.present?
-      render json: { alert: @alert_msg }
-    else
-      render json: { notice: FlashMessages.purchased }
-    end
+    @alert_msg.present? ? (render json: { alert: @alert_msg }) : (render json: { notice: FlashMessages.purchased })
   end
 
   private
